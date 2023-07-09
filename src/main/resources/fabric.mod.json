@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "morassbmod",
+	"version": "${version}",
+	"name": "morassbmod",
+	"description": "This mod provides client side features for hypixel skyblock.",
+	"authors": [
+		"Morazzer"
+	],
+	"contact": {
+		"sources": "https://github.com/Morazzer"
+	},
+	"license": "",
+	"icon": "assets/morassbmod/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"dev.morazzer.morassbmod.MorasSbMod"
+		]
+	},
+	"mixins": [
+		"mixins/msbm.dev.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.21",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
