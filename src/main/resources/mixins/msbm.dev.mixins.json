@@ -1,0 +1,10 @@
+{
+	"required": true,
+	"package": "dev.morazzer.morassbmod.mixin.dev",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
