@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.morazzer.cookiesmod.mixin.repo",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ItemStackMixin",
+    "PlayerInventoryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "morassbmod",
+	"id": "cookiesmod",
 	"version": "${version}",
-	"name": "morassbmod",
+	"name": "Cookies mod",
 	"description": "This mod provides client side features for hypixel skyblock.",
 	"authors": [
 		"Morazzer"
@@ -11,20 +11,22 @@
 		"sources": "https://github.com/Morazzer"
 	},
 	"license": "",
-	"icon": "assets/morassbmod/icon.png",
+	"icon": "assets/cookiesmod/icon.png",
 	"environment": "client",
 	"entrypoints": {
 		"main": [
-			"dev.morazzer.morassbmod.MorasSbMod"
+          "dev.morazzer.cookiesmod.CookiesMod"
 		]
 	},
 	"mixins": [
-		"mixins/msbm.dev.mixins.json"
+		"mixins/cookies.dev.mixins.json",
+		"mixins/cookies.repo.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.21",
 		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*"
-	}
+	},
+	"accessWidener": "cookiesmod.accesswidener"
 }
