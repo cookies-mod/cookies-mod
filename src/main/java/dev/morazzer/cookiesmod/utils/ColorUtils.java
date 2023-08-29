@@ -8,16 +8,15 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.morazzer.cookiesmod.utils.DevUtils.createIdentifier;
-
 public class ColorUtils {
 
     public static int mainColor = 0xE99DBE;
     public static int failColor = 0xFF6961;
     public static int successColor = 0x77DD77;
 
-    private static final Identifier showStacktraceOnGradientHover = createIdentifier("show_stacktrace_on_gradient_hover");
+    private static final Identifier showStacktraceOnGradientHover = DevUtils.createIdentifier("show_stacktrace_on_gradient_hover");
 
+    @SuppressWarnings("unused") // might be useful in the future
     public static MutableText literalWithGradientToAndBack(@NotNull String text, int borderColor, int middleColor) {
         return literalWithGradient3(text, borderColor, middleColor, borderColor);
     }

@@ -3,12 +3,9 @@ package dev.morazzer.cookiesmod.commands.helpers;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.SingleRedirectModifier;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
@@ -18,7 +15,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class ClientCommand {
-    private static Identifier identifier = new Identifier("cookie", "commands");
+    private static final Identifier identifier = new Identifier("cookie", "commands");
 
     public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
 

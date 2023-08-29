@@ -44,7 +44,6 @@ public class ItemListScreen {
 	private int pageCount;
 	private int pageNumberX;
 	private int pageNumberY;
-	private long timeOpened;
 
 	private EnumCycleWidget<AlphabeticalSort, Comparator<Identifier>> sortAlphabetical;
 	private EnumCycleWidget<RaritySort, Comparator<Identifier>> sortRarity;
@@ -55,6 +54,9 @@ public class ItemListScreen {
 	private TextFieldWidget textFieldWidget;
 
 	CopyOnWriteArrayList<Identifier> items = new CopyOnWriteArrayList<>();
+
+	public ItemListScreen() {
+	}
 
 	public void load() {
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {

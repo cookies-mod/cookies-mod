@@ -31,7 +31,7 @@ public class ImageButtonWidget {
 	}
 
 
-	protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+	protected void renderButton(DrawContext context) {
 		boolean fileFound = true;
 		try {
 			MinecraftClient.getInstance().getTextureManager().getTexture(this.background);
@@ -46,8 +46,8 @@ public class ImageButtonWidget {
 		}
 	}
 
-	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.renderButton(context, mouseX, mouseY, delta);
+	public void render(DrawContext context) {
+		this.renderButton(context);
 	}
 
 	public void mouseClicked(double mouseX, double mouseY, int button) {

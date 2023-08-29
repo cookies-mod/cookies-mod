@@ -2,7 +2,6 @@ package dev.morazzer.cookiesmod.screen;
 
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.PlayerManager;
-import dev.morazzer.cookiesmod.features.ProfileManager;
 import dev.morazzer.cookiesmod.features.ProfileViewerManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import net.minecraft.client.MinecraftClient;

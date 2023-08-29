@@ -104,6 +104,7 @@ public class RepositoryManager {
 		log.info("{}", count);
 	}
 
+	@SuppressWarnings("UnusedReturnValue")
 	public static boolean loadItem(Path path) {
 		return loadItem(path, (o) -> {});
 	}

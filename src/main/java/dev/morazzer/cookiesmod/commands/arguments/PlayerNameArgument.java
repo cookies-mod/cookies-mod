@@ -10,8 +10,6 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import java.util.Collection;
@@ -36,13 +34,13 @@ public class PlayerNameArgument implements ArgumentType<String> {
             reader.skip();
         }
 
-        String string = reader.getString().substring(i, reader.getCursor());
+        String playerName = reader.getString().substring(i, reader.getCursor());
 
         try {
-            return string;
+            return playerName;
         } catch (InvalidIdentifierException var4) {
             reader.setCursor(i);
-            throw COMMAND_EXCEPTION.createWithContext(reader, string);
+            throw COMMAND_EXCEPTION.createWithContext(reader, playerName);
         }
     }
 

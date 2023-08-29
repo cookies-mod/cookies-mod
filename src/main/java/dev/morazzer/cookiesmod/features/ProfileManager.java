@@ -42,11 +42,10 @@ public class ProfileManager {
             );
         });
 
-        WrappedSkyblockProfile skyblockProfile = new WrappedSkyblockProfile(result.get());
-
-        return skyblockProfile;
+	    return new WrappedSkyblockProfile(result.get());
     }
 
+    @SuppressWarnings("unused")
     public static WrappedSkyblockProfile getProfile(String playerName) {
         return ExceptionHandler.removeThrows(() -> sbProfileCache.get(playerName));
     }

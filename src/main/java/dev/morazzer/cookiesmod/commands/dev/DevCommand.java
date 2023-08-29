@@ -154,10 +154,7 @@ public class DevCommand extends ClientCommand {
 										.then(Helper.literal("apply_large")
 												.then(Helper.argument("file", StringArgumentType.string())
 														.then(Helper.argument("regex", StringArgumentType.string())
-																.executes(context -> {
-
-																	return Command.SINGLE_SUCCESS;
-																}))))
+																.executes(context -> Command.SINGLE_SUCCESS))))
 
 										.then(Helper.literal("review")
 												.executes(context -> {

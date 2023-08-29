@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.utils;
 
+import dev.morazzer.cookiesmod.CookiesMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
@@ -10,9 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.management.ManagementFactory;
-
-import static dev.morazzer.cookiesmod.CookiesMod.createPrefix;
-import static dev.morazzer.cookiesmod.utils.ColorUtils.failColor;
 
 public class ExceptionHandler {
 
@@ -43,9 +41,9 @@ public class ExceptionHandler {
                     stackTrace
             );
             MinecraftClient.getInstance().player.sendMessage(
-                    createPrefix(failColor)
+                    CookiesMod.createPrefix(ColorUtils.failColor)
                             .append(Text.literal("An internal error occurred please report this on our discord. (Click to copy)")
-                                    .styled(style -> style.withColor(failColor)
+                                    .styled(style -> style.withColor(ColorUtils.failColor)
                                             .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("%s: %s".formatted(exception.getClass().getName(), exception.getMessage()))))
                                             .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copy))
                                     )
@@ -63,6 +61,7 @@ public class ExceptionHandler {
         return stringWriter.toString();
     }
 
+    @FunctionalInterface
     public interface ThrowableFunction<T> {
         T run() throws Throwable;
     }

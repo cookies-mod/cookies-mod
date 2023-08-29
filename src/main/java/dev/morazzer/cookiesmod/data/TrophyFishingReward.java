@@ -1,5 +1,8 @@
 package dev.morazzer.cookiesmod.data;
 
+import lombok.Getter;
+
+@Getter
 public enum TrophyFishingReward {
 	BRONZE("Novice"),
 	SILVER("Adept"),
@@ -12,7 +15,4 @@ public enum TrophyFishingReward {
 		this.name = name;
 	}
 
-	public String getName() {
-		return name;
-	}
 }

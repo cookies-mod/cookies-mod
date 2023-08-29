@@ -45,6 +45,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("OverlyComplexClass")
 @Getter
 public class RepositoryItem {
 	private final static Identifier NAMESPACE = new Identifier("skyblock", "item/");
@@ -487,9 +488,7 @@ public class RepositoryItem {
 			tooltip.add(Text.literal("Gear Score: ").formatted(Formatting.GRAY).append(Text.literal(String.valueOf(this.gearScore)).formatted(Formatting.LIGHT_PURPLE)));
 		}
 
-		this.furniture.ifPresent(furniture -> {
-			tooltip.add(Text.literal("Furniture").formatted(Formatting.DARK_GRAY));
-		});
+		this.furniture.ifPresent(furniture -> tooltip.add(Text.literal("Furniture").formatted(Formatting.DARK_GRAY)));
 
 		this.stats.ifPresent(stats -> {
 			if (stats.containsKey(Stats.BREAKING_POWER)) {
@@ -719,6 +718,7 @@ public class RepositoryItem {
 	record GemstoneSlotRequirement<T>(GemstoneSlotRequirementType<T> requirementType, T value, int amount) {
 	}
 
+	@SuppressWarnings("unused")
 	static class GemstoneSlotRequirementType<T> {
 		public static GemstoneSlotRequirementType<Integer> COINS = new GemstoneSlotRequirementType<>();
 		public static GemstoneSlotRequirementType<Identifier> ITEM = new GemstoneSlotRequirementType<>();
@@ -979,6 +979,7 @@ public class RepositoryItem {
 	record SalvageUpgrade<T>(SalvageType<T> salvageType, T value, int amount) {
 	}
 
+	@SuppressWarnings("unused")
 	static class SalvageType<T> {
 		public final static SalvageType<EssenceType> ESSENCE = new SalvageType<>();
 		public final static SalvageType<Identifier> ITEM = new SalvageType<>();

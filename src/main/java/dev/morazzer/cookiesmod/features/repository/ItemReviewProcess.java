@@ -61,6 +61,7 @@ public class ItemReviewProcess implements Runnable {
 		return next();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void startWatcher(Path path) {
 		do {
 			for (WatchEvent<?> event : watchKey.pollEvents()) {

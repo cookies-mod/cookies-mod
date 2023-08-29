@@ -7,6 +7,7 @@ import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import io.github.moulberry.moulconfig.processor.BuiltinMoulConfigGuis;
 import io.github.moulberry.moulconfig.processor.ConfigProcessorDriver;
 import io.github.moulberry.moulconfig.processor.MoulConfigProcessor;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ public class ConfigManager {
             .create();
 
     private static CookiesConfig config;
+    @Getter
     private static MoulConfigProcessor<CookiesConfig> processedConfig;
 
     public static CookiesConfig getConfig() {
@@ -66,7 +68,7 @@ public class ConfigManager {
         if (!Files.exists(configFile)) {
             config = new CookiesConfig();
             saveConfig(false, "first-save");
-            CookiesMod.getInstance().setFirstStart();
+            CookiesMod.setFirstStart();
         }
 
 
@@ -92,7 +94,4 @@ public class ConfigManager {
         processedConfig = configProcessor;
     }
 
-    public static MoulConfigProcessor<CookiesConfig> getProcessedConfig() {
-        return processedConfig;
-    }
 }

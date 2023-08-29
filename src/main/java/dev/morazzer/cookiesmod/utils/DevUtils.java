@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.utils;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.util.Identifier;
 
@@ -12,7 +13,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class DevUtils {
 
     private static final Set<Identifier> enabledTools = new CopyOnWriteArraySet<>();
+    @Getter
     public static final Set<Identifier> availableTools = new HashSet<>();
+    @Getter
     private static final Set<Identifier> disabledTools = new CopyOnWriteArraySet<>(availableTools);
 
     private static final Identifier EXTRA_LOGGING = createIdentifier("extra_logging");
@@ -48,14 +51,6 @@ public class DevUtils {
 
     public static Set<Identifier> getEnabledTools() {
         return Collections.unmodifiableSet(enabledTools);
-    }
-
-    public static Set<Identifier> getAvailableTools() {
-        return availableTools;
-    }
-
-    public static Set<Identifier> getDisabledTools() {
-        return disabledTools;
     }
 
     public static Identifier createIdentifier(String name) {
