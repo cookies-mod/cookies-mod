@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProfileViewerManager {
 
-    private static CopyOnWriteArrayList<UUID> lastSearches = new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<UUID> lastSearches = new CopyOnWriteArrayList<>();
 
     public static void setLastSearch(UUID uuid) {
         lastSearches.remove(uuid);

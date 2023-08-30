@@ -8,14 +8,18 @@ import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.commands.arguments.RealIdentifierArgument;
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
 import dev.morazzer.cookiesmod.commands.helpers.Helper;
+import dev.morazzer.cookiesmod.commands.helpers.LoadCommand;
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.features.garden.Garden;
 import dev.morazzer.cookiesmod.features.repository.ItemReviewProcess;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
+import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.recipe.RepositoryRecipeManager;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
 import dev.morazzer.cookiesmod.utils.DevUtils;
+import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.StringUtils;
 import dev.morazzer.cookiesmod.utils.general.ScoreboardUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
@@ -25,7 +29,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -33,7 +36,6 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,18 +43,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.LongStream;
 
+@LoadCommand
 public class DevCommand extends ClientCommand {
 	@NotNull
 	@Override
 	public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
 		return Helper.literal("dev")
-				.then(
-						Helper.literal("enable")
-								.then(
-										Helper.argument(
-												"tool",
-												new RealIdentifierArgument(DevUtils.getDisabledTools())
-										)
+				.then(Helper.literal("enable")
+						.then(Helper
+								.argument(
+										"tool",
+										new RealIdentifierArgument(DevUtils.getDisabledTools())
 								).executes(
 										context -> {
 											Identifier identifier = context.getArgument("tool", Identifier.class);
@@ -75,13 +76,12 @@ public class DevCommand extends ClientCommand {
 											return Command.SINGLE_SUCCESS;
 										}
 								)
-				).then(
-						Helper.literal("disable")
-								.then(
-										Helper.argument(
-												"tool",
-												new RealIdentifierArgument(DevUtils.getDisabledTools())
-										)
+						)
+				).then(Helper.literal("disable")
+						.then(Helper
+								.argument(
+										"tool",
+										new RealIdentifierArgument(DevUtils.getEnabledTools())
 								).executes(
 										context -> {
 											Identifier identifier = context.getArgument("tool", Identifier.class);
@@ -105,6 +105,7 @@ public class DevCommand extends ClientCommand {
 											return Command.SINGLE_SUCCESS;
 										}
 								)
+						)
 				).then(
                         /*
 
@@ -123,11 +124,11 @@ public class DevCommand extends ClientCommand {
 											long start = System.currentTimeMillis();
 											context.getSource()
 													.sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor)
-															.append("Reloading item repository"));
-											RepositoryManager.reloadItems();
+															.append("Reloading repository"));
+											RepositoryManager.reload();
 											context.getSource()
 													.sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor)
-															.append("Reloaded item repository in %sms".formatted(System.currentTimeMillis() - start)));
+															.append("Reloaded repository in %sms".formatted(System.currentTimeMillis() - start)));
 
 											return 1;
 										})
@@ -165,7 +166,7 @@ public class DevCommand extends ClientCommand {
 													return Command.SINGLE_SUCCESS;
 												})
 												.then(Helper.literal("skip")
-														.then(Helper.argument("skip", IntegerArgumentType.integer(1, RepositoryManager.getAllItems().size()))
+														.then(Helper.argument("skip", IntegerArgumentType.integer(1, RepositoryItemManager.getAllItems().size()))
 																.executes(context -> {
 																	if (ItemReviewProcess.getItemReviewProcess() == null) {
 																		context.getSource().sendFeedback(
@@ -218,20 +219,11 @@ public class DevCommand extends ClientCommand {
 															return Command.SINGLE_SUCCESS;
 														})
 												)
-										).then(Helper.literal("merge_all")
-												.executes(context -> {
-													ConcurrentUtils.execute(() -> {
-														Path path = RepositoryManager.mergeAllItems();
-
-														context.getSource().sendFeedback(Text.literal("Click here to open merged items").styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, path.toAbsolutePath().toString()))));
-													});
-													return Command.SINGLE_SUCCESS;
-												})
 										).then(Helper.literal("create_from_api")
 												.executes(context -> {
 
 													ConcurrentUtils.execute(() -> {
-														boolean succeeded = RepositoryManager.loadOfficialItemList();
+														boolean succeeded = RepositoryItemManager.loadOfficialItemList();
 														if (!succeeded) {
 															context.getSource().sendError(
 																	CookiesMod.createPrefix(ColorUtils.failColor)
@@ -250,7 +242,7 @@ public class DevCommand extends ClientCommand {
 													return Command.SINGLE_SUCCESS;
 												})
 										).then(Helper.literal("give")
-												.then(Helper.argument("item", new RealIdentifierArgument(RepositoryManager.getAllItems()))
+												.then(Helper.argument("item", new RealIdentifierArgument(RepositoryItemManager.getAllItems()))
 														.executes(context -> {
 															if (context.getSource().getEntity() instanceof PlayerEntity player && !player.isCreative()) {
 																context.getSource()
@@ -261,7 +253,7 @@ public class DevCommand extends ClientCommand {
 																return 0;
 															}
 
-															RepositoryItem item = RepositoryManager.getItem(context.getArgument("item", Identifier.class));
+															RepositoryItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
 
 															ItemStack itemStack = item.getItemStack().getValue().copy();
 
@@ -321,7 +313,14 @@ public class DevCommand extends ClientCommand {
 										}
 										case "is_in_skyblock" ->
 												MinecraftClient.getInstance().player.sendMessage(CookiesMod.createPrefix().append("" + SkyblockUtils.isCurrentlyInSkyblock()));
-										case "enable_garden_features" -> Garden.loadGardenFeatures();
+										case "enable_garden_features" -> System.out.println(LocationUtils.getCurrentLocation());
+										case "debug_recipe_feature" -> {
+
+												RepositoryRecipeManager.resolveToLowestSingleIngredient(Identifier.of("skyblock","item/tightly_tied_hay_bale")).ifPresent(ingredient -> {
+													System.out.println(ingredient + " | " + ingredient.getAmount());
+												});
+
+										}
 										case "is_on_garden" ->
 												MinecraftClient.getInstance().player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden()));
 									}

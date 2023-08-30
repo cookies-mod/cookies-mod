@@ -40,7 +40,7 @@ public class ScoreboardUtils {
 	}
 
 	public static String getCurrentLocation() {
-		return getAllLines().stream().map(String::trim).filter(line -> line.matches(". .+")).findFirst().orElse("");
+		return getAllLines().stream().map(String::trim).filter(line -> line.matches("\u23E3 .+")).findFirst().orElse("");
 	}
 
 	private static Optional<ScoreboardObjective> getScoreboardObjective() {

@@ -4,6 +4,9 @@ import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
+import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.modules.LoadModule;
+import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.screen.widgets.EnumCycleWidget;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
@@ -26,7 +29,8 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
-public class ItemListScreen {
+@LoadModule
+public class ItemListScreen implements Module {
 
 
 	private final int itemSize = 18;
@@ -58,6 +62,7 @@ public class ItemListScreen {
 	public ItemListScreen() {
 	}
 
+	@Override
 	public void load() {
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			ItemListConfig config = ConfigManager.getConfig().itemListConfig;
@@ -71,7 +76,7 @@ public class ItemListScreen {
 
 			this.textFieldWidget = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, 0, 0, 20, 20, this.textFieldWidget, Text.empty());
 			this.textFieldWidget.setChangedListener(o -> this.filterAndSort());
-			this.items = new CopyOnWriteArrayList<>(RepositoryManager.getAllItems());
+			this.items = new CopyOnWriteArrayList<>(RepositoryItemManager.getAllItems());
 			filterAndSort();
 			init(screen);
 			ScreenEvents.afterRender(screen).register(this::render);
@@ -98,9 +103,9 @@ public class ItemListScreen {
 				EnumCycleWidget.OnClick.identity(this::sort),
 				alphabeticalSort -> switch (alphabeticalSort) {
 					case NORMAL ->
-							Comparator.comparing((Identifier o) -> RepositoryManager.getItem(o).getItemNameAlphaNumerical());
+							Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o).getItemNameAlphaNumerical());
 					case REVERSED ->
-							Comparator.comparing((Identifier o) -> RepositoryManager.getItem(o).getItemNameAlphaNumerical()).reversed();
+							Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o).getItemNameAlphaNumerical()).reversed();
 				}
 		);
 
@@ -116,9 +121,9 @@ public class ItemListScreen {
 				raritySort -> switch (raritySort) {
 					case UNSORTED -> Comparator.comparingInt(value -> 0);
 					case LOWEST_FIRST ->
-							Comparator.comparingInt((Identifier o) -> RepositoryManager.getItem(o).getTier().ordinal());
+							Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier().ordinal());
 					case HIGHEST_FIRST ->
-							Comparator.comparingInt((Identifier o) -> RepositoryManager.getItem(o).getTier().ordinal()).reversed();
+							Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier().ordinal()).reversed();
 				}
 		);
 
@@ -132,18 +137,19 @@ public class ItemListScreen {
 				RarityFilter::getText,
 				EnumCycleWidget.OnClick.identity(this::filterAndSort),
 				rarityFilter -> switch (rarityFilter) {
-					case NO_FILTER -> i -> RepositoryManager.getItem(i).getTier() != RepositoryItem.Tier.UNOBTAINABLE;
-					case COMMON -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.COMMON;
-					case UNCOMMON -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.UNCOMMON;
-					case RARE -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.RARE;
-					case EPIC -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.EPIC;
-					case LEGENDARY -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.LEGENDARY;
-					case MYTHIC -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.MYTHIC;
-					case SPECIAL -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.SPECIAL
-							|| RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.VERY_SPECIAL;
-					case ADMIN -> i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.ADMIN;
+					case NO_FILTER ->
+							i -> RepositoryItemManager.getItem(i).getTier() != RepositoryItem.Tier.UNOBTAINABLE;
+					case COMMON -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.COMMON;
+					case UNCOMMON -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.UNCOMMON;
+					case RARE -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.RARE;
+					case EPIC -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.EPIC;
+					case LEGENDARY -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.LEGENDARY;
+					case MYTHIC -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.MYTHIC;
+					case SPECIAL -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.SPECIAL
+							|| RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.VERY_SPECIAL;
+					case ADMIN -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.ADMIN;
 					case UNOBTAINABLE ->
-							i -> RepositoryManager.getItem(i).getTier() == RepositoryItem.Tier.UNOBTAINABLE;
+							i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.UNOBTAINABLE;
 				}
 		);
 
@@ -170,8 +176,8 @@ public class ItemListScreen {
 				EnumCycleWidget.OnClick.identity(this::filterAndSort),
 				museumFilter -> switch (museumFilter) {
 					case UNFILTERED -> identifier -> true;
-					case MUSEUM -> identifier -> RepositoryManager.getItem(identifier).isMuseum();
-					case NON_MUSEUM -> identifier -> !RepositoryManager.getItem(identifier).isMuseum();
+					case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).isMuseum();
+					case NON_MUSEUM -> identifier -> !RepositoryItemManager.getItem(identifier).isMuseum();
 				}
 		);
 
@@ -181,8 +187,13 @@ public class ItemListScreen {
 		RepositoryManager.addReloadCallback(this::filterAndSort);
 	}
 
+	@Override
+	public String getIdentifierPath() {
+		return "itemlist";
+	}
+
 	private boolean search(Identifier identifier) {
-		RepositoryItem item = RepositoryManager.getItem(identifier);
+		RepositoryItem item = RepositoryItemManager.getItem(identifier);
 		String content = this.textFieldWidget.getText();
 
 		if (content.isBlank()) {
@@ -337,7 +348,7 @@ public class ItemListScreen {
 
 	public void filter() {
 		this.items.clear();
-		this.items.addAll(RepositoryManager.getAllItems());
+		this.items.addAll(RepositoryItemManager.getAllItems());
 		this.items.removeIf(Predicate.not(this.filterRarity.getValue())
 				.or(Predicate.not(this::search))
 				.or(Predicate.not(this.filterCategory.getValue()))
@@ -393,7 +404,7 @@ public class ItemListScreen {
 
 				//context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, (x % 2 ^ y % 2) == 0 ? 0x55FFFFFF : 0x55 << 24);
 
-				ItemStack value = RepositoryManager.getItem(items.get(itemIndex)).getItemStack().getValue();
+				ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack().getValue();
 				if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY && mouseY < itemY + this.itemSize) {
 					this.drawItemTooltip(screen, context, value, mouseX, mouseY);
 				}

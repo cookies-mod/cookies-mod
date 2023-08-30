@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.features.repository;
 
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
+import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class ItemReviewProcess implements Runnable {
 	private Identifier currentItem;
 
 	public ItemReviewProcess() {
-		this.items = RepositoryManager.getAllItems().iterator();
+		this.items = RepositoryItemManager.getAllItems().iterator();
 		this.monitorThread = new Thread(this);
 		this.monitorThread.start();
 		itemReviewProcess = this;
@@ -75,9 +76,9 @@ public class ItemReviewProcess implements Runnable {
 					log.info("Detected file change {}", file.toString());
 
 					MinecraftClient.getInstance().executeSync(() -> {
-						boolean b = RepositoryManager.loadItem(path.resolve(file.getFileName()), identifier -> {
+						boolean b = RepositoryItemManager.loadItem(path.resolve(file.getFileName()), identifier -> {
 							if (identifier.equals(this.currentItem)) {
-								giveItem(RepositoryManager.getItem(identifier));
+								giveItem(RepositoryItemManager.getItem(identifier));
 							}
 						});
 						String message;
@@ -115,7 +116,7 @@ public class ItemReviewProcess implements Runnable {
 			return next();
 		}
 
-		RepositoryItem item = RepositoryManager.getItem(next);
+		RepositoryItem item = RepositoryItemManager.getItem(next);
 		this.currentItem = item.getSkyblockId();
 
 		giveItem(item);
@@ -123,7 +124,7 @@ public class ItemReviewProcess implements Runnable {
 		Objects.requireNonNull(MinecraftClient.getInstance().player)
 				.sendMessage(CookiesMod
 						.createPrefix(ColorUtils.successColor)
-						.append(Text.literal("Click here to open the file (%s/%s)".formatted(done, RepositoryManager.getAllItems().size()))
+						.append(Text.literal("Click here to open the file (%s/%s)".formatted(done, RepositoryItemManager.getAllItems().size()))
 								.styled(style -> style.withClickEvent(
 												new ClickEvent(
 														ClickEvent.Action.SUGGEST_COMMAND,

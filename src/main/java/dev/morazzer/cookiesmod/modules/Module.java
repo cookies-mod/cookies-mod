@@ -6,9 +6,14 @@ import net.minecraft.util.Identifier;
 public interface Module {
 	Identifier MODULE_ROOT = CookiesMod.ROOT.withPath("modules/");
 
-	void load();
+	void load() ;
 
-	void unload();
+	default void unload() {
+	}
+
+	default boolean shouldLoad() {
+		return true;
+	}
 
 	default Identifier getIdentifier() {
 		return MODULE_ROOT.withSuffixedPath(getIdentifierPath());

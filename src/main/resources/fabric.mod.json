@@ -20,7 +20,8 @@
 	},
 	"mixins": [
 		"mixins/cookies.dev.mixins.json",
-		"mixins/cookies.repo.mixins.json"
+		"mixins/cookies.repo.mixins.json",
+		"mixins/cookies.event.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.14.21",

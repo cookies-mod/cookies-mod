@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public enum RecipeType {
 
-	SHAPED(ShapedRecipe::new),
+	CRAFTING(ShapedRecipe::new),
 	FORGE(ForgeRecipe::new),
 	TRADE(TradeRecipe::new),
-	SELL(SellRecipe::new),
-	NPC(NpcRecipe::new);
+	NPC(NpcRecipe::new),
+	MOB_LOOT(jsonObject -> null);
 
 	private final RecipeCreator constructor;
 

@@ -33,6 +33,7 @@ dependencies {
     include(modImplementation("com.github.0x3C50:Renderer:master-SNAPSHOT")!!)
 
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.reflections:reflections:0.10.2")
 
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("org.projectlombok:lombok:1.18.26")

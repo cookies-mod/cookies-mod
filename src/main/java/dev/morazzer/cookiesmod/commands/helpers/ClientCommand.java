@@ -5,19 +5,48 @@ import com.mojang.brigadier.SingleRedirectModifier;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.morazzer.cookiesmod.utils.DevUtils;
+import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
+import org.reflections.Reflections;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+@Slf4j
 public abstract class ClientCommand {
     private static final Identifier identifier = new Identifier("cookie", "commands");
 
-    public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
+    public static void loadCommands(Reflections reflections, CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        reflections.getTypesAnnotatedWith(LoadCommand.class).forEach(aClass -> {
+            log.debug("Found class annotated with @LoadCommand");
+            if (!ClientCommand.class.isAssignableFrom(aClass)) {
+                log.warn("{} does not extend ClientCommand but is annotated with @LoadCommand", aClass);
+                return;
+            }
+
+            try {
+                Constructor<? extends ClientCommand> constructor = (Constructor<? extends ClientCommand>) aClass.getConstructor();
+                ClientCommand clientCommand = constructor.newInstance();
+                clientCommand.register(dispatcher);
+            } catch (NoSuchMethodException e) {
+                log.warn("No empty constructor found for class {}", aClass);
+            } catch (InvocationTargetException e) {
+                log.error("Error while invoking constructor {}", aClass, e);
+            } catch (InstantiationException e) {
+                log.error("Module {} is an abstract class", aClass);
+            } catch (IllegalAccessException e) {
+                log.error("Constructor not accessible {}", aClass);
+            }
+        });
+    }
+
+	public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
 
     private String originalCommandName;
 

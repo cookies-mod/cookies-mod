@@ -1,7 +1,7 @@
 package dev.morazzer.cookiesmod.screen.itemlist;
 
-import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
+import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import lombok.Getter;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -76,13 +76,13 @@ public enum CategoryFilter {
 			case SPADE -> i -> shouldBeFiltered(i, RepositoryItem.Category.SPADE);
 			case WAND -> i -> shouldBeFiltered(i, RepositoryItem.Category.WAND);
 			case POWER_STONE -> i -> shouldBeFiltered(i, RepositoryItem.Category.POWER_STONE);
-			case MINION -> i -> RepositoryManager.getItem(i).getGenerator().isPresent();
+			case MINION -> i -> RepositoryItemManager.getItem(i).getGenerator().isPresent();
 			case PET -> i -> true; // TODO: ADD PETS
 		};
 	}
 
 	private static boolean shouldBeFiltered(Identifier identifier, RepositoryItem.Category... categories) {
-		RepositoryItem repositoryItem = RepositoryManager.getItem(identifier);
+		RepositoryItem repositoryItem = RepositoryItemManager.getItem(identifier);
 
 		return Arrays.asList(categories).contains(repositoryItem.getCategory());
 	}

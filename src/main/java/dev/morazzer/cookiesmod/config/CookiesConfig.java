@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.config;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.categories.DevCategory;
+import dev.morazzer.cookiesmod.config.categories.GardenCategory;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
 import dev.morazzer.cookiesmod.config.categories.MainCategory;
 import dev.morazzer.cookiesmod.config.categories.ProfileViewerConfig;
@@ -53,10 +54,13 @@ public class CookiesConfig extends Config {
     @Category(name = "Profile Viewer", description = "Settings related to the /pv command")
     public ProfileViewerConfig profileViewerConfig = new ProfileViewerConfig();
 
-
     @Expose
     @Category(name = "Item List", description = "Settings related to the item list")
     public ItemListConfig itemListConfig = new ItemListConfig();
+
+    @Expose
+    @Category(name = "Garden", description = "All settings related with the garden features")
+    public GardenCategory gardenCategory = new GardenCategory();
 
     @Expose
     @Category(name = "Dev", description = "Development related settings, most of them are for debug or ONLY for development")
