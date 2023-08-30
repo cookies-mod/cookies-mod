@@ -14,10 +14,6 @@ public class Ingredient extends Identifier {
 
 	private int amount = -1;
 
-	private Ingredient(String namespace, String path, Identifier.ExtraData extraData) {
-		super(namespace, path, extraData);
-	}
-
 	public Ingredient(String namespace, String path, int amount) {
 		super(namespace.toLowerCase(), path.toLowerCase());
 		this.amount = amount;

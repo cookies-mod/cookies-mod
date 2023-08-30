@@ -1,6 +1,5 @@
 package dev.morazzer.cookiesmod.screen;
 
-import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.PlayerManager;
 import dev.morazzer.cookiesmod.features.ProfileViewerManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
@@ -16,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 public class ProfileViewerScreen extends Screen {
     private UUID uuid;
     private String userName;
-    private JsonObject profile;
     private boolean finishedFetching = false;
     private final long openedAt = System.currentTimeMillis();
 
@@ -72,12 +70,12 @@ public class ProfileViewerScreen extends Screen {
         context.getMatrices().scale((float) (1 + this.scaleFactorX), (float) (1 + this.scaleFactorY), 1);
 
         this.renderBackground(context);
-        this.renderMainMenu(context, mouseX, mouseY);
+        this.renderMainMenu(context);
 
         context.getMatrices().pop();
     }
 
-    private void renderMainMenu(DrawContext context, int mouseX, int mouseY) {
+    private void renderMainMenu(DrawContext context) {
         if (!this.finishedFetching) {
             long timeOpen = System.currentTimeMillis() - this.openedAt;
 
@@ -86,11 +84,7 @@ public class ProfileViewerScreen extends Screen {
             Text dottedText = Text.literal("Loading profiles").append(StringUtils.repeat(".", dots)).styled(style -> style.withColor(0xFFFF00FF));
 
             context.drawTextWithShadow(super.textRenderer, dottedText, this.width / 2 - testLength / 2, this.height / 2, 0xFF << 24);
-
-            return;
         }
-
-
     }
 
     @Override

@@ -317,9 +317,7 @@ public class DevCommand extends ClientCommand {
 										case "enable_garden_features" ->
 												System.out.println(LocationUtils.getCurrentLocation());
 										case "debug_recipe_feature" ->
-												RepositoryRecipeManager.resolveToLowestSingleIngredient(Identifier.of("skyblock", "item/tightly_tied_hay_bale")).ifPresent(ingredient -> {
-													System.out.println(ingredient + " | " + ingredient.getAmount());
-												});
+												RepositoryRecipeManager.resolveToLowestSingleIngredient(Identifier.of("skyblock", "item/tightly_tied_hay_bale")).ifPresent(ingredient -> System.out.println(ingredient + " | " + ingredient.getAmount()));
 										case "is_on_garden" ->
 												Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden())));
 									}
