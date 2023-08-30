@@ -16,10 +16,6 @@ public class Garden implements Module {
 	private static final Identifier DISABLE_GARDEN_CHECK = DevUtils.createIdentifier("garden/disable_garden_check");
 	static CachedValue<Boolean> isOnGarden = new CachedValue<>(Garden::isOnGardenForce, 2, TimeUnit.SECONDS);
 
-	public static void loadGardenFeatures() {
-
-	}
-
 	public static boolean isOnGarden() {
 		return SkyblockUtils.isCurrentlyInSkyblock() && isOnGarden.getValue();
 	}

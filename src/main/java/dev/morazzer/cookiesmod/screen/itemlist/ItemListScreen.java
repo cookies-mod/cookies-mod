@@ -80,9 +80,7 @@ public class ItemListScreen implements Module {
 			filterAndSort();
 			init(screen);
 			ScreenEvents.afterRender(screen).register(this::render);
-			ScreenKeyboardEvents.beforeKeyRelease(screen).register(this::keyRelease);
 			ScreenMouseEvents.afterMouseClick(screen).register(this::mouseClick);
-			ScreenMouseEvents.afterMouseRelease(screen).register(this::mouseRelease);
 			ScreenKeyboardEvents.allowKeyPress(screen).register(this::keyPress);
 
 			if (config.sort.enableAlphabeticalSort) this.sortAlphabetical.setEnumIndex(0);
@@ -225,14 +223,6 @@ public class ItemListScreen implements Module {
 	private boolean identifierMatches(Identifier identifier, String identifierPart) {
 		return identifier.getPath().startsWith(identifierPart)
 				|| identifier.toString().startsWith(identifierPart);
-	}
-
-	private void mouseRelease(Screen screen, double v, double v1, int i) {
-		//this.textFieldWidget.mouseReleased(v, v1, i);
-	}
-
-	private void keyRelease(Screen screen, int i, int i1, int i2) {
-
 	}
 
 	private boolean keyPress(Screen screen, int keyCode, int scanCode, int modifiers) {

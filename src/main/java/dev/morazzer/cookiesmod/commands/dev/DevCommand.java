@@ -39,6 +39,7 @@ import java.awt.Color;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.LongStream;
@@ -309,20 +310,18 @@ public class DevCommand extends ClientCommand {
 													.append(Duration.ofNanos((long) LongStream.of(timings).average().orElse(0)).toString()));
 
 											list.add(CookiesMod.createColor().append("-------------------------------------"));
-											list.forEach(MinecraftClient.getInstance().player::sendMessage);
+											Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> list.forEach(player::sendMessage));
 										}
 										case "is_in_skyblock" ->
-												MinecraftClient.getInstance().player.sendMessage(CookiesMod.createPrefix().append("" + SkyblockUtils.isCurrentlyInSkyblock()));
-										case "enable_garden_features" -> System.out.println(LocationUtils.getCurrentLocation());
-										case "debug_recipe_feature" -> {
-
-												RepositoryRecipeManager.resolveToLowestSingleIngredient(Identifier.of("skyblock","item/tightly_tied_hay_bale")).ifPresent(ingredient -> {
+												Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(CookiesMod.createPrefix().append("" + SkyblockUtils.isCurrentlyInSkyblock())));
+										case "enable_garden_features" ->
+												System.out.println(LocationUtils.getCurrentLocation());
+										case "debug_recipe_feature" ->
+												RepositoryRecipeManager.resolveToLowestSingleIngredient(Identifier.of("skyblock", "item/tightly_tied_hay_bale")).ifPresent(ingredient -> {
 													System.out.println(ingredient + " | " + ingredient.getAmount());
 												});
-
-										}
 										case "is_on_garden" ->
-												MinecraftClient.getInstance().player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden()));
+												Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden())));
 									}
 
 									return Command.SINGLE_SUCCESS;

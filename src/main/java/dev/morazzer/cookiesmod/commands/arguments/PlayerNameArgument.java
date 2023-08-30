@@ -63,9 +63,4 @@ public class PlayerNameArgument implements ArgumentType<String> {
         }
         return builder.buildFuture();
     }
-
-    @Override
-    public Collection<String> getExamples() {
-        return ArgumentType.super.getExamples();
-    }
 }

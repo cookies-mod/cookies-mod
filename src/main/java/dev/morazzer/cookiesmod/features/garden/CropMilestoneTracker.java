@@ -16,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldAccess;
 
 import java.awt.Color;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,7 +51,7 @@ public class CropMilestoneTracker implements Module {
 
 		Renderer3d.renderFadingBlock(Color.BLACK, Color.BLACK, blockPos.toCenterPos().add(-0.5,-0.5,-0.5), new Vec3d(1, 1, 1), 10000);
 
-		MinecraftClient.getInstance().player.sendMessage(Text.of(blockId.toString()));
+		Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(Text.of(blockId.toString())));
 	}
 
 	@Override

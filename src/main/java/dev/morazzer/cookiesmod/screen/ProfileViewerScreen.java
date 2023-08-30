@@ -94,11 +94,6 @@ public class ProfileViewerScreen extends Screen {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-    }
-
-    @Override
     public void renderBackground(DrawContext context) {
         context.fill(0,0, this.width, this.height, this.finishedFetching ? 0xFFD4D4D4 :  ~0 ^ 0x5f5f5f);
     }

@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.features.repository.items.recipe;
 
+import lombok.Getter;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -8,11 +9,12 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@Getter
 public class Ingredient extends Identifier {
 
 	private int amount = -1;
 
-	public Ingredient(String namespace, String path, Identifier.ExtraData extraData) {
+	private Ingredient(String namespace, String path, Identifier.ExtraData extraData) {
 		super(namespace, path, extraData);
 	}
 
@@ -37,10 +39,6 @@ public class Ingredient extends Identifier {
 
 	public Ingredient withAmount(int amount) {
 		return new Ingredient(this.getNamespace(), this.getPath(), amount);
-	}
-
-	public int getAmount() {
-		return amount;
 	}
 
 

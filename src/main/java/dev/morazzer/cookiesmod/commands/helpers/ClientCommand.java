@@ -31,6 +31,7 @@ public abstract class ClientCommand {
             }
 
             try {
+                //noinspection unchecked
                 Constructor<? extends ClientCommand> constructor = (Constructor<? extends ClientCommand>) aClass.getConstructor();
                 ClientCommand clientCommand = constructor.newInstance();
                 clientCommand.register(dispatcher);

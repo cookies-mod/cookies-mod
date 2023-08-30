@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class ModuleManager {
 
-	private static CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<>();
+	private static final CopyOnWriteArrayList<Module> modules = new CopyOnWriteArrayList<>();
 
 	public static void loadModules(Reflections reflections) {
 		reflections.getTypesAnnotatedWith(LoadModule.class).forEach(aClass -> {
@@ -21,6 +21,7 @@ public class ModuleManager {
 			}
 
 			try {
+				//noinspection unchecked
 				Constructor<? extends Module> constructor = (Constructor<? extends Module>) aClass.getConstructor();
 				Module module = constructor.newInstance();
 				modules.add(module);

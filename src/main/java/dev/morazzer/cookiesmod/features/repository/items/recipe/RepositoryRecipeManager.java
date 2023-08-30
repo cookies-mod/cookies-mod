@@ -25,7 +25,7 @@ public class RepositoryRecipeManager {
 
 	static Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
 
-	private static ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
+	private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
 
 	public static void loadRecipes() {
 		try (Stream<Path> list = Files.list(recipes)) {
@@ -41,7 +41,7 @@ public class RepositoryRecipeManager {
 				}
 			});
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionHandler.handleException(e);
 		}
 	}
 

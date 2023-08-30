@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.features.repository.items.tags;
 
 import com.google.gson.Gson;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class TagManager {
 		try (Stream<Path> list = Files.list(tags)) {
 			list.forEach(TagManager::load);
 		} catch (IOException e) {
-			e.printStackTrace();
+			ExceptionHandler.handleException(e);
 		}
 	}
 
