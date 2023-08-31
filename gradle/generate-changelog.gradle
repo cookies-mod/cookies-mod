@@ -1,0 +1,76 @@
+apply plugin: "org.ajoberstar.grgit"
+
+tasks.register("generateChangelog") {
+    doLast {
+        boolean master = grgit.branch.current().name == "master"
+                && !version.toString().endsWith("-SNAPSHOT")
+
+        var latest = null
+
+        grgit.tag.list().forEach {
+            if (it.name.endsWith("${master ? "" : "-snapshot"}")) {
+                latest = it
+            }
+        }
+
+        var list
+
+        grgit.log().forEach {
+            if (list == null) {
+                list = create(it)
+            }
+
+            if ((latest == null) || (grgit.isAncestorOf(latest, it) && (latest.commit.getId() != it.id))) {
+                list.add(it)
+            }
+        }
+
+        var features = new StringBuilder()
+        var bugFixes = new StringBuilder()
+        var typos = new StringBuilder()
+
+        list.forEach {
+            var message = "- ${it.shortMessage} (${it.abbreviatedId}) by @${it.committer.name}"
+
+            if (it.shortMessage.startsWith("fix")) {
+                bugFixes.append(message).append("\n")
+            } else if (it.shortMessage.startsWith("typo")) {
+                typos.append(message).append("\n")
+            } else {
+                features.append(message).append("\n")
+            }
+        }
+
+        var finalChangelog = new StringBuilder()
+        finalChangelog.append("\uD83D\uDCCB Changelog").append("\n")
+        finalChangelog.append("---").append("\n")
+
+        if (!features.isEmpty()) {
+            finalChangelog.append("## Features").append("\n")
+            finalChangelog.append("---").append("\n")
+            finalChangelog.append(features).append("\n")
+        }
+
+        if (!bugFixes.isEmpty()) {
+            finalChangelog.append("## Bug Fixes").append("\n")
+            finalChangelog.append("---").append("\n")
+            finalChangelog.append(bugFixes).append("\n")
+        }
+
+        if (!typos.isEmpty()) {
+            finalChangelog.append("## Typos").append("\n")
+            finalChangelog.append("---").append("\n")
+            finalChangelog.append(typos).append("\n")
+        }
+
+        var changelog = new File("$projectDir/CHANGELOG.md")
+        print(finalChangelog)
+        changelog.write(finalChangelog.toString(), "UTF-8")
+    }
+}
+
+
+@SuppressWarnings('unused')
+static <T> ArrayList<T> create(T type) {
+    return new ArrayList<T>()
+}

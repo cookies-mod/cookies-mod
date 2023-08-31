@@ -1,0 +1,36 @@
+import java.nio.file.Files
+import java.nio.file.StandardOpenOption
+import java.security.MessageDigest
+
+tasks.register("hashLibraries") {
+
+    Files.list(buildDir.toPath().resolve("libs")).forEach {
+        try {
+            if (!it.toString().endsWith("jar")) {
+                return null
+            }
+
+            byte[] file = Files.readAllBytes(it)
+            Files.write(
+                    it.resolveSibling("${it.getFileName().toString()}.md5"),
+                    hex(MessageDigest.getInstance("MD5").digest(file)).getBytes(),
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING
+            )
+            Files.write(
+                    it.resolveSibling("${it.getFileName().toString()}.sha256"),
+                    hex(MessageDigest.getInstance("SHA-256").digest(file)).getBytes(),
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING
+            )
+        } catch (e) {
+            e.printStackTrace()
+        }
+    }
+}
+
+static String hex(byte[] bytes) {
+    StringBuilder result = new StringBuilder()
+    for (byte aByte : bytes) {
+        result.append(String.format("%02x", aByte))
+    }
+    return result.toString().toUpperCase()
+}
