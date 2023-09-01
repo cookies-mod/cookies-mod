@@ -124,7 +124,7 @@ public class RancherBootsOverlay implements Module {
 			SpeedEntry entry = this.entries.get(i);
 			int items = 0;
 			for (Identifier identifier : entry.identifiers) {
-				context.drawItem(RepositoryItemManager.getItem(identifier).getItemStack().getValue(), items * 16, i * 16);
+				context.drawItem(RepositoryItemManager.getItem(identifier).getItemStack(), items * 16, i * 16);
 				items++;
 			}
 

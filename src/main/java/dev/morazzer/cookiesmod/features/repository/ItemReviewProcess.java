@@ -140,7 +140,7 @@ public class ItemReviewProcess implements Runnable {
 	}
 
 	private void giveItem(RepositoryItem item) {
-		ItemStack value = item.getItemStack().getValue();
+		ItemStack value = item.getItemStack();
 
 		Objects.requireNonNull(MinecraftClient.getInstance().player).getInventory().clear();
 

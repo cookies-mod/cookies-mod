@@ -7,7 +7,7 @@ import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.GsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
-import kotlin.Lazy;
+
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.util.Identifier;
 
@@ -70,8 +70,6 @@ public class RepositoryItemManager {
 		}
 		log.info("Loaded {} items", itemMap.size());
 		updateItemList();
-		long count = itemMap.values().stream().map(RepositoryItem::getItemStack).map(Lazy::getValue).count();
-		log.info("{}", count);
 	}
 
 	@SuppressWarnings("UnusedReturnValue")

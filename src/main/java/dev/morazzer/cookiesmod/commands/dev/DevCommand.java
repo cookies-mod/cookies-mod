@@ -256,7 +256,7 @@ public class DevCommand extends ClientCommand {
 
 															RepositoryItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
 
-															ItemStack itemStack = item.getItemStack().getValue().copy();
+															ItemStack itemStack = item.getItemStack().copy();
 
 															context.getSource()
 																	.sendFeedback(

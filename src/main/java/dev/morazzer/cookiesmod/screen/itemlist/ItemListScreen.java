@@ -205,7 +205,7 @@ public class ItemListScreen implements Module {
 
 		if (content.startsWith("actual_type:")) {
 			String inputIdentifier = content.substring(12);
-			return this.identifierMatches(Registries.ITEM.getId(item.getItemStack().getValue().getItem()), inputIdentifier);
+			return this.identifierMatches(Registries.ITEM.getId(item.getItemStack().getItem()), inputIdentifier);
 		}
 
 		if (content.startsWith("id:")) {
@@ -394,7 +394,7 @@ public class ItemListScreen implements Module {
 
 				//context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, (x % 2 ^ y % 2) == 0 ? 0x55FFFFFF : 0x55 << 24);
 
-				ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack().getValue();
+				ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack();
 				if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY && mouseY < itemY + this.itemSize) {
 					this.drawItemTooltip(screen, context, value, mouseX, mouseY);
 				}

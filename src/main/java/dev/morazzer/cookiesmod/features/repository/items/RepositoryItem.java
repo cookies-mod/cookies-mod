@@ -15,7 +15,6 @@ import dev.morazzer.cookiesmod.data.TrophyFishingReward;
 import dev.morazzer.cookiesmod.mixin.ItemStackTooltip;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.RomanNumerals;
-import kotlin.Lazy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.item.TooltipContext;
@@ -28,6 +27,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.Color;
@@ -92,7 +92,7 @@ public class RepositoryItem {
 	private final boolean canBeReforged;
 	private final boolean loseMotesValueOnTransfer;
 	private final Optional<Prestige> prestige;
-	private final Lazy<ItemStack> itemStack;
+	private final ItemStack itemStack;
 
 	public RepositoryItem(JsonObject jsonObject) {
 		this.material = Identifier.of("minecraft", jsonObject.get("material").getAsString().toLowerCase());
@@ -405,27 +405,9 @@ public class RepositoryItem {
 			this.prestige = Optional.empty();
 		}
 
-		this.itemStack = getLazyItemStack();
+		this.itemStack = constructItemStack();
 	}
 
-	private Lazy<ItemStack> getLazyItemStack() {
-		return new Lazy<>() {
-			ItemStack itemStack;
-
-			@Override
-			public ItemStack getValue() {
-				if (this.itemStack == null) {
-					this.itemStack = constructItemStack();
-				}
-				return this.itemStack;
-			}
-
-			@Override
-			public boolean isInitialized() {
-				return this.itemStack != null;
-			}
-		};
-	}
 
 	public String getItemNameAlphaNumerical() {
 		return Normalizer.normalize(this.getName().getString(), Normalizer.Form.NFD).replaceAll("[^A-Za-z0-9 _\\-]|§.", "").trim();
