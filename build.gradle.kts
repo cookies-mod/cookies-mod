@@ -7,7 +7,7 @@ plugins {
     id("fabric-loom") version "1.3-SNAPSHOT"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    kotlin("jvm") version "1.9.0"
+    //kotlin("jvm") version "1.9.0"
 }
 
 version = project.properties["mod_version"]!!
@@ -35,8 +35,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"]}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}")
-    modImplementation("com.github.0x3C50:Renderer:master-SNAPSHOT")
+    //include(modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}")!!)
     include(modImplementation("com.github.0x3C50:Renderer:master-SNAPSHOT")!!)
 
     implementation("com.google.code.gson:gson:2.10.1")!!
