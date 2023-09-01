@@ -30,9 +30,6 @@ public class RepositoryManager {
 	}
 
 	public static void load() {
-		Path repo = repoRoot.toAbsolutePath();
-		boolean doesExist = Files.exists(repo);
-		System.out.println(Files.exists(repoRoot.toAbsolutePath()));
 		if (!Files.exists(repoRoot)) {
 			try {
 				Files.createDirectories(repoRoot.getParent());

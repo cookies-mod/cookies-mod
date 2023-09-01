@@ -27,7 +27,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.Color;
