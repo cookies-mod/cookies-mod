@@ -52,10 +52,11 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}")
     modImplementation("com.github.0x3C50:Renderer:master-SNAPSHOT")
 
-    implementation("com.google.code.gson:gson:2.10.1")
-    shadowImplementation("org.reflections:reflections:0.10.2") {
+    implementation("com.google.code.gson:gson:2.10.1")!!
+    shadowConfiguration(implementation("org.reflections:reflections:0.10.2") {
         exclude(module = "slf4j-api")
-    }
+    })
+    shadowConfiguration(implementation("org.eclipse.jgit:org.eclipse.jgit:3.5.0.201409260305-r")!!)
 
     shadowFinalMod("dev.morazzer:moulconfig:1.0.0-fix+1") {
         isTransitive = false
