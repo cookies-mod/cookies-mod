@@ -63,6 +63,8 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.getByName<ShadowJar>("shadowJar") {
     archiveClassifier.set("dev")
     configurations = listOf(shadowConfiguration)
+    isEnableRelocation = true
+    relocationPrefix = "cookiesmod"
 }
 
 tasks.getByName<RemapJarTask>("remapJar") {
