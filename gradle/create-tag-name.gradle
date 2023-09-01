@@ -4,7 +4,9 @@ import java.nio.file.StandardOpenOption
 apply plugin: "org.ajoberstar.grgit"
 
 tasks.register("createTagName") {
-    var tag = "v${rootProject.version.toString().toLowerCase()}"
-    println(tag)
-    Files.writeString(java.nio.file.Path.of("version"), "version=$tag", StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING)
+    doLast {
+        var tag = "v${rootProject.version.toString().toLowerCase()}"
+        println(tag)
+        Files.writeString(java.nio.file.Path.of("version"), "version=$tag", StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING)
+    }
 }

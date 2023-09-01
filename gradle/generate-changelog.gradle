@@ -42,7 +42,7 @@ tasks.register("generateChangelog") {
         }
 
         var finalChangelog = new StringBuilder()
-        finalChangelog.append("\uD83D\uDCCB Changelog").append("\n")
+        finalChangelog.append("# \uD83D\uDCCB Changelog").append("\n")
         finalChangelog.append("---").append("\n")
 
         if (!features.isEmpty()) {
