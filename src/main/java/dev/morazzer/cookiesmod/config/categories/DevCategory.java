@@ -1,19 +1,26 @@
 package dev.morazzer.cookiesmod.config.categories;
 
 import com.google.gson.annotations.Expose;
-import io.github.moulberry.moulconfig.annotations.ConfigEditorBoolean;
-import io.github.moulberry.moulconfig.annotations.ConfigOption;
+import dev.morazzer.cookiesmod.config.system.Category;
+import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import net.minecraft.text.Text;
 
-public class DevCategory {
+public class DevCategory extends Category {
 
-    @ConfigOption(name = "Show repo options", description = "Shows repo options in the /dev command", hiddenKeys = {"repo dev options item list"})
     @Expose
-    @ConfigEditorBoolean
-    public boolean displayRepoOption = true;
+    public BooleanOption displayRepoOption = new BooleanOption(Text.literal("Show repo options"),Text.literal("Shows repo options in the /dev command"), true)
+            .withHiddenKeys("repo", "dev options", "item list");
 
-    @ConfigOption(name = "Hide spam from console log", description = "Hides all packet spam from log")
     @Expose
-    @ConfigEditorBoolean
-    public boolean hideSpam = true;
+    public BooleanOption hideSpam = new BooleanOption(Text.literal("Hide spam from console log"),Text.literal("Hides all packet spam from log"),true);
 
+    @Override
+    public Text getName() {
+        return Text.literal("Dev");
+    }
+
+    @Override
+    public Text getDescription() {
+        return Text.literal("Development settings (Don't change without knowing what it does)");
+    }
 }

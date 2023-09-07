@@ -20,7 +20,6 @@ base {
 repositories {
     maven { url = uri("https://maven.ladysnake.org/releases") }
     maven { url = uri("https://jitpack.io") }
-    maven { url = uri("https://maven.wispforest.io") }
     maven { url = uri("https://repo.morazzer.dev/releases") }
 }
 
@@ -43,8 +42,6 @@ dependencies {
         exclude(module = "slf4j-api")
     })
     shadowConfiguration(implementation("org.eclipse.jgit:org.eclipse.jgit:3.5.0.201409260305-r")!!)
-
-    include(modImplementation("dev.morazzer:moulconfig:1.0.0-fix+2")!!)
 
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("org.projectlombok:lombok:1.18.26")

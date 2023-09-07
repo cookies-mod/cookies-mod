@@ -1,14 +1,23 @@
 package dev.morazzer.cookiesmod.config.categories;
 
 import com.google.gson.annotations.Expose;
-import io.github.moulberry.moulconfig.annotations.ConfigEditorBoolean;
-import io.github.moulberry.moulconfig.annotations.ConfigOption;
+import dev.morazzer.cookiesmod.config.system.Category;
+import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import net.minecraft.text.Text;
 
-public class MainCategory {
+public class MainCategory extends Category {
 
-    @ConfigOption(name = "Auto Updates", description = "Automatically checks for updates on startup", hiddenKeys = {"version"})
-    @Expose
-    @ConfigEditorBoolean
-    public boolean autoUpdates = true;
+	@Expose
+	public BooleanOption booleanOption = new BooleanOption(Text.literal("Auto Updates"), Text.literal("Automatically checks for updates on startup"), true);
+
+	@Override
+	public Text getName() {
+		return Text.literal("Main Category");
+	}
+
+	@Override
+	public Text getDescription() {
+		return Text.literal("Test Description");
+	}
 
 }

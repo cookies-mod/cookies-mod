@@ -57,7 +57,7 @@ public class RancherBootsOverlay implements Module {
 			return;
 		}
 		if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
-		if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds) {
+		if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds.getValue()) {
 			return;
 		}
 		if (!DevUtils.isEnabled(SKIP_RANCHER_BOOTS_CHECK) && !isRancherBootsScreen((SignEditScreen) screen)) {
@@ -65,7 +65,7 @@ public class RancherBootsOverlay implements Module {
 		}
 
 		Speeds speeds = Speeds.merge(
-				ConfigManager.getConfig().gardenCategory.speed.speedPresets.getSpeeds(),
+				ConfigManager.getConfig().gardenCategory.speed.speedPresets.getValue().getSpeeds(),
 				ConfigManager.getConfig().gardenCategory.speed.speeds
 		);
 
@@ -73,7 +73,7 @@ public class RancherBootsOverlay implements Module {
 
 		this.entries = new ArrayList<>();
 
-		if (ConfigManager.getConfig().gardenCategory.speed.mergeEqualSpeeds) {
+		if (ConfigManager.getConfig().gardenCategory.speed.mergeEqualSpeeds.getValue()) {
 			HashMap<Integer, List<Identifier>> tempMap = new HashMap<>();
 			list.forEach(integerIdentifierSimpleEntry -> tempMap.computeIfAbsent(integerIdentifierSimpleEntry.getKey(), integer -> new ArrayList<>()).add(integerIdentifierSimpleEntry.getValue()));
 			tempMap.forEach((integer, identifiers) -> {
@@ -94,7 +94,7 @@ public class RancherBootsOverlay implements Module {
 	private Text createText(String crop, int speed) {
 		MutableText text = Text.empty();
 
-		if (ConfigManager.getConfig().gardenCategory.speed.showNames) {
+		if (ConfigManager.getConfig().gardenCategory.speed.showNames.getValue()) {
 			text.append(crop);
 		}
 		text.append(" - ").append(String.valueOf(speed));
@@ -104,7 +104,7 @@ public class RancherBootsOverlay implements Module {
 
 	private void render(Screen screen, DrawContext context, int mouseX, int mouseY, float tickDelta) {
 		if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
-		if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds) {
+		if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds.getValue()) {
 			return;
 		}
 
