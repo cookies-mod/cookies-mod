@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class RancherBootsOverlay implements Module {
 
 	private static final Identifier SHOW_BUTTON_BORDERS = DevUtils.createIdentifier("garden/rancher_boots/show_borders");
-	private static final Identifier SKIP_RANCHER_BOOTS_CHECK = DevUtils.createIdentifier("garden/rancher_boots/show_borders");
+	private static final Identifier SKIP_RANCHER_BOOTS_CHECK = DevUtils.createIdentifier("garden/rancher_boots/disable_boots_check");
 
 	private final Set<Identifier> crops = Set.of(
 			new Identifier("skyblock:item/wheat"),
