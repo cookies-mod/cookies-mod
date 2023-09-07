@@ -1,31 +1,43 @@
 package dev.morazzer.cookiesmod.config.categories;
 
 import com.google.gson.annotations.Expose;
+import dev.morazzer.cookiesmod.config.system.Category;
+import dev.morazzer.cookiesmod.config.system.Foldable;
+import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import dev.morazzer.cookiesmod.config.system.options.EnumDropdownOption;
 import dev.morazzer.cookiesmod.features.garden.speed.SpeedPresets;
 import dev.morazzer.cookiesmod.features.garden.speed.Speeds;
-import io.github.moulberry.moulconfig.annotations.Accordion;
-import io.github.moulberry.moulconfig.annotations.ConfigEditorBoolean;
-import io.github.moulberry.moulconfig.annotations.ConfigEditorDropdown;
-import io.github.moulberry.moulconfig.annotations.ConfigOption;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
-public class GardenCategory {
+public class GardenCategory extends Category {
 
-	public static class Visitors {
-		@ConfigOption(name = "Show required items", description = "Rather or not the items should be added to the description")
+	@Override
+	public Text getName() {
+		return Text.literal("Garden").formatted(Formatting.DARK_GREEN);
+	}
+
+	@Override
+	public Text getDescription() {
+		return Text.literal("All settings related with the garden features");
+	}
+
+	public static class Visitors extends Foldable {
 		@Expose
-		@ConfigEditorBoolean
-		public boolean shouldAddItems = true;
+		public BooleanOption shouldAddItems = new BooleanOption(Text.literal("Show required items"), Text.literal("Rather or not the items should be added to the description"), true);
 
-		@ConfigOption(name = "Use Item Rarity As Color", description = "Uses the item rarity for the color of the required items", hiddenKeys = {"tier", "visitors"})
 		@Expose
-		@ConfigEditorBoolean
-		public boolean useItemRarityColor = true;
+		public BooleanOption useItemRarityColor = new BooleanOption(Text.literal("Use Item Rarity As Color"), Text.literal("Uses the item rarity for the color of the required items"), true)
+				.withHiddenKeys("tier", "visitors");
 
 
-		@ConfigOption(name = "Show required amount", description = "Where to show the required amount for the items")
 		@Expose
-		@ConfigEditorDropdown
-		public CountPosition countPosition = CountPosition.RIGHT;
+		public EnumDropdownOption<CountPosition> countPosition = new EnumDropdownOption<>(Text.literal("Show required amount"), Text.literal("Where to show the required amount for the items"), CountPosition.RIGHT);
+
+		@Override
+		public Text getName() {
+			return Text.literal("Visitor Helper");
+		}
 
 		public enum CountPosition {
 			LEFT,
@@ -33,42 +45,37 @@ public class GardenCategory {
 		}
 	}
 
-	public static class Speed {
-		@ConfigOption(name = "Show speeds", description = "Shows the speeds in the rancher boots for specific crops")
-		@Expose
-		@ConfigEditorBoolean
-		public boolean showSpeeds = true;
-
-		@ConfigOption(name = "Show crop names", description = "Shows the crop names next to the icons")
-		@Expose
-		@ConfigEditorBoolean
-		public boolean showNames = true;
-
-		@ConfigOption(name = "Merge Equal Speeds", description = "If two crops with the same speed should be merged into one line")
-		@Expose
-		@ConfigEditorBoolean
-		public boolean mergeEqualSpeeds = true;
-
-		@ConfigOption(name = "Use speed preset", description = "Change the preset that is used for speeds")
-		@Expose
-		@ConfigEditorDropdown
-		public SpeedPresets speedPresets = SpeedPresets.NORMAL;
-
+	public static class Speed extends Foldable {
 
 		@Expose
-		@ConfigOption(name = "Speed overrides", description = "")
-		@Accordion
+		public BooleanOption showSpeeds = new BooleanOption(Text.literal("Show speeds"), Text.literal("Shows the speeds in the rancher boots for specific crops"), true);
+
+		@Expose
+		public BooleanOption showNames = new BooleanOption(Text.literal("Show crop names"), Text.literal("Shows the crop names next to the icons"), true);
+
+		@Expose
+		public BooleanOption mergeEqualSpeeds = new BooleanOption(Text.literal("Merge Equal Speeds"), Text.literal("If two crops with the same speed should be merged into one line"), true);
+
+		@Expose
+		public EnumDropdownOption<SpeedPresets> speedPresets = new EnumDropdownOption<>(Text.literal("Use speed preset"),Text.literal("Change the preset that is used for speeds"),SpeedPresets.NORMAL);
+
+		@Expose
 		public Speeds speeds = new Speeds();
+
+		@Override
+		public Text getName() {
+			return Text.literal("Speeds");
+		}
+	}
+
+	public static class Hotkeys {
+
 	}
 
 	@Expose
-	@ConfigOption(name = "Visitor Helper", description = "")
-	@Accordion
 	public Visitors visitors = new Visitors();
 
 	@Expose
-	@ConfigOption(name = "Walk Speeds", description = "")
-	@Accordion
 	public Speed speed = new Speed();
 
 }

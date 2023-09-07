@@ -1,28 +1,26 @@
 package dev.morazzer.cookiesmod.features.garden.speed;
 
 import com.google.gson.annotations.Expose;
-import io.github.moulberry.moulconfig.annotations.ConfigEditorSlider;
-import io.github.moulberry.moulconfig.annotations.ConfigOption;
+import dev.morazzer.cookiesmod.config.system.Foldable;
+import dev.morazzer.cookiesmod.config.system.options.SliderOption;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class Speeds {
-	public Speeds(int wheat, int carrot, int potato, int nether_wart, int pumpkin, int melon, int cocoa_beans, int sugar_cane, int cactus, int mushroom) {
-		this.wheat = wheat;
-		this.carrot = carrot;
-		this.potato = potato;
-		this.nether_wart = nether_wart;
-		this.pumpkin = pumpkin;
-		this.melon = melon;
-		this.cocoa_beans = cocoa_beans;
-		this.sugar_cane = sugar_cane;
-		this.cactus = cactus;
-		this.mushroom = mushroom;
+public class Speeds extends Foldable {
+	public Speeds(int wheat, int carrot, int potato, int netherWart, int pumpkin, int melon, int cocoaBeans, int sugarCane, int cactus, int mushroom) {
+		this.wheat.setValue(wheat);
+		this.carrot.setValue(carrot);
+		this.potato.setValue(potato);
+		this.netherWart.setValue(netherWart);
+		this.pumpkin.setValue(pumpkin);
+		this.melon.setValue(melon);
+		this.cocoaBeans.setValue(cocoaBeans);
+		this.sugarCane.setValue(sugarCane);
+		this.cactus.setValue(cactus);
+		this.mushroom.setValue(mushroom);
 	}
 
 	public Speeds() {
-
 	}
 
 	public static Speeds merge(Speeds preset, Speeds config) {
@@ -32,11 +30,11 @@ public class Speeds {
 				.setWheat(getValue(preset.wheat, config.wheat))
 				.setCarrot(getValue(preset.carrot, config.carrot))
 				.setPotato(getValue(preset.potato, config.potato))
-				.setNetherWart(getValue(preset.nether_wart, config.nether_wart))
+				.setNetherWart(getValue(preset.netherWart, config.netherWart))
 				.setPumpkin(getValue(preset.pumpkin, config.pumpkin))
 				.setMelon(getValue(preset.melon, config.melon))
-				.setCocoaBeans(getValue(preset.cocoa_beans, config.cocoa_beans))
-				.setSugarCane(getValue(preset.sugar_cane, config.sugar_cane))
+				.setCocoaBeans(getValue(preset.cocoaBeans, config.cocoaBeans))
+				.setSugarCane(getValue(preset.sugarCane, config.sugarCane))
 				.setCactus(getValue(preset.cactus, config.cactus))
 				.setMushroom(getValue(preset.mushroom, config.mushroom))
 				.createSpeeds();
@@ -44,79 +42,94 @@ public class Speeds {
 
 	public int getValue(Identifier identifier) {
 		return switch (identifier.getPath()) {
-			case "item/wheat" -> this.wheat;
-			case "item/carrot_item" -> this.carrot;
-			case "item/potato_item" -> this.potato;
-			case "item/nether_stalk" -> this.nether_wart;
-			case "item/pumpkin" -> this.pumpkin;
-			case "item/melon" -> this.melon;
-			case "item/ink_sack_3" -> this.cocoa_beans;
-			case "item/sugar_cane" -> this.sugar_cane;
-			case "item/cactus" -> this.cactus;
-			case "item/huge_mushroom_2" -> this.mushroom;
+			case "item/wheat" -> this.wheat.getValue();
+			case "item/carrot_item" -> this.carrot.getValue();
+			case "item/potato_item" -> this.potato.getValue();
+			case "item/nether_stalk" -> this.netherWart.getValue();
+			case "item/pumpkin" -> this.pumpkin.getValue();
+			case "item/melon" -> this.melon.getValue();
+			case "item/ink_sack_3" -> this.cocoaBeans.getValue();
+			case "item/sugar_cane" -> this.sugarCane.getValue();
+			case "item/cactus" -> this.cactus.getValue();
+			case "item/huge_mushroom_2" -> this.mushroom.getValue();
 			default -> throw new IllegalStateException("Unexpected value: " + identifier.getPath());
 		};
 	}
 
-	private static int getValue(int preset, int config) {
-		return config != -1 ? config : preset;
+	private static int getValue(SliderOption<Integer> preset, SliderOption<Integer> config) {
+		return config.getValue() != -1 ? config.getValue() : preset.getValue();
 	}
 
+	@Expose
+	public SliderOption<Integer> wheat = SliderOption.integerOption(
+			Text.literal("Wheat"),
+			Text.literal("Overrides the preset value for wheat (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 
 	@Expose
-	@ConfigOption(name = "Wheat", description = "Overrides the preset value for wheat (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int wheat = -1;
+	public SliderOption<Integer> carrot = SliderOption.integerOption(
+			Text.literal("Carrot"),
+			Text.literal("Overrides the preset value for carrots (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 	@Expose
-	@ConfigOption(name = "Carrot", description = "Overrides the preset value for carrots (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int carrot = -1;
-	@Expose
-	@ConfigOption(name = "Potato", description = "Overrides the preset value for potatoes (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int potato = -1;
-	@Expose
-	@ConfigOption(name = "Nether Wart", description = "Overrides the preset value for nether warts (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int nether_wart = -1;
-	@Expose
-	@ConfigOption(name = "Pumpkin", description = "Overrides the preset value for pumpkins (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int pumpkin = -1;
-	@Expose
-	@ConfigOption(name = "Melon", description = "Overrides the preset value for melons (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int melon = -1;
-	@Expose
-	@ConfigOption(name = "Cocoa Beans", description = "Overrides the preset value for cocoa beans (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int cocoa_beans = -1;
-	@Expose
-	@ConfigOption(name = "Sugar Cane", description = "Overrides the preset value for sugar cane (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int sugar_cane = -1;
-	@Expose
-	@ConfigOption(name = "Cactus", description = "Overrides the preset value for cactus (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int cactus = -1;
-	@Expose
-	@ConfigOption(name = "Mushroom", description = "Overrides the preset value for mushrooms (-1 to keep preset)")
-	@ConfigEditorSlider(maxValue = 500, minValue = -1, minStep = 1)
-	public int mushroom = -1;
+	public SliderOption<Integer> potato = SliderOption.integerOption(
+			Text.literal("Potato"),
+			Text.literal("Overrides the preset value for potatoes (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
+	@Expose
+	public SliderOption<Integer> netherWart = SliderOption.integerOption(
+			Text.literal("Nether Wart"),
+			Text.literal("Overrides the preset value for nether warts (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 
-		if (o == null || getClass() != o.getClass()) return false;
+	@Expose
+	public SliderOption<Integer> pumpkin = SliderOption.integerOption(
+			Text.literal("Pumpkin"),
+			Text.literal("Overrides the preset value for pumpkins (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 
-		Speeds speeds = (Speeds) o;
+	@Expose
+	public SliderOption<Integer> melon = SliderOption.integerOption(
+			Text.literal("Melon"),
+			Text.literal("Overrides the preset value for melons (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 
-		return new EqualsBuilder().append(wheat, speeds.wheat).append(carrot, speeds.carrot).append(potato, speeds.potato).append(nether_wart, speeds.nether_wart).append(pumpkin, speeds.pumpkin).append(melon, speeds.melon).append(cocoa_beans, speeds.cocoa_beans).append(sugar_cane, speeds.sugar_cane).append(cactus, speeds.cactus).append(mushroom, speeds.mushroom).isEquals();
-	}
+	@Expose
+	public SliderOption<Integer> cocoaBeans = SliderOption.integerOption(
+			Text.literal("Cocoa Beans"),
+			Text.literal("Overrides the preset value for cocoa beans (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(wheat).append(carrot).append(potato).append(nether_wart).append(pumpkin).append(melon).append(cocoa_beans).append(sugar_cane).append(cactus).append(mushroom).toHashCode();
+	@Expose
+	public SliderOption<Integer> sugarCane = SliderOption.integerOption(
+			Text.literal("Sugar Cane"),
+			Text.literal("Overrides the preset value for sugar cane (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
+
+	@Expose
+	public SliderOption<Integer> cactus = SliderOption.integerOption(
+			Text.literal("Cactus"),
+			Text.literal("Overrides the preset value for cactus (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
+
+	@Expose
+	public SliderOption<Integer> mushroom = SliderOption.integerOption(
+			Text.literal("Mushroom"),
+			Text.literal("Overrides the preset value for mushrooms (-1 to keep preset)"),
+			-1
+	).withMax(500).withMin(-1).withStep(1);
+
+	public Text getName() {
+		return Text.literal("Custom Speeds");
 	}
 }

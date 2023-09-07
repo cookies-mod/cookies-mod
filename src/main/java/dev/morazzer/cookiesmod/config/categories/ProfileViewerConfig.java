@@ -1,14 +1,23 @@
 package dev.morazzer.cookiesmod.config.categories;
 
 import com.google.gson.annotations.Expose;
-import io.github.moulberry.moulconfig.annotations.ConfigEditorBoolean;
-import io.github.moulberry.moulconfig.annotations.ConfigOption;
+import dev.morazzer.cookiesmod.config.system.Category;
+import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import net.minecraft.text.Text;
 
-public class ProfileViewerConfig {
+public class ProfileViewerConfig extends Category {
 
-    @ConfigOption(name = "Keep last search", description = "Keeps the last viewed profile open when you open pv again", hiddenKeys = "")
     @Expose
-    @ConfigEditorBoolean
-    public boolean keepLastProfileOpen = false;
+    public BooleanOption keepLastProfileOpen = new BooleanOption(Text.of("Keep last search"), Text.of("Keeps the last viewed profile open when you open pv again"), false);
+
+    @Override
+    public Text getName() {
+        return Text.literal("Profile Viewer");
+    }
+
+    @Override
+    public Text getDescription() {
+        return Text.literal("Settings related to the profile viewer");
+    }
 
 }

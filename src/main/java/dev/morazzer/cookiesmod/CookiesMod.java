@@ -54,7 +54,7 @@ public class CookiesMod implements ModInitializer {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.loadCommands(reflections, dispatcher));
 
 
-        if (ConfigManager.getConfig().devCategory.hideSpam) {
+        if (ConfigManager.getConfig().devCategory.hideSpam.getValue()) {
             LoggerContext context = (LoggerContext) LogManager.getContext(false);
             for (LoggerConfig value : context.getConfiguration().getLoggers().values()) {
                 value.addFilter(new StringMatchFilter.Builder().setMatchString("Ignoring player info update for unknown player").setOnMismatch(Filter.Result.ACCEPT).setOnMatch(Filter.Result.DENY).build());

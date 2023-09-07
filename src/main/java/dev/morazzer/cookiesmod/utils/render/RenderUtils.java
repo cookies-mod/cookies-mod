@@ -1,61 +1,76 @@
 package dev.morazzer.cookiesmod.utils.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
+import java.util.Optional;
 
+@Slf4j
 public class RenderUtils {
 
-	private static Vec3d transformWorldToRelative(Vec3d in) {
-		Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-		Vec3d camPos = camera.getPos();
-		return in.subtract(camPos);
+	private static final int ALPHA = 0xff000000;
+
+	public static void renderRectangle(DrawContext drawContext, int x, int y, int width, int height, boolean shadow) {
+		int main = ALPHA | 0x202026;
+
+		int light = 0xff303036;
+		int dark = 0xff101016;
+
+		drawContext.fill(x, y, x + 1, y + height, light); //Left
+		drawContext.fill(x + 1, y, x + width, y + 1, light); //Top
+		drawContext.fill(x + width - 1, y + 1, x + width, y + height, dark); //Right
+		drawContext.fill(x + 1, y + height - 1, x + width - 1, y + height, dark); //Bottom
+		drawContext.fill(x + 1, y + 1, x + width - 1, y + height - 1, main); //Middle
+		if (shadow) {
+			drawContext.fill(x + width, y + 2, x + width + 2, y + height + 2, 0x70000000); //Right shadow
+			drawContext.fill(x + 2, y + height, x + width, y + height + 2, 0x70000000); //Bottom shadow
+		}
 	}
 
-	public static void drawLineWorldCoordinates(BufferBuilder bufferBuilder, Vec3d start, Vec3d end, Color color) {
-		drawLine(bufferBuilder, transformWorldToRelative(start), transformWorldToRelative(end), color);
+	private static TextRenderer getTextRendererOrNull() {
+		return Optional.of(MinecraftClient.getInstance()).map(client -> client.textRenderer).orElse(null);
 	}
 
-	public static void drawLine(BufferBuilder bufferBuilder, Vec3d relativeStart, Vec3d relativeEnd, Color color) {
-		bufferBuilder.vertex(relativeStart.x, relativeStart.y, relativeStart.z).color(color.getRGB() | color.getAlpha() << 24).next();
-		bufferBuilder.vertex(relativeEnd.x, relativeEnd.y, relativeEnd.z).color(color.getRGB() | color.getAlpha() << 24).next();
+	public static void renderCenteredTextWithMaxWidth(@NotNull DrawContext drawContext, @NotNull Text text, int width, int centerX, int y, int color, boolean shadow) {
+		TextRenderer textRenderer = getTextRendererOrNull();
+		if (textRenderer == null) {
+			return;
+		}
+		float scale = 1.0f;
+		int textWidth = textRenderer.getWidth(text);
+		if (textWidth > width) {
+			scale = width / (float) textWidth;
+		}
+		int newLength = Math.min(textWidth, width);
+		int fontHeight = (int) (textRenderer.fontHeight * scale);
+		renderTextScaled(drawContext, text, scale, centerX - newLength / 2, y - fontHeight / 2, color, shadow);
 	}
 
-	public static BufferBuilder createBuffer(VertexFormat.DrawMode drawMode, VertexFormat vertexFormat) {
-		Tessellator tessellator = new Tessellator();
-		BufferBuilder bufferBuilder = tessellator.getBuffer();
-		bufferBuilder.begin(drawMode,vertexFormat);
-		return bufferBuilder;
+	public static void renderTextWithMaxWidth(@NotNull DrawContext drawContext, @NotNull Text text, int width, int x, int y, int color, boolean shadow) {
+		TextRenderer textRenderer = getTextRendererOrNull();
+		if (textRenderer == null) {
+			return;
+		}
+		int textWidth = textRenderer.getWidth(text);
+		float scale = 1.0f;
+		if (textWidth > width) {
+			scale = width / (float) textWidth;
+		}
+		renderTextScaled(drawContext, text, scale, x, y, color, shadow);
 	}
 
-	public static void render(BufferBuilder bufferBuilder, boolean throughWalls) {
-		startDrawing(throughWalls);
-		draw(bufferBuilder);
-		stopDrawing();
-	}
-
-	public static void startDrawing(boolean throughWalls) {
-		RenderSystem.enableBlend();
-		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-		RenderSystem.enableDepthTest();
-		RenderSystem.depthFunc(throughWalls ? GL11.GL_ALWAYS : GL11.GL_LEQUAL);
-	}
-
-	public static void stopDrawing() {
-		RenderSystem.enableCull();
-		RenderSystem.disableBlend();
-		RenderSystem.depthFunc(GL11.GL_ALWAYS);
-	}
-
-	public static void draw(BufferBuilder bufferBuilder) {
-		BufferRenderer.draw(bufferBuilder.end());
+	public static void renderTextScaled(@NotNull DrawContext drawContext, @NotNull Text text, float scaleFactor, int x, int y, int color, boolean shadow) {
+		TextRenderer textRenderer = getTextRendererOrNull();
+		if (textRenderer == null) {
+			return;
+		}
+		drawContext.getMatrices().push();
+		drawContext.getMatrices().scale(scaleFactor, scaleFactor, 1);
+		drawContext.drawText(textRenderer, text, (int) (x / scaleFactor), (int) (y / scaleFactor), color, shadow);
+		drawContext.getMatrices().pop();
 	}
 }

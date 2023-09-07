@@ -275,7 +275,7 @@ public class DevCommand extends ClientCommand {
 												)
 										)
 								)
-								.requires(context -> ConfigManager.getConfig().devCategory.displayRepoOption)
+								.requires(context -> ConfigManager.getConfig().devCategory.displayRepoOption.getValue())
 				).then(Helper.literal("test")
 						.then(Helper.argument("test_description", StringArgumentType.string())
 								.executes(context -> {
@@ -337,7 +337,14 @@ public class DevCommand extends ClientCommand {
 
 									return Command.SINGLE_SUCCESS;
 								}))
-				);
+				).then(Helper.literal("config")
+						.then(Helper.literal("save").executes(context -> {
+							ConfigManager.saveConfig(true, "command");
+							return Command.SINGLE_SUCCESS;
+						})).then(Helper.literal("load").executes(context -> {
+							ConfigManager.processConfig();
+							return Command.SINGLE_SUCCESS;
+						})));
 	}
 
 	static String[] REPLACEMENT_CHARS;

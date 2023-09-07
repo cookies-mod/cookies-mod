@@ -34,7 +34,7 @@ public class VisitorHelper implements Module {
 	private void modifyAcceptItem(ItemStack itemStack, TooltipContext tooltipContext, List<Text> texts) {
 		if (!Garden.isOnGarden()) return;
 		if (!Plot.getCurrentPlot().isBarn()) return;
-		if (!ConfigManager.getConfig().gardenCategory.visitors.shouldAddItems) return;
+		if (!ConfigManager.getConfig().gardenCategory.visitors.shouldAddItems.getValue()) return;
 		if (!itemStack.hasCustomName()) return;
 		Text name = itemStack.getName();
 
@@ -93,13 +93,13 @@ public class VisitorHelper implements Module {
 
 			Text amount = Text.literal(numberFormatter.format(finalIngredient.getAmount()));
 			Text name;
-			if (ConfigManager.getConfig().gardenCategory.visitors.useItemRarityColor) {
+			if (ConfigManager.getConfig().gardenCategory.visitors.useItemRarityColor.getValue()) {
 				name = item.getName();
 			} else {
 				name = Text.literal(item.getName().getString()).formatted(Formatting.GRAY);
 			}
 
-			if (ConfigManager.getConfig().gardenCategory.visitors.countPosition == GardenCategory.Visitors.CountPosition.LEFT) {
+			if (ConfigManager.getConfig().gardenCategory.visitors.countPosition.getValue() == GardenCategory.Visitors.CountPosition.LEFT) {
 				text.append(amount).append("x ").append(name);
 			} else {
 				text.append(name).append(" x").append(amount);

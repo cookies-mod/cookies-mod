@@ -66,7 +66,7 @@ public class ItemListScreen implements Module {
 	public void load() {
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			ItemListConfig config = ConfigManager.getConfig().itemListConfig;
-			if (!config.enableItemList) {
+			if (!config.enableItemList.getValue()) {
 				return;
 			}
 
@@ -83,11 +83,11 @@ public class ItemListScreen implements Module {
 			ScreenMouseEvents.afterMouseClick(screen).register(this::mouseClick);
 			ScreenKeyboardEvents.allowKeyPress(screen).register(this::keyPress);
 
-			if (config.sort.enableAlphabeticalSort) this.sortAlphabetical.setEnumIndex(0);
-			if (config.sort.enableItemRaritySort) this.sortRarity.setEnumIndex(0);
-			if (config.filters.enableRarityFilter) this.sortRarity.setEnumIndex(0);
-			if (config.filters.enableCategoryFilter) this.filterCategory.setEnumIndex(0);
-			if (config.filters.enableMuseumFilter) this.filterMuseum.setEnumIndex(0);
+			if (config.sort.enableAlphabeticalSort.getValue()) this.sortAlphabetical.setEnumIndex(0);
+			if (config.sort.enableItemRaritySort.getValue()) this.sortRarity.setEnumIndex(0);
+			if (config.filters.enableRarityFilter.getValue()) this.sortRarity.setEnumIndex(0);
+			if (config.filters.enableCategoryFilter.getValue()) this.filterCategory.setEnumIndex(0);
+			if (config.filters.enableMuseumFilter.getValue()) this.filterMuseum.setEnumIndex(0);
 		});
 
 		this.sortAlphabetical = new EnumCycleWidget<>(
@@ -290,8 +290,8 @@ public class ItemListScreen implements Module {
 
 		ItemListConfig config = ConfigManager.getConfig().itemListConfig;
 
-		this.sortAlphabetical.visible = config.sort.enableAlphabeticalSort;
-		this.sortRarity.visible = config.sort.enableItemRaritySort;
+		this.sortAlphabetical.visible = config.sort.enableAlphabeticalSort.getValue();
+		this.sortRarity.visible = config.sort.enableItemRaritySort.getValue();
 
 		if (this.sortAlphabetical.visible) {
 			//noinspection ConstantValue
@@ -304,9 +304,9 @@ public class ItemListScreen implements Module {
 		}
 
 		index = 0;
-		this.filterRarity.visible = config.filters.enableRarityFilter;
-		this.filterCategory.visible = config.filters.enableCategoryFilter;
-		this.filterMuseum.visible = config.filters.enableMuseumFilter;
+		this.filterRarity.visible = config.filters.enableRarityFilter.getValue();
+		this.filterCategory.visible = config.filters.enableCategoryFilter.getValue();
+		this.filterMuseum.visible = config.filters.enableMuseumFilter.getValue();
 
 		if (this.filterRarity.visible) {
 			//noinspection ConstantValue

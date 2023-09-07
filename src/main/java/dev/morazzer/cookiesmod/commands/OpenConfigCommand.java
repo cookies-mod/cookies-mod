@@ -6,8 +6,7 @@ import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
 import dev.morazzer.cookiesmod.commands.helpers.Helper;
 import dev.morazzer.cookiesmod.commands.helpers.LoadCommand;
 import dev.morazzer.cookiesmod.config.ConfigManager;
-import io.github.moulberry.moulconfig.gui.GuiScreenElementWrapper;
-import io.github.moulberry.moulconfig.gui.MoulConfigEditor;
+import dev.morazzer.cookiesmod.config.system.ConfigScreen;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 
@@ -20,11 +19,12 @@ public class OpenConfigCommand extends ClientCommand {
 	public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
 		return Helper.literal("cookiesmod")
 				.executes(context -> {
-					MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(
-							new GuiScreenElementWrapper(
-									new MoulConfigEditor<>(ConfigManager.getProcessedConfig())
-							)
-					));
+					MinecraftClient
+							.getInstance()
+							.send(() -> MinecraftClient.getInstance().setScreen(
+											new ConfigScreen(ConfigManager.getConfigReader())
+									)
+							);
 					return Command.SINGLE_SUCCESS;
 				});
 	}

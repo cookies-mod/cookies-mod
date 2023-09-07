@@ -1,7 +1,12 @@
 accessWidener	v2 named
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I # accessed in dev.morazzer.cookiesmod.screen.itemlist.ItemListScreen
-accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecraft/client/font/TextRenderer; # accessed in dev.morazzer.cookiesmod.screen.itemlist.ItemListScreen
-accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawItem (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V # accessed in dev.morazzer.cookiesmod.screen.itemlist.ItemListScreen
-accessible method net/minecraft/client/gui/screen/Screen addSelectableChild (Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element; # accessed in dev.morazzer.cookiesmod.screen.itemlist.ItemListScreen
-accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setText (Lnet/minecraft/text/Text;)V  # used for debugging with text display entities
+# dev.morazzer.cookiesmod.screen.itemlist.ItemListScreen
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
+accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecraft/client/font/TextRenderer;
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawItem (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V
+accessible method net/minecraft/client/gui/screen/Screen addSelectableChild (Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;
+
+# ingame debugging
+accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setText (Lnet/minecraft/text/Text;)V
+
+# dev.morazzer.cookiesmod.features.garden.RancherBootsOverlay
 accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen messages [Ljava/lang/String;
