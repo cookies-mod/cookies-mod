@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.utils.general;
 
+import dev.morazzer.cookiesmod.data.profile.GameMode;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.ScoreboardObjective;
@@ -41,6 +42,15 @@ public class ScoreboardUtils {
 
 	public static String getCurrentLocation() {
 		return getAllLines().stream().map(String::trim).filter(line -> line.matches("\u23E3 .+")).findFirst().orElse("");
+	}
+
+	public static GameMode getCurrentGameMode() {
+		return getAllLines().stream()
+				.map(String::trim)
+				.filter(line -> line.matches("[^A-Za-z0-9\u23E3] .*"))
+				.map(GameMode::getByString)
+				.findFirst()
+				.orElse(GameMode.CLASSIC);
 	}
 
 	private static Optional<ScoreboardObjective> getScoreboardObjective() {

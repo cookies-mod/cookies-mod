@@ -1,4 +1,4 @@
-package dev.morazzer.cookiesmod.data;
+package dev.morazzer.cookiesmod.data.enums;
 
 import lombok.Getter;
 

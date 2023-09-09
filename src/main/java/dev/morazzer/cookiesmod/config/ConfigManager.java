@@ -77,7 +77,8 @@ public class ConfigManager {
 	}
 
 	public static void processConfig() {
-		config = new CookiesConfig().load(loadConfig());
+		config = new CookiesConfig();
+		config.load(loadConfig());
 		configReader = new ConfigReader();
 		ConfigProcessor.processConfig(config, configReader);
 	}
