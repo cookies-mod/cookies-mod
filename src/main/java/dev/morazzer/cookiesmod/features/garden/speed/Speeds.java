@@ -56,8 +56,8 @@ public class Speeds extends Foldable {
 		};
 	}
 
-	private static int getValue(SliderOption<Integer> preset, SliderOption<Integer> config) {
-		return config.getValue() != -1 ? config.getValue() : preset.getValue();
+	private static int getValue(SliderOption<? extends Number> preset, SliderOption<? extends Number> config) {
+		return config.getValue().intValue() != -1 ? config.getValue().intValue() : preset.getValue().intValue();
 	}
 
 	@Expose
