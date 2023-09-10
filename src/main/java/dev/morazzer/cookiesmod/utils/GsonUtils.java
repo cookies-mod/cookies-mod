@@ -12,6 +12,8 @@ public class GsonUtils {
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
 
+    public static Gson gsonClean = new Gson();
+
     public static JsonObject emptyObject = gson.fromJson("{}", JsonObject.class);
 
 }
