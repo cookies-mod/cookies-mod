@@ -7,6 +7,8 @@ import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import dev.morazzer.cookiesmod.config.system.options.EnumDropdownOption;
 import dev.morazzer.cookiesmod.features.garden.speed.SpeedPresets;
 import dev.morazzer.cookiesmod.features.garden.speed.Speeds;
+import lombok.Getter;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -24,19 +26,55 @@ public class GardenCategory extends Category {
 
 	public static class Visitors extends Foldable {
 		@Expose
-		public BooleanOption shouldAddItems = new BooleanOption(Text.literal("Show required items"), Text.literal("Rather or not the items should be added to the description"), true);
+		public BooleanOption shouldAddItems = new BooleanOption(
+				Text.literal("Show required items"),
+				Text.literal("Rather or not the items should be added to the description"),
+				true
+		);
 
 		@Expose
-		public BooleanOption useItemRarityColor = new BooleanOption(Text.literal("Use Item Rarity As Color"), Text.literal("Uses the item rarity for the color of the required items"), true)
-				.withHiddenKeys("tier", "visitors");
-
+		public BooleanOption useItemRarityColor = new BooleanOption(
+				Text.literal("Use Item Rarity As Color"),
+				Text.literal("Uses the item rarity for the color of the required items"),
+				true
+		).withHiddenKeys("tier", "visitors");
 
 		@Expose
-		public EnumDropdownOption<CountPosition> countPosition = new EnumDropdownOption<>(Text.literal("Show required amount"), Text.literal("Where to show the required amount for the items"), CountPosition.RIGHT);
+		public EnumDropdownOption<CountPosition> countPosition = new EnumDropdownOption<>(
+				Text.literal("Show required amount"),
+				Text.literal("Where to show the required amount for the items"),
+				CountPosition.RIGHT
+		);
+
+		@Expose
+		public BooleanOption showPrice = new BooleanOption(
+				Text.literal("Show crop price"),
+				Text.literal("Shows the price of the required items"),
+				true
+		).withHiddenKeys("coins", "bazaar", "cost");
+
+		@Expose
+		public EnumDropdownOption<BazaarBuyType> buyType = new EnumDropdownOption<>(
+				Text.literal("Bazaar buy type"),
+				Text.literal("Change the behaviour to either show instant buy or buy order price"),
+				BazaarBuyType.INSTANT
+		).withSupplier(BazaarBuyType::getText).withHiddenKeys("coins", "cost");
 
 		@Override
 		public Text getName() {
 			return Text.literal("Visitor Helper");
+		}
+
+		@Getter
+		public enum BazaarBuyType {
+			INSTANT(Text.literal("Instant Buy")),
+			ORDER(Text.literal("Buy Order"));
+
+			private final Text text;
+
+			BazaarBuyType(MutableText text) {
+				this.text = text;
+			}
 		}
 
 		public enum CountPosition {
@@ -48,16 +86,32 @@ public class GardenCategory extends Category {
 	public static class Speed extends Foldable {
 
 		@Expose
-		public BooleanOption showSpeeds = new BooleanOption(Text.literal("Show speeds"), Text.literal("Shows the speeds in the rancher boots for specific crops"), true);
+		public BooleanOption showSpeeds = new BooleanOption(
+				Text.literal("Show speeds"),
+				Text.literal("Shows the speeds in the rancher boots for specific crops"),
+				true
+		);
 
 		@Expose
-		public BooleanOption showNames = new BooleanOption(Text.literal("Show crop names"), Text.literal("Shows the crop names next to the icons"), true);
+		public BooleanOption showNames = new BooleanOption(
+				Text.literal("Show crop names"),
+				Text.literal("Shows the crop names next to the icons"),
+				true
+		);
 
 		@Expose
-		public BooleanOption mergeEqualSpeeds = new BooleanOption(Text.literal("Merge Equal Speeds"), Text.literal("If two crops with the same speed should be merged into one line"), true);
+		public BooleanOption mergeEqualSpeeds = new BooleanOption(
+				Text.literal("Merge Equal Speeds"),
+				Text.literal("If two crops with the same speed should be merged into one line"),
+				true
+		);
 
 		@Expose
-		public EnumDropdownOption<SpeedPresets> speedPresets = new EnumDropdownOption<>(Text.literal("Use speed preset"),Text.literal("Change the preset that is used for speeds"),SpeedPresets.NORMAL);
+		public EnumDropdownOption<SpeedPresets> speedPresets = new EnumDropdownOption<>(
+				Text.literal("Use speed preset"),
+				Text.literal("Change the preset that is used for speeds"),
+				SpeedPresets.NORMAL
+		);
 
 		@Expose
 		public Speeds speeds = new Speeds();
