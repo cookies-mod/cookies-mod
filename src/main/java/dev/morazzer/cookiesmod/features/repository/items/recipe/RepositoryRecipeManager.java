@@ -35,7 +35,7 @@ public class RepositoryRecipeManager {
 					RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
 					RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
 
-					map.computeIfAbsent(repositoryRecipe.getOutput().withSuffixedPath(""), identifier -> new ArrayList<>()).add(repositoryRecipe);
+					map.computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>()).add(repositoryRecipe);
 				} catch (IOException e) {
 					ExceptionHandler.handleException(e);
 				}
@@ -81,7 +81,7 @@ public class RepositoryRecipeManager {
 
 	}
 
-
+	@SuppressWarnings("unused")
 	public static Optional<RepositoryRecipe> getRecipe(Identifier identifier) {
 		return map
 				.getOrDefault(identifier, Collections.emptyList())
@@ -97,6 +97,7 @@ public class RepositoryRecipeManager {
 				.findFirst();
 	}
 
+	@SuppressWarnings("unused")
 	public static List<RepositoryRecipe> getRecipes(Identifier identifier, RecipeType type) {
 		return map
 				.getOrDefault(identifier, Collections.emptyList())

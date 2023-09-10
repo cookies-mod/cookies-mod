@@ -17,6 +17,10 @@ public class ItemUtils {
         return Optional.ofNullable(NAMESPACE.withSuffixedPath(skyblockId.toLowerCase().replace(":", "_")));
     }
 
+    public static String withNamespace(String identifier) {
+        return "%s:%s%s".formatted(NAMESPACE.getNamespace(), NAMESPACE.getPath(), identifier.toLowerCase());
+    }
+
     public static Optional<Identifier> getSkyblockIdAsIdentifier(ItemStack itemStack) {
         return getSkyblockId(itemStack).flatMap(ItemUtils::skyblockIdToIdentifier);
     }

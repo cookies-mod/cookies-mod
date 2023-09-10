@@ -33,16 +33,16 @@ public class RancherBootsOverlay implements Module {
 	private static final Identifier SKIP_RANCHER_BOOTS_CHECK = DevUtils.createIdentifier("garden/rancher_boots/disable_boots_check");
 
 	private final Set<Identifier> crops = Set.of(
-			new Identifier("skyblock:item/wheat"),
-			new Identifier("skyblock:item/carrot_item"),
-			new Identifier("skyblock:item/potato_item"),
-			new Identifier("skyblock:item/nether_stalk"),
-			new Identifier("skyblock:item/pumpkin"),
-			new Identifier("skyblock:item/melon"),
-			new Identifier("skyblock:item/ink_sack_3"),
-			new Identifier("skyblock:item/sugar_cane"),
-			new Identifier("skyblock:item/cactus"),
-			new Identifier("skyblock:item/huge_mushroom_2")
+			new Identifier("skyblock:items/wheat"),
+			new Identifier("skyblock:items/carrot_item"),
+			new Identifier("skyblock:items/potato_item"),
+			new Identifier("skyblock:items/nether_stalk"),
+			new Identifier("skyblock:items/pumpkin"),
+			new Identifier("skyblock:items/melon"),
+			new Identifier("skyblock:items/ink_sack_3"),
+			new Identifier("skyblock:items/sugar_cane"),
+			new Identifier("skyblock:items/cactus"),
+			new Identifier("skyblock:items/huge_mushroom_2")
 	);
 
 	private List<SpeedEntry> entries;

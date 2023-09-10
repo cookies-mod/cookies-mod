@@ -71,8 +71,8 @@ public class VisitorHelper implements Module {
 
 	private List<Text> createMaterialList(Ingredient rootIngredient, int deep, ArrayList<Ingredient> visited) {
 		ArrayList<Text> texts = new ArrayList<>();
-		if (rootIngredient.getPath().equals("item/wheat")
-				|| rootIngredient.getPath().equals("item/golden_carrot")) return texts;
+		if (rootIngredient.getPath().equals("items/wheat")
+				|| rootIngredient.getPath().equals("items/golden_carrot")) return texts;
 		List<Ingredient> ingredientListSorted = RepositoryRecipeManager.getIngredientListSorted(rootIngredient);
 
 		for (Ingredient ingredient : ingredientListSorted) {

@@ -42,16 +42,16 @@ public class Speeds extends Foldable {
 
 	public int getValue(Identifier identifier) {
 		return switch (identifier.getPath()) {
-			case "item/wheat" -> this.wheat.getValue();
-			case "item/carrot_item" -> this.carrot.getValue();
-			case "item/potato_item" -> this.potato.getValue();
-			case "item/nether_stalk" -> this.netherWart.getValue();
-			case "item/pumpkin" -> this.pumpkin.getValue();
-			case "item/melon" -> this.melon.getValue();
-			case "item/ink_sack_3" -> this.cocoaBeans.getValue();
-			case "item/sugar_cane" -> this.sugarCane.getValue();
-			case "item/cactus" -> this.cactus.getValue();
-			case "item/huge_mushroom_2" -> this.mushroom.getValue();
+			case "items/wheat" -> this.wheat.getValue();
+			case "items/carrot_item" -> this.carrot.getValue();
+			case "items/potato_item" -> this.potato.getValue();
+			case "items/nether_stalk" -> this.netherWart.getValue();
+			case "items/pumpkin" -> this.pumpkin.getValue();
+			case "items/melon" -> this.melon.getValue();
+			case "items/ink_sack_3" -> this.cocoaBeans.getValue();
+			case "items/sugar_cane" -> this.sugarCane.getValue();
+			case "items/cactus" -> this.cactus.getValue();
+			case "items/huge_mushroom_2" -> this.mushroom.getValue();
 			default -> throw new IllegalStateException("Unexpected value: " + identifier.getPath());
 		};
 	}
