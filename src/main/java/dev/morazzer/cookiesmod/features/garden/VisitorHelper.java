@@ -52,9 +52,9 @@ public class VisitorHelper implements Module {
 			if (literalContent.equals("Rewards:")) finishedItems = true;
 
 			if (!finishedItems && !literalContent.isEmpty() && literalContent.matches("([A-Za-z ]+)(?: x[\\d,]+)?")) {
-				Optional<Identifier> item = RepositoryItemManager.findByName(literalContent.replaceAll("([A-Za-z ]+) (x[\\d,]+)?", "$1"));
+				Optional<Identifier> item = RepositoryItemManager.findByName(literalContent.replaceAll("([A-Za-z ]+[a-z]) ?(x[\\d,]+)", "$1"));
 				if (item.isEmpty()) {
-					newTooltip.add(Text.literal(" - ").append(Text.literal("Could not find item").formatted(Formatting.RED)).formatted(Formatting.GRAY));
+					newTooltip.add(Text.literal(" -> ").append(Text.literal("Could not find item").formatted(Formatting.RED)).formatted(Formatting.GRAY));
 					continue;
 				}
 
