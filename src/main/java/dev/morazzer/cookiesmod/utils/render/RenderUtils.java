@@ -73,4 +73,15 @@ public class RenderUtils {
 		drawContext.drawText(textRenderer, text, (int) (x / scaleFactor), (int) (y / scaleFactor), color, shadow);
 		drawContext.getMatrices().pop();
 	}
+
+	public static void renderTextCenteredScaled(@NotNull DrawContext drawContext, @NotNull Text text, float scaleFactor, int x, int y, int color) {
+		TextRenderer textRenderer = getTextRendererOrNull();
+		if (textRenderer == null) {
+			return;
+		}
+		drawContext.getMatrices().push();
+		drawContext.getMatrices().scale(scaleFactor, scaleFactor, 1);
+		drawContext.drawCenteredTextWithShadow(textRenderer, text, (int) (x / scaleFactor), (int) (y / scaleFactor), color);
+		drawContext.getMatrices().pop();
+	}
 }

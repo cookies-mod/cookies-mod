@@ -46,7 +46,10 @@ public class ConfigScreen extends Screen {
 	protected void init() {
 		this.searchField = new TextFieldWidget(textRenderer, 0, 0, 0, 18, Text.of(""));
 		this.setSelectedCategory(this.allCategories.peekFirst());
-		executeForEach((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().init(), true);
+		executeForEach(
+				(processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().init(),
+				true
+		);
 		resize(MinecraftClient.getInstance(), this.width, this.height);
 		this.searchField.setChangedListener(text -> {
 			this.repopulateActiveFoldables();
@@ -159,9 +162,15 @@ public class ConfigScreen extends Screen {
 
 		this.categoryScrollbarScale = scrollbarHeight / (float) this.categoryAllSize;
 
-		this.categoryScrollbarPart = (int) Math.min((this.categoryViewport * this.categoryScrollbarScale), this.categoryViewport - 10);
+		this.categoryScrollbarPart = (int) Math.min(
+				(this.categoryViewport * this.categoryScrollbarScale),
+				this.categoryViewport - 10
+		);
 
-		this.categoryScrollbar.setValue(Math.max(0, Math.min(this.categoryAllSize - this.categoryViewport, this.categoryScrollbar.getValue())));
+		this.categoryScrollbar.setValue(Math.max(
+				0,
+				Math.min(this.categoryAllSize - this.categoryViewport, this.categoryScrollbar.getValue())
+		));
 	}
 
 	public void recalculateOptionBarSize() {
@@ -175,24 +184,35 @@ public class ConfigScreen extends Screen {
 
 		this.optionsAllSize = 5;
 		for (ProcessedOption<?, ?> processedOption : this.selectedCategory.get().getProcessedOptions()) {
-			if ((processedOption.getFoldable() >= 0 && !activeFoldables.containsKey(processedOption.getFoldable())) || this.hiddenOptions.contains(processedOption)) {
+			if ((processedOption.getFoldable() >= 0 && !activeFoldables.containsKey(processedOption.getFoldable())) || this.hiddenOptions.contains(
+					processedOption)) {
 				continue;
 			}
-			this.optionsAllSize += processedOption.getEditor().getHeight() + 5;
+			int optionWidth = getOptionSize(processedOption);
+			this.optionsAllSize += processedOption.getEditor().getHeight(optionWidth) + 5;
 		}
 		int scrollbarHeight = (this.optionsBottom - this.optionsTop - 10);
 
 		this.optionScrollbarScale = scrollbarHeight / (float) this.optionsAllSize;
 
-		this.optionsScrollbarPart = (int) Math.min((this.optionsViewport * this.optionScrollbarScale), this.optionsViewport - 10);
+		this.optionsScrollbarPart = (int) Math.min(
+				(this.optionsViewport * this.optionScrollbarScale),
+				this.optionsViewport - 10
+		);
 
-		this.optionsScrollbar.setValue(Math.max(0, Math.min(this.optionsAllSize - this.optionsViewport, this.optionsScrollbar.getValue())));
+		this.optionsScrollbar.setValue(Math.max(
+				0,
+				Math.min(this.optionsAllSize - this.optionsViewport, this.optionsScrollbar.getValue())
+		));
 	}
 
 	public void setSearchBarWidth() {
 		int length = this.textRenderer.getWidth(this.searchField.getText());
 		this.searchField.setWidth(length + 20);
-		this.searchField.setPosition(this.optionsRight - 25 - length, this.optionsTop - (20 + this.innerPadding) / 2 - 9);
+		this.searchField.setPosition(
+				this.optionsRight - 25 - length,
+				this.optionsTop - (20 + this.innerPadding) / 2 - 9
+		);
 	}
 
 	public void repopulateActiveFoldables() {
@@ -227,9 +247,11 @@ public class ConfigScreen extends Screen {
 		this.visibleCategories.clear();
 		this.visibleCategories.addAll(allCategories);
 		if (search.isEmpty()) return;
-		this.visibleCategories.removeIf(Predicate.not(processedCategory -> processedCategory.getName().getString().contains(search)
+		this.visibleCategories.removeIf(Predicate.not(processedCategory -> processedCategory.getName().getString()
+				.contains(search)
 				|| processedCategory.getDescription().getString().contains(search)
-				|| processedCategory.getProcessedOptions().stream().anyMatch(option -> option.getEditor().doesMatchSearch(search))));
+				|| processedCategory.getProcessedOptions().stream()
+				.anyMatch(option -> option.getEditor().doesMatchSearch(search))));
 		if (this.selectedCategory.filter(this.visibleCategories::contains).isEmpty()) {
 			this.setSelectedCategory(this.visibleCategories.peekFirst());
 		}
@@ -250,7 +272,8 @@ public class ConfigScreen extends Screen {
 				(context.getScaledWindowHeight() - this.ySize) / 2,
 				this.xSize, this.ySize, true
 		);
-		context.enableScissor((context.getScaledWindowWidth() - this.xSize) / 2,
+		context.enableScissor(
+				(context.getScaledWindowWidth() - this.xSize) / 2,
 				(context.getScaledWindowHeight() - this.ySize) / 2,
 				(context.getScaledWindowWidth() + this.xSize) / 2,
 				(context.getScaledWindowHeight() + this.ySize) / 2
@@ -260,12 +283,38 @@ public class ConfigScreen extends Screen {
 		RenderUtils.renderRectangle(context, this.windowX + 5, this.windowY + 29, 140, ySize - 34, false);
 
 		context.fill(this.categoryLeft, this.categoryTop, this.categoryRight, this.categoryBottom, 0x6008080E); //Middle
-		context.fill(this.categoryRight - 1, this.categoryTop, this.categoryRight, this.categoryBottom, 0xff28282E); //Right
-		context.fill(this.categoryLeft, this.categoryBottom - 1, this.categoryRight, this.categoryBottom, 0xff28282E); //Bottom
-		context.fill(this.categoryLeft, this.categoryTop, this.categoryLeft + 1, this.categoryBottom, 0xff08080E); //Left
+		context.fill(
+				this.categoryRight - 1,
+				this.categoryTop,
+				this.categoryRight,
+				this.categoryBottom,
+				0xff28282E
+		); //Right
+		context.fill(
+				this.categoryLeft,
+				this.categoryBottom - 1,
+				this.categoryRight,
+				this.categoryBottom,
+				0xff28282E
+		); //Bottom
+		context.fill(
+				this.categoryLeft,
+				this.categoryTop,
+				this.categoryLeft + 1,
+				this.categoryBottom,
+				0xff08080E
+		); //Left
 		context.fill(this.categoryLeft, this.categoryTop, this.categoryRight, this.categoryTop + 1, 0xff08080E); //Top
 
-		RenderUtils.renderCenteredTextWithMaxWidth(context, configReader.getConfig().getTitle(), xSize - 25, this.windowX + (int) (xSize / 2.0f), this.windowY + 15, -1, true);
+		RenderUtils.renderCenteredTextWithMaxWidth(
+				context,
+				configReader.getConfig().getTitle(),
+				xSize - 25,
+				this.windowX + (int) (xSize / 2.0f),
+				this.windowY + 15,
+				-1,
+				true
+		);
 
 		context.enableScissor(0, this.categoryTop + 1, context.getScaledWindowWidth(),
 				this.categoryBottom - 1
@@ -274,11 +323,24 @@ public class ConfigScreen extends Screen {
 
 		int categoryStartY = this.categoryScrollbar.getValue();
 		for (ProcessedCategory visibleCategory : this.visibleCategories) {
-			context.drawCenteredTextWithShadow(this.textRenderer, visibleCategory.getName().copy().formatted(this.selectedCategory.map(visibleCategory::equals).orElse(false) ? Formatting.AQUA : Formatting.GRAY), this.windowX + 76, this.windowY + 70 + categoryStartY, ~0);
+			context.drawCenteredTextWithShadow(
+					this.textRenderer,
+					visibleCategory.getName().copy().formatted(this.selectedCategory.map(visibleCategory::equals)
+							.orElse(false) ? Formatting.AQUA : Formatting.GRAY),
+					this.windowX + 76,
+					this.windowY + 70 + categoryStartY,
+					~0
+			);
 			categoryStartY += 15;
 		}
 
-		context.fill(this.categoryScrollbarLeft, this.categoryScrollbarTop, this.categoryScrollbarRight, this.categoryScrollbarBottom, 0xff << 24);
+		context.fill(
+				this.categoryScrollbarLeft,
+				this.categoryScrollbarTop,
+				this.categoryScrollbarRight,
+				this.categoryScrollbarBottom,
+				0xff << 24
+		);
 
 		int startCategories = (int) (this.categoryScrollbarTop + this.categoryScrollbar.getValue() * this.categoryScrollbarScale);
 
@@ -293,20 +355,42 @@ public class ConfigScreen extends Screen {
 		context.disableScissor();
 
 		context.drawCenteredTextWithShadow(this.textRenderer, "Categories",
-				this.windowX + 75, this.windowY + 44, 0xa368ef);
+				this.windowX + 75, this.windowY + 44, 0xa368ef
+		);
 
 
 		RenderUtils.renderRectangle(context, this.windowX + 149, this.windowY + 29, xSize - 154, ySize - 34, false);
 
-		this.selectedCategory.filter(this.visibleCategories::contains).ifPresent(processedCategory -> RenderUtils.renderTextWithMaxWidth(context, processedCategory.getDescription(), this.optionsRight - 35 - this.optionsLeft, this.optionsLeft + 5, this.windowY + 40, ~0, true));
+		this.selectedCategory.filter(this.visibleCategories::contains)
+				.ifPresent(processedCategory -> RenderUtils.renderTextWithMaxWidth(
+						context,
+						processedCategory.getDescription(),
+						this.optionsRight - 35 - this.optionsLeft,
+						this.optionsLeft + 5,
+						this.windowY + 40,
+						~0,
+						true
+				));
 
 		context.fill(this.optionsLeft, this.optionsTop, this.optionsRight, this.optionsBottom, 0x6008080E); //Middle
 		context.fill(this.optionsRight - 1, this.optionsTop, this.optionsRight, this.optionsBottom, 0xff303036); //Right
-		context.fill(this.optionsLeft, this.optionsBottom - 1, this.optionsRight, this.optionsBottom, 0xff303036); //Bottom
+		context.fill(
+				this.optionsLeft,
+				this.optionsBottom - 1,
+				this.optionsRight,
+				this.optionsBottom,
+				0xff303036
+		); //Bottom
 		context.fill(this.optionsLeft, this.optionsTop, this.optionsLeft + 1, this.optionsBottom, 0xff08080E); //Left
 		context.fill(this.optionsLeft, this.optionsTop, this.optionsRight, this.optionsTop + 1, 0xff08080E); //Top
 
-		context.fill(this.optionsScrollbarLeft, this.optionsScrollbarTop, this.optionsScrollbarRight, this.optionsScrollbarBottom, 0xff << 24);
+		context.fill(
+				this.optionsScrollbarLeft,
+				this.optionsScrollbarTop,
+				this.optionsScrollbarRight,
+				this.optionsScrollbarBottom,
+				0xff << 24
+		);
 
 		int startOptions = (int) (this.optionsScrollbarTop + this.optionsScrollbar.getValue() * this.optionScrollbarScale);
 
@@ -318,24 +402,35 @@ public class ConfigScreen extends Screen {
 				0xffffffff
 		);
 
-		context.enableScissor(this.optionsLeft + 1, this.optionsTop + 1, this.optionsRight - 1, this.optionsBottom - 1);
+		//
 
 		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> {
 			ConfigOptionEditor<?, ?> editor = processedOption.getEditor();
 			int localMouseX = mouseX - positionX;
 			int localMouseY = mouseY - positionY;
-
-			context.enableScissor(positionX, positionY, positionX + optionWidth, positionY + editor.getHeight());
+			context.enableScissor(
+					this.optionsLeft + 1,
+					this.optionsTop + 1,
+					this.optionsRight - 1,
+					this.optionsBottom - 1
+			);
+			context.enableScissor(
+					positionX,
+					positionY,
+					positionX + optionWidth,
+					positionY + editor.getHeight(optionWidth)
+			);
 			context.getMatrices().push();
 			context.getMatrices().translate(positionX, positionY, 1);
 			editor.render(context, localMouseX, localMouseY, delta, optionWidth);
 			context.disableScissor();
+			context.disableScissor();
 			context.getMatrices().translate(0, 0, 10);
-			editor.renderOverlay(context, localMouseX, localMouseY, delta, optionWidth);
+			int finalLocalMouseX = ((mouseY >= this.optionsTop) && (mouseY < this.optionsBottom)) ? localMouseX : -1;
+
+			editor.renderOverlay(context, finalLocalMouseX, localMouseY, delta, optionWidth);
 			context.getMatrices().pop();
 		});
-
-		context.disableScissor();
 		context.disableScissor();
 
 		this.searchField.render(context, mouseX, mouseY, delta);
@@ -349,7 +444,8 @@ public class ConfigScreen extends Screen {
 
 	private void setSelectedCategory(ProcessedCategory processedCategory) {
 		this.selectedCategory = Optional.ofNullable(processedCategory);
-		this.selectedCategory.ifPresent(processedCategory1 -> processedCategory1.getProcessedOptions().forEach(processedOption -> processedOption.getEditor().init()));
+		this.selectedCategory.ifPresent(processedCategory1 -> processedCategory1.getProcessedOptions()
+				.forEach(processedOption -> processedOption.getEditor().init()));
 
 		this.repopulateHiddenOptions();
 		this.repopulateActiveFoldables();
@@ -364,7 +460,8 @@ public class ConfigScreen extends Screen {
 		List<Integer> matchedFoldables = new ArrayList<>();
 		this.selectedCategory.ifPresent(processedCategory -> {
 			for (ProcessedOption<?, ?> processedOption : processedCategory.getProcessedOptions()) {
-				if (!processedOption.getEditor().doesMatchSearch(search) && !matchedFoldables.contains(processedOption.getFoldable())) {
+				if (!processedOption.getEditor()
+						.doesMatchSearch(search) && !matchedFoldables.contains(processedOption.getFoldable())) {
 					this.hiddenOptions.add(processedOption);
 				} else if (processedOption.getEditor() instanceof FoldableEditor editor) {
 					matchedFoldables.add(editor.foldableId);
@@ -404,13 +501,13 @@ public class ConfigScreen extends Screen {
 			int finalX = (this.optionsLeft + this.optionsRight - optionWidth) / 2 - 5;
 			int finalY = this.optionsTop + 5 + optionsY;
 
-			if (all || ((finalY + editor.getHeight() > this.optionsTop + 1)
+			if (all || ((finalY + editor.getHeight(optionWidth) > this.optionsTop + 1)
 					&& (finalY < this.optionsBottom - 1))) {
 				executor.execute(processedOption, finalX, finalY, optionWidth);
 			}
 
 
-			optionsY += editor.getHeight() + 5;
+			optionsY += editor.getHeight(optionWidth) + 5;
 		}
 	}
 
@@ -435,12 +532,12 @@ public class ConfigScreen extends Screen {
 			int finalX = (this.optionsLeft + this.optionsRight - optionWidth) / 2 - 5;
 			int finalY = this.optionsTop + 5 + optionsY;
 
-			if (((finalY + editor.getHeight()) > (this.optionsTop + 1))
+			if (((finalY + editor.getHeight(optionWidth)) > (this.optionsTop + 1))
 					&& (finalY < (this.optionsBottom - 1))) {
 				executor.execute(processedOption, finalX, finalY, optionWidth);
 			}
 
-			optionsY += editor.getHeight() + 5;
+			optionsY += editor.getHeight(optionWidth) + 5;
 		}
 	}
 
@@ -455,7 +552,8 @@ public class ConfigScreen extends Screen {
 		if (this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
 			return true;
 		}
-		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().keyPressed(keyCode, scanCode, modifiers));
+		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+				.keyPressed(keyCode, scanCode, modifiers));
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
@@ -492,7 +590,8 @@ public class ConfigScreen extends Screen {
 				if (consumed.get()) {
 					return;
 				}
-				consumed.set(processedOption.getEditor().mouseClicked(mouseX - positionX, mouseY - positionY, button, optionWidth));
+				consumed.set(processedOption.getEditor()
+						.mouseClicked(mouseX - positionX, mouseY - positionY, button, optionWidth));
 			});
 		}
 
@@ -504,7 +603,8 @@ public class ConfigScreen extends Screen {
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
-		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().mouseReleased(mouseX - positionX, mouseY - positionY, button));
+		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+				.mouseReleased(mouseX - positionX, mouseY - positionY, button));
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
 
@@ -512,7 +612,8 @@ public class ConfigScreen extends Screen {
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (mouseY > this.optionsTop && mouseY < this.optionsBottom
 				&& mouseX > this.optionsLeft && mouseX < this.optionsRight) {
-			this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().mouseDragged(mouseX - positionX, mouseY - positionY, button, deltaX, deltaY, optionWidth));
+			this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+					.mouseDragged(mouseX - positionX, mouseY - positionY, button, deltaX, deltaY, optionWidth));
 		}
 
 		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -520,23 +621,31 @@ public class ConfigScreen extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().mouseScrolled(mouseX - positionX, mouseY - positionY, amount));
+		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+				.mouseScrolled(mouseX - positionX, mouseY - positionY, amount));
 		if ((mouseY > this.optionsTop) && (mouseY < this.optionsBottom)
 				&& (mouseX > this.optionsLeft) && (mouseX < this.optionsRight)) {
 			int newTarget = (int) (this.optionsScrollbar.getTarget() - amount * 30);
-			this.optionsScrollbar.setTargetValue(Math.max(0, Math.min(this.optionsAllSize - this.optionsViewport, newTarget)));
+			this.optionsScrollbar.setTargetValue(Math.max(
+					0,
+					Math.min(this.optionsAllSize - this.optionsViewport, newTarget)
+			));
 		}
 		if ((mouseY > this.categoryTop) && (mouseY < this.categoryBottom)
 				&& (mouseX > this.categoryLeft) && (mouseX < this.categoryRight)) {
 			int newTarget = (int) (this.categoryScrollbar.getTarget() - amount * 30);
-			this.categoryScrollbar.setTargetValue(Math.max(0, Math.min(this.categoryAllSize - this.categoryViewport, newTarget)));
+			this.categoryScrollbar.setTargetValue(Math.max(
+					0,
+					Math.min(this.categoryAllSize - this.categoryViewport, newTarget)
+			));
 		}
 		return super.mouseScrolled(mouseX, mouseY, amount);
 	}
 
 	@Override
 	public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().keyReleased(keyCode, scanCode, modifiers));
+		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+				.keyReleased(keyCode, scanCode, modifiers));
 		return super.keyReleased(keyCode, scanCode, modifiers);
 	}
 
@@ -545,7 +654,8 @@ public class ConfigScreen extends Screen {
 		if (this.searchField.charTyped(chr, modifiers)) {
 			return true;
 		}
-		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor().charTyped(chr, modifiers));
+		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
+				.charTyped(chr, modifiers));
 		return super.charTyped(chr, modifiers);
 	}
 

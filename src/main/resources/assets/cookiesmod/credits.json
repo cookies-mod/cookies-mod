@@ -1,0 +1,164 @@
+{
+  "descriptions": {
+    "maintainers": [
+      {
+        "text": "The people who are mainly responsible"
+      },
+      {
+        "text": "for keeping the project running"
+      }
+    ],
+    "discord_staff": [
+      {
+        "text": "The people who help moderating"
+      },
+      {
+        "text": "and/or organizing the discord"
+      }
+    ],
+    "contributors_coding": [
+      {
+        "text": "The people who contribute to any project"
+      },
+      {
+        "text": "that is associated with the mod"
+      },
+      {
+        "text": ""
+      },
+      {
+        "text": "(sorted by most additions)",
+        "color": "dark_gray"
+      }
+    ],
+    "contributors_art": [
+      {
+        "text": "The people who drew anything that is used in any of the"
+      },
+      {
+        "text": "projects associated with cookies mod"
+      }
+    ],
+    "ideas": [
+      {
+        "text": "Only for the people who help this mod getting new features"
+      },
+      {
+        "text": ""
+      },
+      {
+        "text": "(requires 20 added suggestions and is sorted by most added)",
+        "color": "dark_gray"
+      }
+    ],
+    "libraries": [
+      {
+        "text": "All libraries and/or assets used in the project"
+      },
+      {
+        "text": "that aren't associated with cookies mod"
+      }
+    ]
+  },
+  "maintainers": [
+    {
+      "prefix": {
+        "text": "",
+        "color": "#efbbff"
+      },
+      "uuid": "e90ea9ec-080a-401b-8d10-6a53c407ac53",
+      "description": [
+        {
+          "text": "Creator & Owner of the mod"
+        }
+      ]
+    }
+  ],
+  "used_libraries": [
+    {
+      "name": "Moulconfig",
+      "description": [
+        {
+          "text": "Design for the whole config,"
+        },
+        {
+          "text": "first ported to a newer version"
+        },
+        {
+          "text": "and then completely recoded"
+        }
+      ],
+      "url": "https://github.com/NotEnoughUpdates/MoulConfig"
+    },
+    {
+      "name": "NotEnoughUpdates-REPO",
+      "description": [
+        {
+          "text": "Base of the cookies mod repo"
+        },
+        {
+          "text": "which is used all over the place"
+        }
+      ],
+      "url": "https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO"
+    },
+    {
+      "name": "Renderer",
+      "description": [
+        {
+          "text": "Used to render various shapes"
+        }
+      ],
+      "url": "https://github.com/0x3C50/Renderer"
+    }
+  ],
+  "discord_staff": [
+    {
+      "uuid": "c932b869-d479-4471-a36d-4ec6c1ef1fa2",
+      "description": [
+        {
+          "text": "Moderating the discord server"
+        }
+      ],
+      "prefix": {
+        "text": "",
+        "color": "#d896ff"
+      }
+    },
+    {
+      "uuid": "db1939e8-2f75-4b29-8c59-97ad9cc3f461",
+      "description": [
+        {
+          "text": "Moderating and designing"
+        },
+        {
+          "text": "the discord server"
+        }
+      ],
+      "prefix": {
+        "text": "",
+        "color": "#d896ff"
+      }
+    },
+    {
+      "uuid": "a94c92a0-eb69-44d6-8643-23fffe27e8f7",
+      "description": [
+        {
+          "text": "Moderating the discord server"
+        }
+      ],
+      "prefix": {
+        "text": "",
+        "color": "#d896ff"
+      }
+    }
+  ],
+  "contributors": {
+    "coding": [
+    ],
+    "art": [
+    ]
+  },
+  "ideas": [
+  ]
+}
