@@ -41,7 +41,9 @@ dependencies {
     shadowConfiguration(implementation("org.reflections:reflections:0.10.2") {
         exclude(module = "slf4j-api")
     })
-    shadowConfiguration(implementation("org.eclipse.jgit:org.eclipse.jgit:3.5.0.201409260305-r")!!)
+    shadowConfiguration(implementation("org.eclipse.jgit:org.eclipse.jgit:3.5.0.201409260305-r") {
+        exclude(group = "org.apache.httpcomponents")
+    })
 
     annotationProcessor("org.projectlombok:lombok:1.18.26")
     compileOnly("org.projectlombok:lombok:1.18.26")
