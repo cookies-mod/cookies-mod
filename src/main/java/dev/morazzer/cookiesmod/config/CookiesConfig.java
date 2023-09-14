@@ -3,6 +3,7 @@ package dev.morazzer.cookiesmod.config;
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.categories.DevCategory;
 import dev.morazzer.cookiesmod.config.categories.GardenCategory;
+import dev.morazzer.cookiesmod.config.categories.GuiCategory;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
 import dev.morazzer.cookiesmod.config.categories.about.AboutCategory;
 import dev.morazzer.cookiesmod.config.categories.ProfileViewerConfig;
@@ -13,6 +14,9 @@ import net.minecraft.text.Text;
 public class CookiesConfig extends Config<CookiesConfig> {
 	@Expose
 	public AboutCategory aboutCategory = new AboutCategory();
+
+	@Expose
+	public GuiCategory guiCategory = new GuiCategory();
 
 	@Expose
 	public ProfileViewerConfig profileViewerConfig = new ProfileViewerConfig();

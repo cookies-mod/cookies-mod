@@ -1,10 +1,14 @@
 package dev.morazzer.cookiesmod.config.system.options;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import dev.morazzer.cookiesmod.config.system.Option;
 import dev.morazzer.cookiesmod.config.system.editor.BooleanEditor;
 import dev.morazzer.cookiesmod.config.system.editor.ConfigOptionEditor;
+import dev.morazzer.cookiesmod.features.hud.HudElement;
+import dev.morazzer.cookiesmod.features.hud.HudManager;
+import dev.morazzer.cookiesmod.utils.render.Position;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
 
@@ -14,12 +18,40 @@ import net.minecraft.text.Text;
 @Slf4j
 public class BooleanOption extends Option<Boolean, BooleanOption> {
 
+	private HudElement hudElement = null;
+
 	public BooleanOption(Text name, Text description, Boolean value) {
 		super(name, description, value);
 	}
 
+	public BooleanOption withHudElement(HudElement hudElement) {
+		HudManager.registerHudElement(hudElement);
+		this.hudElement = hudElement;
+		return this.withCallback((oldValue, newValue) -> hudElement.toggle(newValue));
+	}
+
 	@Override
 	public void load(JsonElement jsonElement) {
+		if (jsonElement instanceof JsonObject jsonObject) {
+			if (!jsonObject.has("value")) {
+				log.warn("Error while loading config value, boolean object doesnt have a value");
+				return;
+			}
+			this.value = jsonObject.get("value").getAsBoolean();
+			if (this.hudElement == null) {
+				return;
+			}
+			double x = 0;
+			double y = 0;
+			if (jsonObject.has("x")) {
+				x = jsonObject.get("x").getAsDouble();
+			}
+			if (jsonObject.has("y")) {
+				y = jsonObject.get("y").getAsDouble();
+			}
+			this.hudElement.setPosition(new Position(x, y));
+			this.hudElement.toggle(this.value);
+		}
 		if (!jsonElement.isJsonPrimitive()) {
 			log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
 			return;
@@ -33,6 +65,14 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
 
 	@Override
 	public JsonElement save() {
+		if (this.hudElement != null) {
+			JsonObject jsonObject = new JsonObject();
+
+			jsonObject.addProperty("value", this.value);
+			jsonObject.addProperty("x", this.hudElement.getPosition().x());
+			jsonObject.addProperty("y", this.hudElement.getPosition().y());
+			return jsonObject;
+		}
 		return new JsonPrimitive(this.value);
 	}
 
