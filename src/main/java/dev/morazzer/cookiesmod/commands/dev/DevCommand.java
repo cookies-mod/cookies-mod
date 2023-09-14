@@ -332,7 +332,7 @@ public class DevCommand extends ClientCommand {
                             ConfigManager.saveConfig(true, "command");
                             return Command.SINGLE_SUCCESS;
                         })).then(Helper.literal("load").executes(context -> {
-                            ConfigManager.processConfig();
+                            ConfigManager.reload();
                             return Command.SINGLE_SUCCESS;
                         }))
                 ).then(Helper.literal("player")

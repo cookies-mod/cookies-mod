@@ -66,6 +66,10 @@ public class ConfigManager {
 		log.info("Saving config with with reason: {}", reason);
 	}
 
+	public static void reload() {
+		config.load(loadConfig());
+	}
+
 	private static JsonObject loadConfig() {
 		if (Files.exists(configFile)) {
 			return gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(configFile), "{}"), JsonObject.class);
@@ -78,7 +82,7 @@ public class ConfigManager {
 
 	public static void processConfig() {
 		config = new CookiesConfig();
-		config.load(loadConfig());
+		reload();
 		configReader = new ConfigReader();
 		ConfigProcessor.processConfig(config, configReader);
 	}
