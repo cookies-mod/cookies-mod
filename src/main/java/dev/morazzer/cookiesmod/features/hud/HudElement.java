@@ -16,13 +16,13 @@ public abstract class HudElement {
 	private Position position;
 	private boolean enabled;
 
-	abstract int getWidth();
+	public abstract int getWidth();
 
-	abstract int getHeight();
+	public abstract int getHeight();
 
-	abstract String getIdentifierPath();
+	public abstract String getIdentifierPath();
 
-	abstract boolean shouldRender();
+	public abstract boolean shouldRender();
 
 	public final int getX() {
 		return this.position.getFixedX(this.getWidth());

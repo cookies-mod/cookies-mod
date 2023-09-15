@@ -5,6 +5,7 @@ import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.Foldable;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import dev.morazzer.cookiesmod.config.system.options.EnumDropdownOption;
+import dev.morazzer.cookiesmod.features.garden.YawPitchDisplay;
 import dev.morazzer.cookiesmod.features.garden.speed.SpeedPresets;
 import dev.morazzer.cookiesmod.features.garden.speed.Speeds;
 import lombok.Getter;
@@ -125,6 +126,13 @@ public class GardenCategory extends Category {
 	public static class Hotkeys {
 
 	}
+
+	@Expose
+	public BooleanOption yawPitchDisplay = new BooleanOption(Text.literal("Yaw and Pitch"),
+			Text.literal(
+					"Shows the Yaw and Pitch for when you farm (only if cultivating or replenish is on the tool)"),
+			false
+	).withHudElement(new YawPitchDisplay());
 
 	@Expose
 	public Visitors visitors = new Visitors();

@@ -27,12 +27,14 @@ import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.StringUtils;
 import dev.morazzer.cookiesmod.utils.TimeUtils;
+import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import dev.morazzer.cookiesmod.utils.general.ScoreboardUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -322,6 +324,7 @@ public class DevCommand extends ClientCommand {
                                                 RepositoryRecipeManager.resolveToLowestSingleIngredient(Identifier.of("skyblock", "item/tightly_tied_hay_bale")).ifPresent(ingredient -> System.out.println(ingredient + " | " + ingredient.getAmount()));
                                         case "is_on_garden" ->
                                                 Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden())));
+                                        case "nbt" -> ItemUtils.getNbtFromMainHand().ifPresent(nbtCompound -> context.getSource().sendFeedback(NbtHelper.toPrettyPrintedText(nbtCompound)));
                                     }
 
                                     return Command.SINGLE_SUCCESS;
