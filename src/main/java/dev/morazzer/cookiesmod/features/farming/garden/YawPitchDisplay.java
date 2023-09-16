@@ -1,4 +1,4 @@
-package dev.morazzer.cookiesmod.features.garden;
+package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.features.hud.HudElement;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;

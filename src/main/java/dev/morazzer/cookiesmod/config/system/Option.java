@@ -18,7 +18,7 @@ public abstract class Option<T, O extends Option<T, O>> {
 	private final Text description;
 	protected T value;
 	private List<String> hiddenKeys = new ArrayList<>();
-	List<ValueChangeCallback<T>> callbacks = new ArrayList<>();
+	protected List<ValueChangeCallback<T>> callbacks = new ArrayList<>();
 
 	public Option(Text name, Text description, T value) {
 		this.name = name;
@@ -29,6 +29,10 @@ public abstract class Option<T, O extends Option<T, O>> {
 	public void setValue(T value) {
 		T oldValue = this.value;
 		this.value = value;
+		this.updateCallbacks(oldValue);
+	}
+
+	protected void updateCallbacks(T oldValue) {
 		this.callbacks.forEach(callbacks -> callbacks.valueChanged(oldValue, this.value));
 	}
 

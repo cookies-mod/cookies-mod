@@ -1,4 +1,4 @@
-package dev.morazzer.cookiesmod.features.garden;
+package dev.morazzer.cookiesmod.features.farming.garden;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;

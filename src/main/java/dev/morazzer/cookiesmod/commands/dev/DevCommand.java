@@ -15,7 +15,8 @@ import dev.morazzer.cookiesmod.data.player.PlayerStorage;
 import dev.morazzer.cookiesmod.data.profile.GameMode;
 import dev.morazzer.cookiesmod.data.profile.ProfileData;
 import dev.morazzer.cookiesmod.data.profile.ProfileStorage;
-import dev.morazzer.cookiesmod.features.garden.Garden;
+import dev.morazzer.cookiesmod.features.farming.garden.Garden;
+import dev.morazzer.cookiesmod.features.farming.jacob.JacobsContests;
 import dev.morazzer.cookiesmod.features.repository.ItemReviewProcess;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
@@ -37,11 +38,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -325,6 +328,13 @@ public class DevCommand extends ClientCommand {
                                         case "is_on_garden" ->
                                                 Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden())));
                                         case "nbt" -> ItemUtils.getNbtFromMainHand().ifPresent(nbtCompound -> context.getSource().sendFeedback(NbtHelper.toPrettyPrintedText(nbtCompound)));
+                                        case "contests" -> {
+                                            JacobsContests.getInstance().getContests().forEach(contest -> {
+                                                context.getSource().sendFeedback(Text.empty().append(contest.time().toStringWithEvents()).formatted(
+                                                        Formatting.BLUE)
+                                                        .append(Text.literal(Arrays.toString(contest.crops())).formatted(Formatting.WHITE)));
+                                            });
+                                        }
                                     }
 
                                     return Command.SINGLE_SUCCESS;

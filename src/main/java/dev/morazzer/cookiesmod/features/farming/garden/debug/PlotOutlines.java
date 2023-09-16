@@ -1,7 +1,7 @@
-package dev.morazzer.cookiesmod.features.garden.debug;
+package dev.morazzer.cookiesmod.features.farming.garden.debug;
 
-import dev.morazzer.cookiesmod.features.garden.Garden;
-import dev.morazzer.cookiesmod.features.garden.Plot;
+import dev.morazzer.cookiesmod.features.farming.garden.Garden;
+import dev.morazzer.cookiesmod.features.farming.garden.Plot;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import me.x150.renderer.render.Renderer3d;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;

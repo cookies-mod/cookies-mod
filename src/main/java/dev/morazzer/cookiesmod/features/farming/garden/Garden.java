@@ -1,6 +1,6 @@
-package dev.morazzer.cookiesmod.features.garden;
+package dev.morazzer.cookiesmod.features.farming.garden;
 
-import dev.morazzer.cookiesmod.features.garden.debug.PlotOutlines;
+import dev.morazzer.cookiesmod.features.farming.garden.debug.PlotOutlines;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.CachedValue;

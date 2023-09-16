@@ -1,4 +1,4 @@
-package dev.morazzer.cookiesmod.features.garden;
+package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.events.api.BlockBreakCallback;
 import dev.morazzer.cookiesmod.modules.LoadModule;

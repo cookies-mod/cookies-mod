@@ -10,23 +10,28 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ConcurrentUtils {
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor(Executors.defaultThreadFactory());
-    private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(Executors.defaultThreadFactory());
+	private static final ExecutorService executorService = Executors.newSingleThreadExecutor(Executors.defaultThreadFactory());
+	private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
+			Executors.defaultThreadFactory());
 
-    static {
-        Runtime.getRuntime().addShutdownHook(new Thread(ConcurrentUtils::shutdown));
-    }
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread(ConcurrentUtils::shutdown));
+	}
 
-    public static void execute(Runnable runnable) {
-        executorService.execute(runnable);
-    }
+	public static void execute(Runnable runnable) {
+		executorService.execute(runnable);
+	}
 
-    public static void scheduleAtFixedRate(Runnable runnable, long time, TimeUnit timeUnit) {
-        scheduledExecutorService.scheduleAtFixedRate(runnable, 0, time, timeUnit);
-    }
+	public static void scheduleAtFixedRate(Runnable runnable, long time, TimeUnit timeUnit) {
+		scheduledExecutorService.scheduleAtFixedRate(runnable, 0, time, timeUnit);
+	}
 
-    public static void shutdown() {
-        executorService.shutdownNow().forEach(runnable -> log.warn("Couldn't execute runnable {}", runnable));
-    }
+	public static void schedule(Runnable runnable, long time, TimeUnit timeUnit) {
+		scheduledExecutorService.schedule(runnable, time, timeUnit);
+	}
+
+	public static void shutdown() {
+		executorService.shutdownNow().forEach(runnable -> log.warn("Couldn't execute runnable {}", runnable));
+	}
 
 }

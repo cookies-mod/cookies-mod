@@ -1,7 +1,7 @@
-package dev.morazzer.cookiesmod.features.garden;
+package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.config.ConfigManager;
-import dev.morazzer.cookiesmod.features.garden.speed.Speeds;
+import dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.modules.LoadModule;

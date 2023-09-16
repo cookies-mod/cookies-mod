@@ -2,7 +2,7 @@ package dev.morazzer.cookiesmod.config;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.categories.DevCategory;
-import dev.morazzer.cookiesmod.config.categories.GardenCategory;
+import dev.morazzer.cookiesmod.config.categories.farming.GardenCategory;
 import dev.morazzer.cookiesmod.config.categories.GuiCategory;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
 import dev.morazzer.cookiesmod.config.categories.about.AboutCategory;

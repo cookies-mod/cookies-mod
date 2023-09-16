@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod;
 
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
 import dev.morazzer.cookiesmod.config.ConfigManager;
+import dev.morazzer.cookiesmod.features.hud.HudManager;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.modules.ModuleManager;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
@@ -50,6 +51,7 @@ public class CookiesMod implements ModInitializer {
                 .setScanners(Scanners.TypesAnnotated));
 
         ModuleManager.loadModules(reflections);
+        HudManager.init();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.loadCommands(reflections, dispatcher));
 

@@ -1,7 +1,7 @@
-package dev.morazzer.cookiesmod.features.garden;
+package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.config.ConfigManager;
-import dev.morazzer.cookiesmod.config.categories.GardenCategory;
+import dev.morazzer.cookiesmod.config.categories.farming.GardenCategory;
 import dev.morazzer.cookiesmod.features.price.bazaar.Bazaar;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;

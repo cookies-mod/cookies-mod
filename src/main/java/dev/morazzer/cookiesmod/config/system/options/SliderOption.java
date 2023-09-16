@@ -40,6 +40,14 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
 	}
 
 	@Override
+	protected void updateCallbacks(T oldValue) {
+		super.callbacks.forEach(callbacks -> callbacks.valueChanged(
+				this.numberTransformer.parseNumber(oldValue),
+				this.numberTransformer.parseNumber(this.value)
+		));
+	}
+
+	@Override
 	public void load(JsonElement jsonElement) {
 		if (!jsonElement.isJsonPrimitive()) {
 			log.warn("Error while loading config value, expected number got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
@@ -60,6 +68,10 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
 
 	@Override
 	public ConfigOptionEditor<T, SliderOption<T>> getEditor() {
+		if (this.max == null || this.min == null || this.step == null || this.value == null) {
+			throw new UnsupportedOperationException("Cannot create editor for slider option with name \"%s\"".formatted(
+					this.getName().getString()));
+		}
 		return new SliderEditor<>(this);
 	}
 

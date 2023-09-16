@@ -13,6 +13,8 @@ public abstract class HudElement {
 		this.position = position;
 	}
 
+	public void init() {}
+
 	private Position position;
 	private boolean enabled;
 

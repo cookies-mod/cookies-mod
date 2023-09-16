@@ -1,6 +1,5 @@
 package dev.morazzer.cookiesmod.config.system.parsed;
 
-import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.Config;
 import dev.morazzer.cookiesmod.config.system.Foldable;
@@ -21,10 +20,6 @@ public class ConfigProcessor {
 		for (Field field : config.getClass().getFields()) {
 			System.out.println();
 			if (field.getType().getSuperclass() != Category.class) {
-				continue;
-			}
-			if (!field.isAnnotationPresent(Expose.class)) {
-				log.warn("Category without @Expose in {} on field {}", config.getClass(), field.getName());
 				continue;
 			}
 			if (!Modifier.isPublic(field.getModifiers())) {
@@ -50,12 +45,7 @@ public class ConfigProcessor {
 			if (!Optional.ofNullable(field.getType().getSuperclass()).map(clazz -> clazz.isAssignableFrom(Option.class) || clazz.isAssignableFrom(Foldable.class)).orElse(false)) {
 				continue;
 			}
-			if (!field.isAnnotationPresent(Expose.class)
-					&& Modifier.isTransient(field.getModifiers())) {
-				log.warn("Field {} int category {} is non transient and doesn't have @Expose", field.getName(), object.getClass().getName());
-			}
-
-			if (Optional.ofNullable(field.getType().getSuperclass()).map(clazz -> clazz.isAssignableFrom(Foldable.class)).orElse(false)) {
+			if (Optional.of(field.getType().getSuperclass()).map(clazz -> clazz.isAssignableFrom(Foldable.class)).orElse(false)) {
 				Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> field.get(object));
 				reader.beginFoldable(foldable);
 				processFoldable(foldable, reader);
@@ -63,7 +53,7 @@ public class ConfigProcessor {
 				continue;
 			}
 
-			if (Optional.ofNullable(field.getType().getSuperclass()).map(clazz -> clazz.isAssignableFrom(Option.class)).orElse(false)) {
+			if (Optional.of(field.getType().getSuperclass()).map(clazz -> clazz.isAssignableFrom(Option.class)).orElse(false)) {
 				reader.processOption((Option<?, ?>) ExceptionHandler.removeThrows(() -> field.get(object)));
 				continue;
 			}

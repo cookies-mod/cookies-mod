@@ -1,13 +1,13 @@
-package dev.morazzer.cookiesmod.config.categories;
+package dev.morazzer.cookiesmod.config.categories.farming;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.Foldable;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import dev.morazzer.cookiesmod.config.system.options.EnumDropdownOption;
-import dev.morazzer.cookiesmod.features.garden.YawPitchDisplay;
-import dev.morazzer.cookiesmod.features.garden.speed.SpeedPresets;
-import dev.morazzer.cookiesmod.features.garden.speed.Speeds;
+import dev.morazzer.cookiesmod.features.farming.garden.YawPitchDisplay;
+import dev.morazzer.cookiesmod.features.farming.garden.speed.SpeedPresets;
+import dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds;
 import lombok.Getter;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -139,5 +139,8 @@ public class GardenCategory extends Category {
 
 	@Expose
 	public Speed speed = new Speed();
+
+	@Expose
+	public JacobFoldable jacobFoldable = new JacobFoldable();
 
 }

@@ -1,4 +1,4 @@
-package dev.morazzer.cookiesmod.features.garden.speed;
+package dev.morazzer.cookiesmod.features.farming.garden.speed;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.system.Foldable;

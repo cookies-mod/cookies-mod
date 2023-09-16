@@ -46,6 +46,10 @@ public class HudManager implements Module {
 		});
 	}
 
+	public static void init() {
+		getInstance().getElements().forEach(HudElement::init);
+	}
+
 	@Override
 	public String getIdentifierPath() {
 		return "hud/manager";

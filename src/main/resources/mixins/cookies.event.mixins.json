@@ -3,7 +3,8 @@
   "package": "dev.morazzer.cookiesmod.events.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BlockBreakCallbackMixin"
+    "BlockBreakCallbackMixin",
+    "ItemBackgroundRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
