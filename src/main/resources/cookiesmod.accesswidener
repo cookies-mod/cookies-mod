@@ -15,3 +15,8 @@ accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen m
 accessible field net/minecraft/client/gui/DrawContext scissorStack Lnet/minecraft/client/gui/DrawContext$ScissorStack;
 accessible field net/minecraft/client/gui/DrawContext$ScissorStack stack Ljava/util/Deque;
 accessible method net/minecraft/client/gui/DrawContext setScissor (Lnet/minecraft/client/gui/ScreenRect;)V
+
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen isPointOverSlot (Lnet/minecraft/screen/slot/Slot;DD)Z
+
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen y I

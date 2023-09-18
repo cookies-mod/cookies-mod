@@ -46,5 +46,6 @@ public class RepositoryManager {
 		RepositoryItemManager.loadItems();
 		TagManager.loadTags();
 		RepositoryRecipeManager.loadRecipes();
+		reloadCallbacks.forEach(Runnable::run);
 	}
 }

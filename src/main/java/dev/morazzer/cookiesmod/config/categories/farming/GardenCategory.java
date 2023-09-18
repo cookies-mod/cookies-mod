@@ -135,6 +135,13 @@ public class GardenCategory extends Category {
 	).withHudElement(new YawPitchDisplay());
 
 	@Expose
+	public BooleanOption plotBreakdown = new BooleanOption(
+			Text.literal("Plot price breakdown"),
+			Text.literal("Shows a breakdown of the overall price for plots"),
+			false
+	);
+
+	@Expose
 	public Visitors visitors = new Visitors();
 
 	@Expose

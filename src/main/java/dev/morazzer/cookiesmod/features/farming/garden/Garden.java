@@ -17,14 +17,16 @@ public class Garden implements Module {
 	static CachedValue<Boolean> isOnGarden = new CachedValue<>(Garden::isOnGardenForce, 2, TimeUnit.SECONDS);
 
 	public static boolean isOnGarden() {
-		return SkyblockUtils.isCurrentlyInSkyblock() && isOnGarden.getValue();
+		if (SkyblockUtils.getLastServerSwap() + 5000 > System.currentTimeMillis()) {
+			isOnGarden.updateNow();
+		}
+		return (SkyblockUtils.isCurrentlyInSkyblock() && isOnGarden.getValue());
 	}
 
 	public static boolean isOnGardenForce() {
 		return SkyblockUtils.isCurrentlyInSkyblock()
 				&& (LocationUtils.getCurrentLocation().matches(". (:?The Garden|Plot: .+)")
-				|| DevUtils.isEnabled(DISABLE_GARDEN_CHECK
-		)
+				|| DevUtils.isEnabled(DISABLE_GARDEN_CHECK)
 		);
 	}
 

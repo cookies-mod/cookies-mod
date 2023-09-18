@@ -42,6 +42,21 @@ public class CachedValue<T> {
 	}
 
 	/**
+	 * Forces the cached value to be reevaluated
+	 */
+	public void updateNow() {
+		this.value = this.valueProvider.getValue();
+		this.lastTimeEvaluated = System.currentTimeMillis();
+	}
+
+	/**
+	 * Always returns the current value even if the time has passed
+	 */
+	public T getValueNoUpdate() {
+		return this.value;
+	}
+
+	/**
 	 * Get the cached value or compute a new one if the provided duration has elapsed
 	 *
 	 * @return The cached value
