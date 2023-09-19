@@ -36,7 +36,8 @@ public class ExceptionHandler {
 					Stacktrace:
 					%s
 					```
-					""".formatted(MinecraftClient.getInstance().getGameVersion(),
+					""".formatted(
+					MinecraftClient.getInstance().getGameVersion(),
 					ManagementFactory.getRuntimeMXBean().getVmVendor() + " " + ManagementFactory.getRuntimeMXBean()
 							.getVmName() + " " + ManagementFactory.getRuntimeMXBean().getVmVersion(),
 					"Cookies mod",
@@ -47,7 +48,8 @@ public class ExceptionHandler {
 					.append(Text.literal("An internal error occurred please report this on our discord. (Click to copy)")
 							.styled(style -> style.withColor(ColorUtils.failColor).withHoverEvent(new HoverEvent(
 									HoverEvent.Action.SHOW_TEXT,
-									Text.literal("%s: %s".formatted(exception.getClass().getName(),
+									Text.literal("%s: %s".formatted(
+											exception.getClass().getName(),
 											exception.getMessage()
 									))
 							)).withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, copy)))));
@@ -93,7 +95,8 @@ public class ExceptionHandler {
 		AtomicBoolean failed = new AtomicBoolean();
 
 		//noinspection unchecked
-		return (T) Proxy.newProxyInstance(function.getClass().getClassLoader(),
+		return (T) Proxy.newProxyInstance(
+				function.getClass().getClassLoader(),
 				function.getClass().getInterfaces(),
 				(proxy, method, args) -> {
 					if (failed.get()) {
@@ -102,10 +105,9 @@ public class ExceptionHandler {
 					try {
 						return method.invoke(function, args);
 					} catch (Exception e) {
-						Optional.ofNullable(MinecraftClient.getInstance()).map(m -> m.player).ifPresent(player -> {
-							player.sendMessage(CookiesMod.createPrefix(ColorUtils.failColor)
-									.append("One of the features you used crashed, it will be disabled for now!"));
-						});
+						Optional.ofNullable(MinecraftClient.getInstance()).map(m -> m.player)
+								.ifPresent(player -> player.sendMessage(CookiesMod.createPrefix(ColorUtils.failColor)
+										.append("One of the features you used crashed, it will be disabled for now!")));
 						handleException(e);
 						failed.set(true);
 						return null;

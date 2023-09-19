@@ -326,6 +326,9 @@ public class ItemListScreen implements Module {
 	}
 
 	public void filterAndSort() {
+		if (this.textFieldWidget == null) {
+			return;
+		}
 		this.filter();
 		this.sort();
 	}

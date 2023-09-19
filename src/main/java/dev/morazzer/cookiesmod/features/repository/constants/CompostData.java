@@ -38,7 +38,7 @@ public class CompostData {
 		};
 	}
 
-	public static record Cost(int amount, boolean bundle) {
+	public record Cost(int amount, boolean bundle) {
 	}
 
 }

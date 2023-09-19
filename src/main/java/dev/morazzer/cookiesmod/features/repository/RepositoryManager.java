@@ -3,6 +3,7 @@ package dev.morazzer.cookiesmod.features.repository;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.RepositoryRecipeManager;
 import dev.morazzer.cookiesmod.features.repository.items.tags.TagManager;
+import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
@@ -40,6 +41,13 @@ public class RepositoryManager {
 						.call();
 			} catch (Exception e) {
 				throw new RuntimeException("Unable to clone repository", e);
+			}
+		} else {
+			try {
+				Git.open(repoRoot.toFile())
+						.pull().call();
+			} catch (Exception exception) {
+				ExceptionHandler.handleException(exception);
 			}
 		}
 

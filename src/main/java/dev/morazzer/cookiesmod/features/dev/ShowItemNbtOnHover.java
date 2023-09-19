@@ -26,7 +26,7 @@ public class ShowItemNbtOnHover implements Module {
 	@Override
 	public void load() {
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-			if (screen instanceof HandledScreen<?> handledScreen) {
+			if (screen instanceof HandledScreen<?>) {
 				if (!DevUtils.isEnabled(RENDER_NBT)) {
 					return;
 				}

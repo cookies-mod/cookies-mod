@@ -150,4 +150,6 @@ public class GardenCategory extends Category {
 	@Expose
 	public JacobFoldable jacobFoldable = new JacobFoldable();
 
+	public CompostFoldable compostFoldable = new CompostFoldable();
+
 }
