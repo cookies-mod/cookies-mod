@@ -8,6 +8,12 @@ import net.minecraft.text.Text;
 
 public class CompostFoldable extends Foldable {
 
+	public BooleanOption muteComposter = new BooleanOption(
+			Text.literal("Mute Composter"),
+			Text.literal("Mutes all composter sounds"),
+			false
+	);
+
 	public BooleanOption showWarnings = new BooleanOption(
 			Text.literal("Show compost warnings"),
 			Text.literal("If you should get notified for low fuel/organic matter"),
@@ -33,16 +39,19 @@ public class CompostFoldable extends Foldable {
 			false
 	);
 
-	public EnumDropdownOption<ItemSortMode> itemSort = new EnumDropdownOption<>(Text.literal("Upgrade item sort"),
+	public EnumDropdownOption<ItemSortMode> itemSort = new EnumDropdownOption<>(
+			Text.literal("Upgrade item sort"),
 			Text.literal("If the items should be from highest to lowest or the other way around"),
-			ItemSortMode.DOWN)
+			ItemSortMode.DOWN
+	)
 			.withSupplier(value -> switch (value) {
 				case UP -> Text.literal("Ascending");
 				case DOWN -> Text.literal("Descending");
 			});
 
 	public enum ItemSortMode {
-		UP,DOWN
+		UP,
+		DOWN
 	}
 
 	@Override
