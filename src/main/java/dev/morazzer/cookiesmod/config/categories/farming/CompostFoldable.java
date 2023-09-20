@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.config.categories.farming;
 
 import dev.morazzer.cookiesmod.config.system.Foldable;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import dev.morazzer.cookiesmod.config.system.options.EnumDropdownOption;
 import dev.morazzer.cookiesmod.config.system.options.SliderOption;
 import net.minecraft.text.Text;
 
@@ -25,6 +26,24 @@ public class CompostFoldable extends Foldable {
 			Text.literal("The amount of fuel to warn at"),
 			5000
 	).withMax(5000).withMin(3000).withStep(100);
+
+	public BooleanOption showUpgradeCost = new BooleanOption(
+			Text.literal("Show upgrades"),
+			Text.literal("Shows a breakdown of all remaining upgrade costs"),
+			false
+	);
+
+	public EnumDropdownOption<ItemSortMode> itemSort = new EnumDropdownOption<>(Text.literal("Upgrade item sort"),
+			Text.literal("If the items should be from highest to lowest or the other way around"),
+			ItemSortMode.DOWN)
+			.withSupplier(value -> switch (value) {
+				case UP -> Text.literal("Ascending");
+				case DOWN -> Text.literal("Descending");
+			});
+
+	public enum ItemSortMode {
+		UP,DOWN
+	}
 
 	@Override
 	public Text getName() {

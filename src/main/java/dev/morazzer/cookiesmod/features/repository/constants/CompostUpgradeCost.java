@@ -20,11 +20,11 @@ public class CompostUpgradeCost {
 	@Getter
 	private static CompostUpgradeCost instance;
 
-	private List<CompostUpgrade> speed;
-	private List<CompostUpgrade> multiDrop;
-	private List<CompostUpgrade> fuelCap;
-	private List<CompostUpgrade> organicMatterCap;
-	private List<CompostUpgrade> costReduction;
+	private final List<CompostUpgrade> speed;
+	private final List<CompostUpgrade> multiDrop;
+	private final List<CompostUpgrade> fuelCap;
+	private final List<CompostUpgrade> organicMatterCap;
+	private final List<CompostUpgrade> costReduction;
 
 	public CompostUpgradeCost(JsonObject jsonObject) {
 		this.speed = getUpgrades(jsonObject.getAsJsonArray("speed"));

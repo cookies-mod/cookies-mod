@@ -1,5 +1,7 @@
 package dev.morazzer.cookiesmod.features.farming.garden.composter;
 
+import dev.morazzer.cookiesmod.config.ConfigManager;
+import dev.morazzer.cookiesmod.config.categories.farming.CompostFoldable;
 import dev.morazzer.cookiesmod.features.farming.garden.Garden;
 import dev.morazzer.cookiesmod.features.farming.garden.Plot;
 import dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost;
@@ -20,6 +22,7 @@ import net.minecraft.util.Formatting;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @LoadModule
@@ -33,7 +36,7 @@ public class CompostUpgradeBreakdown implements Module {
 	private void tooltips(ItemStack itemStack, TooltipContext tooltipContext, List<Text> texts) {
 		if (!Garden.isOnGarden()) return;
 		if (!Plot.getCurrentPlot().isBarn()) return;
-
+		if (!ConfigManager.getConfig().gardenCategory.compostFoldable.showUpgradeCost.getValue()) return;
 		if (!CompostUpgradeCost.loaded()) return;
 		if (!itemStack.hasCustomName()) return;
 
@@ -101,21 +104,28 @@ public class CompostUpgradeBreakdown implements Module {
 				), upgrades.size());
 				List<Ingredient> subListIngredients = subList.stream()
 						.flatMap(compostUpgrade -> compostUpgrade.cost().stream()).toList();
-				Ingredient.mergeToList(subListIngredients).stream()
-						.sorted(Comparator.comparingInt(Ingredient::getAmount)).forEach(ingredient -> {
-							MutableText entry = Text.literal("  ");
-							RepositoryItem item = RepositoryItemManager.getItem(ingredient);
-							if (item == null) {
-								list.add(Text.literal("Can't find item %s".formatted(ingredient.toString())));
-								return;
-							}
-							entry.append(Text.literal(String.valueOf(ingredient.getAmount())).append("x ")
-									.formatted(Formatting.DARK_GRAY));
-							entry.append(item.getName());
-							list.add(entry);
-						});
+				Stream<Ingredient> stream = Ingredient.mergeToList(subListIngredients).stream()
+						.sorted(Comparator.comparingInt(Ingredient::getAmount));
+
+				if (ConfigManager.getConfig().gardenCategory.compostFoldable.itemSort.getValue() == CompostFoldable.ItemSortMode.DOWN) {
+					stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount).reversed());
+				}
+
+				stream.forEach(ingredient -> {
+					MutableText entry = Text.literal("  ");
+					RepositoryItem item = RepositoryItemManager.getItem(ingredient);
+					if (item == null) {
+						list.add(Text.literal("Can't find item %s".formatted(ingredient.toString())));
+						return;
+					}
+					entry.append(Text.literal(String.valueOf(ingredient.getAmount())).append("x ")
+							.formatted(Formatting.DARK_GRAY));
+					entry.append(item.getName());
+					list.add(entry);
+				});
 				int sum = subList.stream().mapToInt(CompostUpgradeCost.CompostUpgrade::copper).sum();
-				list.add(Text.literal("  ").append(Text.literal(String.valueOf(sum)).append(" Copper").formatted(Formatting.RED)));
+				list.add(Text.literal("  ")
+						.append(Text.literal(String.valueOf(sum)).append(" Copper").formatted(Formatting.RED)));
 				break;
 			}
 		}
