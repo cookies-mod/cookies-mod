@@ -3,7 +3,7 @@ package dev.morazzer.cookiesmod.features.farming.garden.desk;
 import com.google.common.collect.Lists;
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.features.farming.garden.Garden;
-import dev.morazzer.cookiesmod.features.repository.constants.CompostData;
+import dev.morazzer.cookiesmod.features.repository.constants.PlotCostData;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
@@ -48,7 +48,7 @@ public class PlotPriceDisplay implements Module {
 			if (!(screen instanceof HandledScreen<?>)) return;
 			if (!Garden.isOnGarden()) return;
 			if (!screen.getTitle().getString().equals("Configure Plots")) return;
-			if (!CompostData.loaded()) return;
+			if (!PlotCostData.loaded()) return;
 
 			ScreenEvents.afterRender(screen)
 					.register(ExceptionHandler.wrap(this::modifyItems));
@@ -77,7 +77,7 @@ public class PlotPriceDisplay implements Module {
 		int missingPlots = 0;
 		int ownedPlots = 0;
 		for (int index = 0; index < 4; index++) {
-			List<CompostData.Cost> cost = CompostData.getInstance().getByIndex(index);
+			List<PlotCostData.Cost> cost = PlotCostData.getInstance().getByIndex(index);
 			int amountBought = 0;
 			int amountMissing = 0;
 			for (int groupIndex = 0; groupIndex < costs[index].length; groupIndex++) {
@@ -96,7 +96,7 @@ public class PlotPriceDisplay implements Module {
 			ownedPlots += amountBought;
 
 			for (int compostIndex = 0; compostIndex < amountMissing; compostIndex++) {
-				CompostData.Cost slotCost = cost.get(amountBought + compostIndex);
+				PlotCostData.Cost slotCost = cost.get(amountBought + compostIndex);
 				if (slotCost.bundle()) {
 					missingBundles += slotCost.amount();
 				} else {

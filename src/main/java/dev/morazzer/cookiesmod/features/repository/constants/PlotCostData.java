@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 
-public class CompostData {
+public class PlotCostData {
 
 	List<Cost> center;
 	List<Cost> middle;
@@ -18,12 +18,12 @@ public class CompostData {
 	List<Cost> corners;
 
 	@Getter
-	private static CompostData instance;
+	private static PlotCostData instance;
 
 	public static boolean loaded() {
-		if (Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json")) && instance == null) {
+		if (instance == null && Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json")) ) {
 			instance = GsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager.getRepoRoot()
-					.resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), CompostData.class);
+					.resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), PlotCostData.class);
 		}
 		return instance != null;
 	}

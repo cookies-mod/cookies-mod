@@ -1,9 +1,10 @@
-package dev.morazzer.cookiesmod.features.farming.garden;
+package dev.morazzer.cookiesmod.features.farming.garden.composter;
 
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.config.categories.farming.CompostFoldable;
 import dev.morazzer.cookiesmod.events.api.PlayerListUpdateEvent;
+import dev.morazzer.cookiesmod.features.farming.garden.Garden;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
