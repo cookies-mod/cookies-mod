@@ -56,7 +56,7 @@ public class ScoreboardUtils {
 	private static Optional<ScoreboardObjective> getScoreboardObjective() {
 		return Optional.ofNullable(MinecraftClient.getInstance().player)
 				.map(PlayerEntity::getScoreboard)
-				.map(scoreboard -> scoreboard.getObjective(SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME));
+				.map(scoreboard -> scoreboard.getNullableObjective(SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME));
 	}
 
 }
