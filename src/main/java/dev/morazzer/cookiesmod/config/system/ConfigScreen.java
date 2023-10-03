@@ -620,12 +620,12 @@ public class ConfigScreen extends Screen {
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 		this.executeForEachVisibleNotHidden((processedOption, positionX, positionY, optionWidth) -> processedOption.getEditor()
-				.mouseScrolled(mouseX - positionX, mouseY - positionY, amount));
+				.mouseScrolled(mouseX - positionX, mouseY - positionY, verticalAmount));
 		if ((mouseY > this.optionsTop) && (mouseY < this.optionsBottom)
 				&& (mouseX > this.optionsLeft) && (mouseX < this.optionsRight)) {
-			int newTarget = (int) (this.optionsScrollbar.getTarget() - amount * 30);
+			int newTarget = (int) (this.optionsScrollbar.getTarget() - verticalAmount * 30);
 			this.optionsScrollbar.setTargetValue(Math.max(
 					0,
 					Math.min(this.optionsAllSize - this.optionsViewport, newTarget)
@@ -633,13 +633,13 @@ public class ConfigScreen extends Screen {
 		}
 		if ((mouseY > this.categoryTop) && (mouseY < this.categoryBottom)
 				&& (mouseX > this.categoryLeft) && (mouseX < this.categoryRight)) {
-			int newTarget = (int) (this.categoryScrollbar.getTarget() - amount * 30);
+			int newTarget = (int) (this.categoryScrollbar.getTarget() - verticalAmount * 30);
 			this.categoryScrollbar.setTargetValue(Math.max(
 					0,
 					Math.min(this.categoryAllSize - this.categoryViewport, newTarget)
 			));
 		}
-		return super.mouseScrolled(mouseX, mouseY, amount);
+		return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 	}
 
 	@Override
