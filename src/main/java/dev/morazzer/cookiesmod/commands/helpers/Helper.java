@@ -7,11 +7,13 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 public interface Helper {
 
-    static LiteralArgumentBuilder<FabricClientCommandSource> literal(String name) {
+    default LiteralArgumentBuilder<FabricClientCommandSource> literal(String name) {
         return LiteralArgumentBuilder.literal(name);
     }
 
-    static <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(String name, ArgumentType<T> argumentType) {
+    default <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(
+            String name, ArgumentType<T> argumentType) {
         return RequiredArgumentBuilder.argument(name, argumentType);
     }
+
 }

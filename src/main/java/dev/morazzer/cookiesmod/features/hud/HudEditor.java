@@ -15,16 +15,14 @@ public class HudEditor extends Screen {
 	}
 
 	@Override
-	public void renderBackground(DrawContext context) {
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
 		context.fill(0, 0, context.getScaledWindowWidth(), context.getScaledWindowHeight(), 0xAB << 24);
 	}
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.renderBackground(context);
-		HudManager.getInstance().getElements().forEach(hudElement -> {
-			hudElement.render(context);
-		});
+		this.renderBackground(context, mouseX, mouseY, delta);
+		HudManager.getInstance().getElements().forEach(hudElement -> hudElement.render(context));
 	}
 
 	private HudElement selected = null;

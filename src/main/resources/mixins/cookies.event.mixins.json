@@ -6,7 +6,8 @@
     "BlockBreakCallbackMixin",
     "ItemBackgroundRenderMixin",
     "PlayerListUpdateMixin",
-    "PositionedSoundInstanceMixin"
+    "PositionedSoundInstanceMixin",
+    "InventorySlotUpdateEventMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Slf4j
-public abstract class ClientCommand {
+public abstract class ClientCommand implements Helper {
     private static final Identifier identifier = new Identifier("cookie", "commands");
 
     public static void loadCommands(Reflections reflections, CommandDispatcher<FabricClientCommandSource> dispatcher) {
@@ -47,7 +47,7 @@ public abstract class ClientCommand {
         });
     }
 
-	public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
+    public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
 
     private String originalCommandName;
 
@@ -57,15 +57,15 @@ public abstract class ClientCommand {
             Predicate<FabricClientCommandSource> requirement = command.getRequirement();
             command.requires(fabricClientCommandSource -> {
                 ClientWorld world = MinecraftClient.getInstance().world;
-                return (this.isAvailableOnServers() || world != null && world.isClient()) && requirement.test(fabricClientCommandSource);
+                return (this.isAvailableOnServers() || world != null && world.isClient()) && requirement.test(
+                        fabricClientCommandSource);
             });
         }
 
         LiteralCommandNode<FabricClientCommandSource> register = dispatcher.register(command);
         this.originalCommandName = register.getName();
         for (String alias : getAliases()) {
-            dispatcher.register(Helper
-                    .literal(alias)
+            dispatcher.register(literal(alias)
                     .executes(command.getCommand())
                     .requires(command.getRequirement())
                     .redirect(register, getRedirectModifier(alias)));
@@ -73,8 +73,7 @@ public abstract class ClientCommand {
             if (alias.startsWith("cookie")) alias = alias.substring(6);
 
             String namespace = String.format("%s:%s", identifier.getNamespace(), alias);
-            dispatcher.register(Helper
-                    .literal(namespace)
+            dispatcher.register(literal(namespace)
                     .executes(command.getCommand())
                     .requires(command.getRequirement())
                     .redirect(register, getRedirectModifier(namespace)));
@@ -84,8 +83,7 @@ public abstract class ClientCommand {
         if (name.startsWith("cookie")) name = name.substring(6);
         String namespace = String.format("%s:%s", identifier.getNamespace(), name);
 
-        dispatcher.register(Helper
-                .literal(namespace)
+        dispatcher.register(literal(namespace)
                 .executes(command.getCommand())
                 .requires(command.getRequirement())
                 .redirect(register, getRedirectModifier(namespace)));

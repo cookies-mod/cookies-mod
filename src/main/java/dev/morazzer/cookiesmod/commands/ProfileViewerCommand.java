@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.morazzer.cookiesmod.commands.arguments.PlayerNameArgument;
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
-import dev.morazzer.cookiesmod.commands.helpers.Helper;
 import dev.morazzer.cookiesmod.commands.helpers.LoadCommand;
 import dev.morazzer.cookiesmod.features.PlayerManager;
 import dev.morazzer.cookiesmod.features.ProfileViewerManager;
@@ -25,10 +24,9 @@ import java.util.concurrent.CompletableFuture;
 public class ProfileViewerCommand extends ClientCommand {
 	@Override
 	public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-		return Helper.literal("pv")
+		return literal("pv")
 				.executes(this::openScreen)
-				.then(Helper
-						.argument("name", PlayerNameArgument.player())
+				.then(argument("name", PlayerNameArgument.player())
 						.executes(this::openScreen)
 				);
 	}

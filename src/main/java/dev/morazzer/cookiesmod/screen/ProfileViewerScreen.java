@@ -69,7 +69,7 @@ public class ProfileViewerScreen extends Screen {
         context.getMatrices().translate(this.x, this.y, 1);
         context.getMatrices().scale((float) (1 + this.scaleFactorX), (float) (1 + this.scaleFactorY), 1);
 
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         this.renderMainMenu(context);
 
         context.getMatrices().pop();
@@ -88,7 +88,7 @@ public class ProfileViewerScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(DrawContext context) {
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         context.fill(0,0, this.width, this.height, this.finishedFetching ? 0xFFD4D4D4 :  ~0 ^ 0x5f5f5f);
     }
 
