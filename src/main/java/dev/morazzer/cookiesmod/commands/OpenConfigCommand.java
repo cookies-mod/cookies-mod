@@ -3,7 +3,6 @@ package dev.morazzer.cookiesmod.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
-import dev.morazzer.cookiesmod.commands.helpers.Helper;
 import dev.morazzer.cookiesmod.commands.helpers.LoadCommand;
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.config.system.ConfigScreen;
@@ -17,7 +16,7 @@ import java.util.List;
 public class OpenConfigCommand extends ClientCommand {
 	@Override
 	public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-		return Helper.literal("cookiesmod")
+		return literal("cookiesmod")
 				.executes(context -> {
 					MinecraftClient
 							.getInstance()
