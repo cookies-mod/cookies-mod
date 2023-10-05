@@ -72,7 +72,7 @@ public class NextJacobContestHud extends HudElement {
 	}
 
 	@Override
-	protected void renderOverlay(DrawContext drawContext) {
+	protected void renderOverlay(DrawContext drawContext, float delta) {
 		int row = 0;
 		for (Contest contest : JacobsContests.getInstance().getNextNContestsActiveOrFuture(this.amountToDisplay)) {
 			int cropIndex = 0;

@@ -60,7 +60,7 @@ public class YawPitchDisplay extends HudElement {
 	}
 
 	@Override
-	protected void renderOverlay(DrawContext drawContext) {
+	protected void renderOverlay(DrawContext drawContext, float delta) {
 		this.updateLastYawPitch();
 		double yaw = MathHelper.wrapDegrees(CookiesUtils.getPlayer().map(ClientPlayerEntity::getYaw).orElse(0f));
 		double pitch = CookiesUtils.getPlayer().map(ClientPlayerEntity::getPitch).orElse(0f);

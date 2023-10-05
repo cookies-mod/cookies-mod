@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.config.categories.mining;
 
 import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import dev.morazzer.cookiesmod.features.mining.FetchurHud;
 import net.minecraft.text.Text;
 
 public class MiningCategory extends Category {
@@ -11,6 +12,12 @@ public class MiningCategory extends Category {
             Text.literal("Highlights the block you have to break for the puzzler"),
             false
     );
+
+    public BooleanOption currentFetchurItem = new BooleanOption(
+            Text.literal("Fetchur solver"),
+            Text.literal("Show next fetchur item"),
+            false
+    ).withHudElement(new FetchurHud());
 
     @Override
     public Text getName() {

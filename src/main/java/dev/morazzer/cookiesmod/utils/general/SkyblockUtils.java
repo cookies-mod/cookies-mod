@@ -44,6 +44,7 @@ public class SkyblockUtils implements Module {
 		if (text.getString().matches("Profile ID: .*")) {
 			DevUtils.log("profile.switch", "Found new profile id was {} is {}", lastProfileId, text.getString().substring(12).trim());
 			UUID uuid = UUID.fromString(text.getString().substring(12).trim());
+			if (lastProfileId == null) return;
 			if (!lastProfileId.equals(uuid)) {
 				ProfileSwapEvent.EVENT.invoker().swapProfile(lastProfileId, uuid);
 				ProfileSwapEvent.EVENT_NO_UUID.invoker().run();

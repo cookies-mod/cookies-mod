@@ -22,7 +22,7 @@ public class HudEditor extends Screen {
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 		this.renderBackground(context, mouseX, mouseY, delta);
-		HudManager.getInstance().getElements().forEach(hudElement -> hudElement.render(context));
+		HudManager.getInstance().getElements().forEach(hudElement -> hudElement.render(context, delta));
 	}
 
 	private HudElement selected = null;

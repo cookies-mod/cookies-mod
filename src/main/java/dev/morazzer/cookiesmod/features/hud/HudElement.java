@@ -38,22 +38,22 @@ public abstract class HudElement {
 		return HUD_NAMESPACE.withSuffixedPath(getIdentifierPath());
 	}
 
-	public void renderWithTests(DrawContext drawContext) {
+	public void renderWithTests(DrawContext drawContext, float delta) {
 		if (!(this.enabled && shouldRender())) {
 			return;
 		}
-		render(drawContext);
+		render(drawContext, delta);
 	}
 
 
-	public void render(DrawContext drawContext) {
+	public void render(DrawContext drawContext, float delta) {
 		drawContext.getMatrices().push();
 		drawContext.getMatrices().translate(position.getFixedX(getWidth()), position.getFixedY(getHeight()), 1);
-		renderOverlay(drawContext);
+		renderOverlay(drawContext, delta);
 		drawContext.getMatrices().pop();
 	}
 
-	protected abstract void renderOverlay(DrawContext drawContext);
+	protected abstract void renderOverlay(DrawContext drawContext, float delta);
 
 	public void toggle(boolean value) {
 		this.enabled = value;

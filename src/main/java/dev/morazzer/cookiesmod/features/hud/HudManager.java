@@ -41,9 +41,7 @@ public class HudManager implements Module {
 		if (MinecraftClient.getInstance().currentScreen instanceof HudEditor) {
 			return;
 		}
-		getElements().forEach(hudElement -> {
-			hudElement.renderWithTests(drawContext);
-		});
+		getElements().forEach(hudElement -> hudElement.renderWithTests(drawContext, (float) tickDelta));
 	}
 
 	public static void init() {
