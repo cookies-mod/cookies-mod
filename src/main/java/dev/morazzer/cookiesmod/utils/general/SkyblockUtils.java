@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.utils.general;
 
+import dev.morazzer.cookiesmod.events.api.ProfileSwapEvent;
 import dev.morazzer.cookiesmod.events.api.ServerSwapEvent;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
@@ -42,7 +43,12 @@ public class SkyblockUtils implements Module {
 	private static void lookForProfileIdMessage(Text text, boolean overlay) {
 		if (text.getString().matches("Profile ID: .*")) {
 			DevUtils.log("profile.switch", "Found new profile id was {} is {}", lastProfileId, text.getString().substring(12).trim());
-			lastProfileId = UUID.fromString(text.getString().substring(12).trim());
+			UUID uuid = UUID.fromString(text.getString().substring(12).trim());
+			if (!lastProfileId.equals(uuid)) {
+				ProfileSwapEvent.EVENT.invoker().swapProfile(lastProfileId, uuid);
+				ProfileSwapEvent.EVENT_NO_UUID.invoker().run();
+			}
+			lastProfileId = uuid;
 		} else if (text.getString().matches("Sending to server (?:mini|mega)\\d*.{1,3}\\.{3}")) {
 			lastServerSwap = System.currentTimeMillis();
 			ServerSwapEvent.SERVER_SWAP.invoker().onServerSwap();

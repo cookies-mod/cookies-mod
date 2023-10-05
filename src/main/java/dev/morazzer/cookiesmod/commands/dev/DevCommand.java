@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -58,6 +59,7 @@ public class DevCommand extends ClientCommand {
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         return Helper.literal("dev")
                 .then(Helper.literal("enable")
+                         // region
                         .then(Helper
                                 .argument(
                                         "tool",
@@ -85,7 +87,9 @@ public class DevCommand extends ClientCommand {
                                         }
                                 )
                         )
-                ).then(Helper.literal("disable")
+				// endregion
+		        ).then(Helper.literal("disable")
+				        // region
                         .then(Helper
                                 .argument(
                                         "tool",
@@ -114,6 +118,7 @@ public class DevCommand extends ClientCommand {
                                         }
                                 )
                         )
+				        // endregion
                 ).then(
                         /*
 
@@ -147,7 +152,21 @@ public class DevCommand extends ClientCommand {
                                         )
                                 ).then(Helper.literal("download")
                                 ).then(Helper.literal("items")
-                                        .then(Helper.literal("try_load_clipboard")
+				                        .then(Helper.literal("get_skull_url")
+						                        .then(Helper.argument("item", new RealIdentifierArgument(RepositoryItemManager.getAllItems()))
+								                        .executes(context -> {
+                                                            RepositoryItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+
+                                                            if (item.getSkin().isPresent()) {
+                                                                byte[] decode = Base64.getDecoder()
+                                                                        .decode(item.getSkin().get());
+                                                                context.getSource().sendFeedback(Text.empty().append(new String(decode)));
+                                                            }
+
+															return 0;
+								                        })
+                                                )
+                                        ).then(Helper.literal("try_load_clipboard")
                                                 .executes(context -> {
                                                     System.out.println(String.join(", ", REPLACEMENT_CHARS));
 
@@ -328,13 +347,9 @@ public class DevCommand extends ClientCommand {
                                         case "is_on_garden" ->
                                                 Optional.ofNullable(MinecraftClient.getInstance().player).ifPresent(player -> player.sendMessage(CookiesMod.createPrefix().append("" + Garden.isOnGarden())));
                                         case "nbt" -> ItemUtils.getNbtFromMainHand().ifPresent(nbtCompound -> context.getSource().sendFeedback(NbtHelper.toPrettyPrintedText(nbtCompound)));
-                                        case "contests" -> {
-                                            JacobsContests.getInstance().getContests().forEach(contest -> {
-                                                context.getSource().sendFeedback(Text.empty().append(contest.time().toStringWithEvents()).formatted(
-                                                        Formatting.BLUE)
-                                                        .append(Text.literal(Arrays.toString(contest.crops())).formatted(Formatting.WHITE)));
-                                            });
-                                        }
+                                        case "contests" -> JacobsContests.getInstance().getContests().forEach(contest -> context.getSource().sendFeedback(Text.empty().append(contest.time().toStringWithEvents()).formatted(
+                                                Formatting.BLUE)
+                                                .append(Text.literal(Arrays.toString(contest.crops())).formatted(Formatting.WHITE))));
                                     }
 
                                     return Command.SINGLE_SUCCESS;
