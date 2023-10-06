@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MiningUtils implements Module {
     private static final Identifier DISABLE_DWARVEN_CHECK = DevUtils.createIdentifier("mining/disable_dwarven_check");
+    private static final Identifier DISABLE_HOLLOW_CHECK = DevUtils.createIdentifier("mining/disable_hollow_check");
+
     private static final List<String> DWARVEN_LOCATIONS = List.of(
             "⏣ Dwarven Mines",
             "⏣ Aristocrat Passage",
@@ -42,11 +44,34 @@ public class MiningUtils implements Module {
             "⏣ Upper Mines"
     );
 
+    private static final List<String> HOLLOWS_LOCATIONS = List.of(
+            "⏣ Crystal Nucleus",
+            "⏣ Dragon's Lair",
+            "⏣ Fairy Grotto",
+            "⏣ Goblin Holdout",
+            "⏣ Goblin Queen's Den",
+            "⏣ Jungle Temple",
+            "⏣ Jungle",
+            "⏣ Khazad-dûm",
+            "⏣ Lost Precursor City",
+            "⏣ Magma Fields",
+            "⏣ Mines of Divan",
+            "⏣ Mithril Deposits",
+            "⏣ Precursor Remnants"
+    );
+
     private static final CachedValue<Boolean> isInDwarven = new CachedValue<>(() -> DWARVEN_LOCATIONS.contains(
             ScoreboardUtils.getCurrentLocation()) || DevUtils.isEnabled(DISABLE_DWARVEN_CHECK), 5, TimeUnit.SECONDS);
 
+    private static final CachedValue<Boolean> isInHollows = new CachedValue<>(() -> HOLLOWS_LOCATIONS.contains(
+            ScoreboardUtils.getCurrentLocation()) || DevUtils.isEnabled(DISABLE_HOLLOW_CHECK), 5, TimeUnit.SECONDS);
+
     public static boolean isInDwarven() {
         return SkyblockUtils.isCurrentlyInSkyblock() && isInDwarven.getValue();
+    }
+
+    public static boolean isInHollows() {
+        return SkyblockUtils.isCurrentlyInSkyblock() && isInHollows.getValue();
     }
 
     @Override
@@ -56,6 +81,6 @@ public class MiningUtils implements Module {
 
     @Override
     public String getIdentifierPath() {
-        return null;
+        return "mining/utils";
     }
 }

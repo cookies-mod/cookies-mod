@@ -33,6 +33,12 @@ public class MiningCategory extends Category {
             false
     ).withHiddenKeys("drill", "fuel", "bar", "drill fuel bar");
 
+    public BooleanOption scathaAlert = new BooleanOption(
+            Text.literal("Scatha Alert"),
+            Text.literal("Show an alert and play a sound when a worm approaches"),
+            true
+    );
+
     @Override
     public Text getName() {
         return Text.literal("Mining");
