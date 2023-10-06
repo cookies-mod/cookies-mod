@@ -3,6 +3,7 @@ package dev.morazzer.cookiesmod.config.categories.mining;
 import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import dev.morazzer.cookiesmod.features.mining.FetchurHud;
+import dev.morazzer.cookiesmod.features.mining.FuelBarHud;
 import net.minecraft.text.Text;
 
 public class MiningCategory extends Category {
@@ -18,6 +19,19 @@ public class MiningCategory extends Category {
             Text.literal("Show next fetchur item"),
             false
     ).withHudElement(new FetchurHud());
+
+
+    public BooleanOption showDrillFuelBar = new BooleanOption(
+            Text.literal("Drill fuel bar"),
+            Text.literal("Shows your remaining drill fuel in a bar"),
+            false
+    ).withHudElement(new FuelBarHud());
+
+    public BooleanOption showDrillFuelPercentage = new BooleanOption(
+            Text.literal("Fuel percentage"),
+            Text.literal("Show the remaining fuel percentage in the fuel bar"),
+            false
+    ).withHiddenKeys("drill", "fuel", "bar", "drill fuel bar");
 
     @Override
     public Text getName() {

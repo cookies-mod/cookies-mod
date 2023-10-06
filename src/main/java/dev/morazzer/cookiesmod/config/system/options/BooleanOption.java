@@ -18,66 +18,76 @@ import net.minecraft.text.Text;
 @Slf4j
 public class BooleanOption extends Option<Boolean, BooleanOption> {
 
-	private HudElement hudElement = null;
+    private HudElement hudElement = null;
 
-	public BooleanOption(Text name, Text description, Boolean value) {
-		super(name, description, value);
-	}
+    public BooleanOption(Text name, Text description, Boolean value) {
+        super(name, description, value);
+    }
 
-	public BooleanOption withHudElement(HudElement hudElement) {
-		HudManager.registerHudElement(hudElement);
-		this.hudElement = hudElement;
-		return this.withCallback((oldValue, newValue) -> hudElement.toggle(newValue));
-	}
+    public BooleanOption withHudElement(HudElement hudElement) {
+        HudManager.registerHudElement(hudElement);
+        this.hudElement = hudElement;
+        return this.withCallback((oldValue, newValue) -> hudElement.toggle(newValue));
+    }
 
-	@Override
-	public void load(JsonElement jsonElement) {
-		if (jsonElement instanceof JsonObject jsonObject) {
-			if (!jsonObject.has("value")) {
-				log.warn("Error while loading config value, boolean object doesnt have a value");
-				return;
-			}
-			this.value = jsonObject.get("value").getAsBoolean();
-			if (this.hudElement == null) {
-				return;
-			}
-			double x = 0;
-			double y = 0;
-			if (jsonObject.has("x")) {
-				x = jsonObject.get("x").getAsDouble();
-			}
-			if (jsonObject.has("y")) {
-				y = jsonObject.get("y").getAsDouble();
-			}
-			this.hudElement.setPosition(new Position(x, y));
-			this.hudElement.toggle(this.value);
-		}
-		if (!jsonElement.isJsonPrimitive()) {
-			log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
-			return;
-		}
-		if (!jsonElement.getAsJsonPrimitive().isBoolean()) {
-			log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.getAsString()));
-			return;
-		}
-		this.value = jsonElement.getAsBoolean();
-	}
+    @Override
+    public void load(JsonElement jsonElement) {
+        if (jsonElement instanceof JsonObject jsonObject) {
+            if (!jsonObject.has("value")) {
+                log.warn("Error while loading config value, boolean object doesnt have a value");
+                return;
+            }
+            this.value = jsonObject.get("value").getAsBoolean();
+            if (this.hudElement == null) {
+                return;
+            }
+            double x = 0;
+            double y = 0;
+            boolean centeredX = false;
+            boolean centeredY = false;
+            if (jsonObject.has("x")) {
+                x = jsonObject.get("x").getAsDouble();
+            }
+            if (jsonObject.has("y")) {
+                y = jsonObject.get("y").getAsDouble();
+            }
+            if (jsonObject.has("centered_x")) {
+                centeredX = jsonObject.get("centered_x").getAsBoolean();
+            }
+            if (jsonObject.has("centered_y")) {
+                centeredY = jsonObject.get("centered_y").getAsBoolean();
+            }
+            this.hudElement.setPosition(new Position(x, y, centeredX, centeredY));
+            this.hudElement.toggle(this.value);
+        }
+        if (!jsonElement.isJsonPrimitive()) {
+            log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            return;
+        }
+        if (!jsonElement.getAsJsonPrimitive().isBoolean()) {
+            log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.getAsString()));
+            return;
+        }
+        this.value = jsonElement.getAsBoolean();
+    }
 
-	@Override
-	public JsonElement save() {
-		if (this.hudElement != null) {
-			JsonObject jsonObject = new JsonObject();
+    @Override
+    public JsonElement save() {
+        if (this.hudElement != null) {
+            JsonObject jsonObject = new JsonObject();
 
-			jsonObject.addProperty("value", this.value);
-			jsonObject.addProperty("x", this.hudElement.getPosition().x());
-			jsonObject.addProperty("y", this.hudElement.getPosition().y());
-			return jsonObject;
-		}
-		return new JsonPrimitive(this.value);
-	}
+            jsonObject.addProperty("value", this.value);
+            jsonObject.addProperty("x", this.hudElement.getPosition().x());
+            jsonObject.addProperty("y", this.hudElement.getPosition().y());
+            jsonObject.addProperty("centered_x", this.hudElement.getPosition().centeredX());
+            jsonObject.addProperty("centered_y", this.hudElement.getPosition().centeredY());
+            return jsonObject;
+        }
+        return new JsonPrimitive(this.value);
+    }
 
-	@Override
-	public ConfigOptionEditor<Boolean, BooleanOption> getEditor() {
-		return new BooleanEditor(this);
-	}
+    @Override
+    public ConfigOptionEditor<Boolean, BooleanOption> getEditor() {
+        return new BooleanEditor(this);
+    }
 }

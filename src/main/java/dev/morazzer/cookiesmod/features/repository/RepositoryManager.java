@@ -2,7 +2,6 @@ package dev.morazzer.cookiesmod.features.repository;
 
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.RepositoryRecipeManager;
-import dev.morazzer.cookiesmod.features.repository.items.tags.TagManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +54,7 @@ public class RepositoryManager {
 		}
 
 		RepositoryItemManager.loadItems();
-		TagManager.loadTags();
+		//TagManager.loadTags();
 		RepositoryRecipeManager.loadRecipes();
 		reloadCallbacks.forEach(Runnable::run);
 		finishedLoading = true;
