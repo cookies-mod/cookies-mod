@@ -41,8 +41,6 @@ public class CookiesMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
-        log.info("Skymora loading...");
         ConfigManager.processConfig();
         ConcurrentUtils.execute(RepositoryManager::load);
 

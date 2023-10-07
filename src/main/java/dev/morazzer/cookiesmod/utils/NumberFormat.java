@@ -1,6 +1,12 @@
 package dev.morazzer.cookiesmod.utils;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class NumberFormat {
+	private static final DecimalFormat numberFormatter = new DecimalFormat("###,###.###", DecimalFormatSymbols.getInstance(
+			Locale.ENGLISH));
 
 	public static String toString(double number) {
 		if (number >= 1_000_000_000_000d) {
@@ -14,6 +20,10 @@ public class NumberFormat {
 		}
 
 		return String.valueOf((int) number);
+	}
+
+	public static String toFormattedString(int number) {
+		return numberFormatter.format(number);
 	}
 
 	public static long fromString(String number) {

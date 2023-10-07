@@ -39,6 +39,8 @@ public class MiningCategory extends Category {
             true
     );
 
+    public HotmFoldable heartOfTheMountain = new HotmFoldable();
+
     @Override
     public Text getName() {
         return Text.literal("Mining");
