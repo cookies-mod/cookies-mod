@@ -13,7 +13,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-@LoadModule
+@LoadModule("mining/scatha_alert")
 public class ScathaWarning implements Module {
 
     private static final String WORM_MESSAGE = "You hear the sound of something approaching...";

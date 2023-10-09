@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-@LoadModule
+@LoadModule("prices/bazaar")
 @Slf4j
 public class Bazaar implements Module {
     @Getter
@@ -50,13 +50,23 @@ public class Bazaar implements Module {
                 continue;
             }
             JsonObject product = products.getAsJsonObject(key);
-            Identifier identifier = ItemUtils.skyblockIdToIdentifier(product.get("product_id").getAsString()).orElse(null);
+            Identifier identifier = ItemUtils.skyblockIdToIdentifier(product.get("product_id").getAsString())
+                    .orElse(null);
             if (identifier == null) {
                 continue;
             }
-            ProductSummary[] buySummary = GsonUtils.gsonClean.fromJson(product.getAsJsonArray("buy_summary"), ProductSummary[].class);
-            ProductSummary[] sellSummary = GsonUtils.gsonClean.fromJson(product.getAsJsonArray("sell_summary"), ProductSummary[].class);
-            QuickStatus quickStatus = GsonUtils.gsonClean.fromJson(product.getAsJsonObject("quick_status"), QuickStatus.class);
+            ProductSummary[] buySummary = GsonUtils.gsonClean.fromJson(
+                    product.getAsJsonArray("buy_summary"),
+                    ProductSummary[].class
+            );
+            ProductSummary[] sellSummary = GsonUtils.gsonClean.fromJson(
+                    product.getAsJsonArray("sell_summary"),
+                    ProductSummary[].class
+            );
+            QuickStatus quickStatus = GsonUtils.gsonClean.fromJson(
+                    product.getAsJsonObject("quick_status"),
+                    QuickStatus.class
+            );
 
             this.productMap.put(identifier, new ProductInformation(identifier, sellSummary, buySummary, quickStatus));
         }

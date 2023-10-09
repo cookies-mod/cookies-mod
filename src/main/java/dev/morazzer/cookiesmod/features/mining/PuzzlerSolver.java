@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 
 import java.awt.Color;
 
-@LoadModule
+@LoadModule("mining/puzzle_solver")
 public class PuzzlerSolver implements Module {
 
     private Vec3d position = null;

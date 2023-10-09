@@ -13,41 +13,41 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
-@LoadModule
+@LoadModule("farming/unclaimed_contests")
 public class UnclaimedJacobsRewards implements Module {
-	@Override
-	public void load() {
-		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-			if (screen instanceof HandledScreen<?> handledScreen) {
-				if (handledScreen.getTitle().getString().equals("Your Contests")
-						&& ConfigManager.getConfig().gardenCategory.jacobFoldable.highlightUnclaimedContests.getValue()) {
-					ItemBackgroundRenderCallback.register(handledScreen, (drawContext, slot) -> {
-						if (slot.getStack().isEmpty()) {
-							return;
-						}
+    @Override
+    public void load() {
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (screen instanceof HandledScreen<?> handledScreen) {
+                if (handledScreen.getTitle().getString().equals("Your Contests")
+                        && ConfigManager.getConfig().gardenCategory.jacobFoldable.highlightUnclaimedContests.getValue()) {
+                    ItemBackgroundRenderCallback.register(handledScreen, (drawContext, slot) -> {
+                        if (slot.getStack().isEmpty()) {
+                            return;
+                        }
 
-						List<Text> tooltip = slot.getStack()
-								.getTooltip(MinecraftClient.getInstance().player, TooltipContext.BASIC);
-						Text lastLine = tooltip.get(tooltip.size() - 1);
-						if (!lastLine.getString().equals("Click to claim reward!")) {
-							return;
-						}
+                        List<Text> tooltip = slot.getStack()
+                                .getTooltip(MinecraftClient.getInstance().player, TooltipContext.BASIC);
+                        Text lastLine = tooltip.get(tooltip.size() - 1);
+                        if (!lastLine.getString().equals("Click to claim reward!")) {
+                            return;
+                        }
 
-						drawContext.fill(
-								slot.x,
-								slot.y,
-								slot.x + 16,
-								slot.y + 16,
-								ColorUtils.failColor | 0xFF << 24
-						);
-					});
-				}
-			}
-		});
-	}
+                        drawContext.fill(
+                                slot.x,
+                                slot.y,
+                                slot.x + 16,
+                                slot.y + 16,
+                                ColorUtils.failColor | 0xFF << 24
+                        );
+                    });
+                }
+            }
+        });
+    }
 
-	@Override
-	public String getIdentifierPath() {
-		return "farming/unclaimed_contests";
-	}
+    @Override
+    public String getIdentifierPath() {
+        return "farming/unclaimed_contests";
+    }
 }

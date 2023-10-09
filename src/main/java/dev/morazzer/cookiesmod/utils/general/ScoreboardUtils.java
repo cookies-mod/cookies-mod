@@ -14,49 +14,50 @@ import java.util.Optional;
 
 public class ScoreboardUtils {
 
-	private static final String SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME = "SBScoreboard";
+    private static final String SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME = "SBScoreboard";
 
-	public static Text getTitle() {
-		return getScoreboardObjective().map(ScoreboardObjective::getDisplayName).orElse(Text.empty());
-	}
+    public static Text getTitle() {
+        return getScoreboardObjective().map(ScoreboardObjective::getDisplayName).orElse(Text.empty());
+    }
 
-	public static List<String> getAllLines() {
-		Collection<ScoreboardPlayerScore> scoreboardPlayerScores = getScoreboardObjective()
-				.flatMap(objective -> Optional.ofNullable(MinecraftClient.getInstance().player)
-						.map(PlayerEntity::getScoreboard)
-						.map(scoreboard -> scoreboard.getAllPlayerScores(objective))
-				).orElse(Collections.emptyList());
+    public static List<String> getAllLines() {
+        Collection<ScoreboardPlayerScore> scoreboardPlayerScores = getScoreboardObjective()
+                .flatMap(objective -> Optional.ofNullable(MinecraftClient.getInstance().player)
+                        .map(PlayerEntity::getScoreboard)
+                        .map(scoreboard -> scoreboard.getAllPlayerScores(objective))
+                ).orElse(Collections.emptyList());
 
-		if (scoreboardPlayerScores.isEmpty()) {
-			return Collections.emptyList();
-		}
+        if (scoreboardPlayerScores.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-		return scoreboardPlayerScores.stream()
-				.map(score -> Optional.ofNullable(MinecraftClient.getInstance().player)
-						.map(PlayerEntity::getScoreboard)
-						.map(scoreboard -> scoreboard.getPlayerTeam(score.getPlayerName()))
-						.map(team -> team.getPrefix().getString() + team.getSuffix().getString())
-						.orElse("")
-				).toList();
-	}
+        return scoreboardPlayerScores.stream()
+                .map(score -> Optional.ofNullable(MinecraftClient.getInstance().player)
+                        .map(PlayerEntity::getScoreboard)
+                        .map(scoreboard -> scoreboard.getPlayerTeam(score.getPlayerName()))
+                        .map(team -> team.getPrefix().getString() + team.getSuffix().getString())
+                        .orElse("")
+                ).toList();
+    }
 
-	public static String getCurrentLocation() {
-		return getAllLines().stream().map(String::trim).filter(line -> line.matches("\u23E3 .+")).findFirst().orElse("");
-	}
+    public static String getCurrentLocation() {
+        return getAllLines().stream().map(String::trim).filter(line -> line.matches("[\u23E3\u0444] .+")).findFirst()
+                .orElse("");
+    }
 
-	public static GameMode getCurrentGameMode() {
-		return getAllLines().stream()
-				.map(String::trim)
-				.filter(line -> line.matches("[^A-Za-z0-9\u23E3] .*"))
-				.map(GameMode::getByString)
-				.findFirst()
-				.orElse(GameMode.CLASSIC);
-	}
+    public static GameMode getCurrentGameMode() {
+        return getAllLines().stream()
+                .map(String::trim)
+                .filter(line -> line.matches("[^A-Za-z0-9\u23E3] .*"))
+                .map(GameMode::getByString)
+                .findFirst()
+                .orElse(GameMode.CLASSIC);
+    }
 
-	private static Optional<ScoreboardObjective> getScoreboardObjective() {
-		return Optional.ofNullable(MinecraftClient.getInstance().player)
-				.map(PlayerEntity::getScoreboard)
-				.map(scoreboard -> scoreboard.getNullableObjective(SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME));
-	}
+    private static Optional<ScoreboardObjective> getScoreboardObjective() {
+        return Optional.ofNullable(MinecraftClient.getInstance().player)
+                .map(PlayerEntity::getScoreboard)
+                .map(scoreboard -> scoreboard.getNullableObjective(SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME));
+    }
 
 }

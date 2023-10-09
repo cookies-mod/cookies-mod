@@ -7,7 +7,8 @@ plugins {
     id("fabric-loom") version "1.3-SNAPSHOT"
     id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    //kotlin("jvm") version "1.9.0"
+    id("cookies.generateAreas")
+    id("cookies.moduleLoader")
 }
 
 version = project.properties["mod_version"]!!
@@ -69,8 +70,8 @@ tasks.getByName<ShadowJar>("shadowJar") {
 tasks.getByName<RemapJarTask>("remapJar") {
     this.dependsOn(tasks.getByName<ShadowJar>("shadowJar"))
     println(tasks.getByName<ShadowJar>("shadowJar").archiveFile)
-    inputFile = tasks.getByName<ShadowJar>("shadowJar").archiveFile
-    archiveClassifier = "remapped"
+    inputFile.set(tasks.getByName<ShadowJar>("shadowJar").archiveFile)
+    archiveClassifier.set("remapped")
 }
 
 java {

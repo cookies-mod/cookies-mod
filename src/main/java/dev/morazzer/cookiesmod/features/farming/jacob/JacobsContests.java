@@ -22,74 +22,76 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.StreamSupport;
 
-@LoadModule
+@LoadModule("farming/contests")
 @Slf4j
 public class JacobsContests implements Module {
-	@Getter
-	private static JacobsContests instance;
+    @Getter
+    private static JacobsContests instance;
 
-	@Getter
-	private LinkedList<Contest> contests = new LinkedList<>();
+    @Getter
+    private LinkedList<Contest> contests = new LinkedList<>();
 
-	@Override
-	public void load() {
-		instance = this;
-		SkyblockDateTime nextFarmingContest = SkyblockDateTime.now()
-				.getNext(SkyblockDateTime.SkyblockEvents.FARMING_CONTEST);
-		Instant instant = nextFarmingContest.getInstant();
-		Instant now = Instant.now();
-		Instant delta = instant.minus(Duration.ofSeconds(now.getEpochSecond()));
+    @Override
+    public void load() {
+        instance = this;
+        SkyblockDateTime nextFarmingContest = SkyblockDateTime.now()
+                .getNext(SkyblockDateTime.SkyblockEvents.FARMING_CONTEST);
+        Instant instant = nextFarmingContest.getInstant();
+        Instant now = Instant.now();
+        Instant delta = instant.minus(Duration.ofSeconds(now.getEpochSecond()));
 
-		log.info("Running contest refresh in {}s", delta.getEpochSecond());
+        log.info("Running contest refresh in {}s", delta.getEpochSecond());
 
-		ConcurrentUtils.schedule(() -> {
-			ConcurrentUtils.scheduleAtFixedRate(this::updateContests, 1, TimeUnit.HOURS);
-		}, delta.getEpochSecond(), TimeUnit.SECONDS);
-		this.updateContests();
-	}
+        ConcurrentUtils.schedule(
+                () -> ConcurrentUtils.scheduleAtFixedRate(this::updateContests, 1, TimeUnit.HOURS),
+                delta.getEpochSecond(),
+                TimeUnit.SECONDS
+        );
+        this.updateContests();
+    }
 
-	private void updateContests() {
-		log.info("Refreshing jacob contests");
-		if (!contests.isEmpty()) {
-			this.contests.removeIf(contest -> contest.time().isInPast());
-			return;
-		}
+    private void updateContests() {
+        log.info("Refreshing jacob contests");
+        if (!contests.isEmpty()) {
+            this.contests.removeIf(contest -> contest.time().isInPast());
+            return;
+        }
 
-		byte[] responseBody = HttpUtils.getResponseBody(URI.create("https://api.elitebot.dev/Contests/at/now"));
-		String response = new String(responseBody, StandardCharsets.UTF_8);
-		JsonObject responseObject = GsonUtils.gson.fromJson(response, JsonObject.class);
+        byte[] responseBody = HttpUtils.getResponseBody(URI.create("https://api.elitebot.dev/Contests/at/now"));
+        String response = new String(responseBody, StandardCharsets.UTF_8);
+        JsonObject responseObject = GsonUtils.gson.fromJson(response, JsonObject.class);
 
-		if (!responseObject.has("contests")) {
-			return;
-		}
+        if (!responseObject.has("contests")) {
+            return;
+        }
 
-		JsonObject contests = responseObject.getAsJsonObject("contests");
-		for (String key : contests.keySet()) {
-			//noinspection SuspiciousToArrayCall
-			Crop[] crops = StreamSupport.stream(contests.getAsJsonArray(key).spliterator(), false)
-					.filter(JsonElement::isJsonPrimitive)
-					.map(JsonElement::getAsJsonPrimitive)
-					.filter(JsonPrimitive::isString)
-					.map(JsonPrimitive::getAsString)
-					.map(Crop::byName)
-					.toArray(Crop[]::new);
-			long time = Long.parseLong(key);
-			if (time < System.currentTimeMillis() / 1000) {
-				continue;
-			}
+        JsonObject contests = responseObject.getAsJsonObject("contests");
+        for (String key : contests.keySet()) {
+            //noinspection SuspiciousToArrayCall
+            Crop[] crops = StreamSupport.stream(contests.getAsJsonArray(key).spliterator(), false)
+                    .filter(JsonElement::isJsonPrimitive)
+                    .map(JsonElement::getAsJsonPrimitive)
+                    .filter(JsonPrimitive::isString)
+                    .map(JsonPrimitive::getAsString)
+                    .map(Crop::byName)
+                    .toArray(Crop[]::new);
+            long time = Long.parseLong(key);
+            if (time < System.currentTimeMillis() / 1000) {
+                continue;
+            }
 
-			this.contests.add(new Contest(SkyblockDateTime.ofEpochSecond(time), crops));
-		}
+            this.contests.add(new Contest(SkyblockDateTime.ofEpochSecond(time), crops));
+        }
 
-	}
+    }
 
-	public List<Contest> getNextNContestsActiveOrFuture(int amount) {
-		return this.contests.stream().filter(contest -> contest.time().isCurrentDay() || contest.time().isInFuture())
-				.limit(amount).toList();
-	}
+    public List<Contest> getNextNContestsActiveOrFuture(int amount) {
+        return this.contests.stream().filter(contest -> contest.time().isCurrentDay() || contest.time().isInFuture())
+                .limit(amount).toList();
+    }
 
-	@Override
-	public String getIdentifierPath() {
-		return "farming/contests";
-	}
+    @Override
+    public String getIdentifierPath() {
+        return "farming/contests";
+    }
 }

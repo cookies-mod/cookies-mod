@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@LoadModule
+@LoadModule("mining/hotm_helper")
 public class HotmHelper implements Module {
     Map<String, List<Integer>> perks = new LinkedHashMap<>();
     List<String> gemstonePowder = new LinkedList<>();

@@ -11,34 +11,34 @@ import net.minecraft.util.Identifier;
 
 import java.util.concurrent.TimeUnit;
 
-@LoadModule
+@LoadModule("garden")
 public class Garden implements Module {
-	private static final Identifier DISABLE_GARDEN_CHECK = DevUtils.createIdentifier("garden/disable_garden_check");
-	static CachedValue<Boolean> isOnGarden = new CachedValue<>(Garden::isOnGardenForce, 2, TimeUnit.SECONDS);
+    private static final Identifier DISABLE_GARDEN_CHECK = DevUtils.createIdentifier("garden/disable_garden_check");
+    static CachedValue<Boolean> isOnGarden = new CachedValue<>(Garden::isOnGardenForce, 2, TimeUnit.SECONDS);
 
-	public static boolean isOnGarden() {
-		if (SkyblockUtils.getLastServerSwap() + 5000 > System.currentTimeMillis()) {
-			isOnGarden.updateNow();
-		}
-		return (SkyblockUtils.isCurrentlyInSkyblock() && isOnGarden.getValue());
-	}
+    public static boolean isOnGarden() {
+        if (SkyblockUtils.getLastServerSwap() + 5000 > System.currentTimeMillis()) {
+            isOnGarden.updateNow();
+        }
+        return (SkyblockUtils.isCurrentlyInSkyblock() && isOnGarden.getValue());
+    }
 
-	public static boolean isOnGardenForce() {
-		return SkyblockUtils.isCurrentlyInSkyblock()
-				&& (LocationUtils.getCurrentLocation().matches(". (:?The Garden|Plot: .+)")
-				|| DevUtils.isEnabled(DISABLE_GARDEN_CHECK)
-		);
-	}
+    public static boolean isOnGardenForce() {
+        return SkyblockUtils.isCurrentlyInSkyblock()
+                && (LocationUtils.getCurrentLocation().matches(". (:?The Garden|Plot: .+)")
+                || DevUtils.isEnabled(DISABLE_GARDEN_CHECK)
+        );
+    }
 
-	@Override
-	public void load() {
-		if (DevUtils.isDevEnvironment()) {
-			PlotOutlines.initializePlotOutlinesDebug();
-		}
-	}
+    @Override
+    public void load() {
+        if (DevUtils.isDevEnvironment()) {
+            PlotOutlines.initializePlotOutlinesDebug();
+        }
+    }
 
-	@Override
-	public String getIdentifierPath() {
-		return "garden";
-	}
+    @Override
+    public String getIdentifierPath() {
+        return "garden";
+    }
 }

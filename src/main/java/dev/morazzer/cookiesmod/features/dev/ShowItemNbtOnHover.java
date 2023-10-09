@@ -19,50 +19,50 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
-@LoadModule
+@LoadModule("dev/show_nbt")
 public class ShowItemNbtOnHover implements Module {
-	private static final Identifier RENDER_NBT = DevUtils.createIdentifier("render_item_nbt");
+    private static final Identifier RENDER_NBT = DevUtils.createIdentifier("render_item_nbt");
 
-	@Override
-	public void load() {
-		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-			if (screen instanceof HandledScreen<?>) {
-				if (!DevUtils.isEnabled(RENDER_NBT)) {
-					return;
-				}
-				ScreenEvents.afterRender(screen).register(this::afterRender);
-			}
-		});
-	}
+    @Override
+    public void load() {
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (screen instanceof HandledScreen<?>) {
+                if (!DevUtils.isEnabled(RENDER_NBT)) {
+                    return;
+                }
+                ScreenEvents.afterRender(screen).register(this::afterRender);
+            }
+        });
+    }
 
-	private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
-		HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
+    private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
+        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
-		for (Slot slot : handledScreen.getScreenHandler().slots) {
-			if (handledScreen.isPointOverSlot(slot, mouseX, mouseY)) {
-				NbtCompound orCreateNbt = slot.getStack()
-						.getNbt();
-				if (orCreateNbt == null || orCreateNbt.isEmpty()) return;
-				Text prettyPrintedText = NbtHelper.toPrettyPrintedText(orCreateNbt);
-				List<OrderedText> orderedTexts = new ArrayList<>(MinecraftClient.getInstance().textRenderer.wrapLines(
-						prettyPrintedText,
-						200
-				));
-				orderedTexts.add(Text.literal("Index: ").append(String.valueOf(slot.getIndex())).asOrderedText());
-				drawContext.drawTooltip(
-						MinecraftClient.getInstance().textRenderer,
-						orderedTexts,
-						HoveredTooltipPositioner.INSTANCE,
-						mouseX - 216 + (200 - Math.min(MinecraftClient.getInstance().textRenderer.getWidth(
-								prettyPrintedText), 200)),
-						mouseY
-				);
-			}
-		}
-	}
+        for (Slot slot : handledScreen.getScreenHandler().slots) {
+            if (handledScreen.isPointOverSlot(slot, mouseX, mouseY)) {
+                NbtCompound orCreateNbt = slot.getStack()
+                        .getNbt();
+                if (orCreateNbt == null || orCreateNbt.isEmpty()) return;
+                Text prettyPrintedText = NbtHelper.toPrettyPrintedText(orCreateNbt);
+                List<OrderedText> orderedTexts = new ArrayList<>(MinecraftClient.getInstance().textRenderer.wrapLines(
+                        prettyPrintedText,
+                        200
+                ));
+                orderedTexts.add(Text.literal("Index: ").append(String.valueOf(slot.getIndex())).asOrderedText());
+                drawContext.drawTooltip(
+                        MinecraftClient.getInstance().textRenderer,
+                        orderedTexts,
+                        HoveredTooltipPositioner.INSTANCE,
+                        mouseX - 216 + (200 - Math.min(MinecraftClient.getInstance().textRenderer.getWidth(
+                                prettyPrintedText), 200)),
+                        mouseY
+                );
+            }
+        }
+    }
 
-	@Override
-	public String getIdentifierPath() {
-		return "dev/show_nbt";
-	}
+    @Override
+    public String getIdentifierPath() {
+        return "dev/show_nbt";
+    }
 }
