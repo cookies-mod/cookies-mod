@@ -1,11 +1,18 @@
 package dev.morazzer.cookiesmod.utils.general;
 
+import com.google.gson.JsonObject;
+import dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint;
+import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.TextUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 
+import java.util.Base64;
 import java.util.Optional;
 
 public class ItemUtils {
@@ -52,6 +59,23 @@ public class ItemUtils {
     public static Optional<ItemStack> getMainHand() {
         return Optional.ofNullable(MinecraftClient.getInstance()).map(client -> client.player)
                 .map(PlayerEntity::getMainHandStack);
+    }
+
+    @TestEntrypoint("get_texture_from_item")
+    public static void getTextureFromCurrentItem() {
+        if (getMainHand().isEmpty()) return;
+        NbtCompound orCreateNbt = getMainHand().get().getOrCreateNbt();
+        NbtCompound properties = orCreateNbt.getCompound("SkullOwner").getCompound("Properties");
+        NbtList textures = properties.getList("textures", NbtElement.COMPOUND_TYPE);
+        for (NbtElement texture : textures) {
+            if (texture.getType() == NbtElement.COMPOUND_TYPE) {
+                NbtCompound textureValue = (NbtCompound) texture;
+
+                String s = new String(Base64.getDecoder().decode(textureValue.getString("Value")));
+                JsonObject jsonObject = GsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
+            }
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -16,6 +17,8 @@ import java.util.Optional;
 
 @Slf4j
 public class RenderUtils {
+
+    public static final Identifier itemModelPredicate = new Identifier("cookiesmod", "skyblock_id");
 
     private static final int ALPHA = 0xff000000;
 

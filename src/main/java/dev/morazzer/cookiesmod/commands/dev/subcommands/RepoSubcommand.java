@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.commands.dev.subcommands;
 
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookiesmod.CookiesMod;
@@ -11,6 +12,8 @@ import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
+import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.TextUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.util.Identifier;
 
+import java.util.Base64;
 import java.util.Objects;
 
 @DevSubcommand
@@ -70,6 +74,25 @@ public class RepoSubcommand extends ClientCommand {
 
             Objects.requireNonNull(MinecraftClient.getInstance().player).giveItemStack(itemStack);
 
+
+            return Command.SINGLE_SUCCESS;
+        }))).then(literal("get_skull_texture").then(argument("item",
+                new RealIdentifierArgument(RepositoryItemManager.getAllItems())
+        ).executes(context -> {
+            if (context.getSource().getEntity() instanceof PlayerEntity player && !player.isCreative()) {
+                context.getSource().sendError(CookiesMod.createPrefix(ColorUtils.failColor)
+                        .append("You have to be in creative to use this command"));
+                return 0;
+            }
+
+            RepositoryItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+            if (item.getSkin().isPresent()) {
+                String s = new String(Base64.getDecoder().decode(item.getSkin().get()));
+                JsonObject jsonObject = GsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                context.getSource().sendFeedback(TextUtils.prettyPrintJson(jsonObject));
+            } else {
+                context.getSource().sendFeedback(CookiesMod.createPrefix(ColorUtils.failColor).append("Item does not have a skin"));
+            }
 
             return Command.SINGLE_SUCCESS;
         })))).requires(context -> ConfigManager.getConfig().devCategory.displayRepoOption.getValue());

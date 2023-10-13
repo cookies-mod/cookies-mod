@@ -20,3 +20,10 @@ accessible method net/minecraft/client/gui/screen/ingame/HandledScreen isPointOv
 
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen y I
+
+accessible class net/minecraft/client/render/model/json/ModelOverrideList$BakedOverride
+accessible field net/minecraft/client/render/model/json/ModelOverrideList$BakedOverride conditions [Lnet/minecraft/client/render/model/json/ModelOverrideList$InlinedCondition;
+accessible class net/minecraft/client/render/model/json/ModelOverrideList$InlinedCondition
+accessible field net/minecraft/client/render/model/json/ModelOverrideList$InlinedCondition index I
+accessible field net/minecraft/client/render/model/json/ModelOverrideList$InlinedCondition threshold F
+accessible field net/minecraft/client/render/model/json/ModelOverrideList$BakedOverride model Lnet/minecraft/client/render/model/BakedModel;
