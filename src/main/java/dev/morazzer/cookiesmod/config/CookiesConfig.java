@@ -2,12 +2,14 @@ package dev.morazzer.cookiesmod.config;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.categories.DevCategory;
+import dev.morazzer.cookiesmod.config.categories.dungeons.DungeonCategory;
 import dev.morazzer.cookiesmod.config.categories.farming.GardenCategory;
 import dev.morazzer.cookiesmod.config.categories.GuiCategory;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
 import dev.morazzer.cookiesmod.config.categories.about.AboutCategory;
 import dev.morazzer.cookiesmod.config.categories.ProfileViewerConfig;
 import dev.morazzer.cookiesmod.config.categories.mining.MiningCategory;
+import dev.morazzer.cookiesmod.config.categories.waypoints.WaypointCategory;
 import dev.morazzer.cookiesmod.config.system.Config;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import net.minecraft.text.Text;
@@ -30,6 +32,8 @@ public class CookiesConfig extends Config<CookiesConfig> {
     public GardenCategory gardenCategory = new GardenCategory();
 
     public MiningCategory miningCategory = new MiningCategory();
+
+    public DungeonCategory dungeonCategory = new DungeonCategory();
 
     @Expose
     public DevCategory devCategory = new DevCategory();

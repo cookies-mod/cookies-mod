@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ColorUtils {
 
-    public static final int mainColor = 0xE99DBE;
-    public static final int failColor = 0xFF6961;
-    public static final int successColor = 0x77DD77;
+    public static final int mainColor = 0xFFE99DBE;
+    public static final int failColor = 0xFFFF6961;
+    public static final int successColor = 0xFF77DD77;
 
     private static final Identifier showStacktraceOnGradientHover = DevUtils.createIdentifier("show_stacktrace_on_gradient_hover");
 

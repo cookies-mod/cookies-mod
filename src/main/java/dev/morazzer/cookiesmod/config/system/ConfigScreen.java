@@ -252,6 +252,7 @@ public class ConfigScreen extends Screen {
 				|| processedCategory.getDescription().getString().contains(search)
 				|| processedCategory.getProcessedOptions().stream()
 				.anyMatch(option -> option.getEditor().doesMatchSearch(search))));
+		if (this.visibleCategories.isEmpty()) return;
 		if (this.selectedCategory.filter(this.visibleCategories::contains).isEmpty()) {
 			this.setSelectedCategory(this.visibleCategories.peekFirst());
 		}

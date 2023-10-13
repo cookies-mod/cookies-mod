@@ -20,6 +20,8 @@ public class SkyblockUtils implements Module {
     private static final Identifier DISABLE_SKYBLOCK_CHECK = DevUtils.createIdentifier("disable_skyblock_check");
     @Getter
     private static long lastServerSwap = -1;
+    @Getter
+    private static String lastServer = "";
 
     private static final CachedValue<Boolean> isCurrentlyInSkyblock = new CachedValue<>(
             () -> ScoreboardUtils.getTitle().getString().matches("SK[YI]BLOCK.*"),
@@ -57,6 +59,7 @@ public class SkyblockUtils implements Module {
             lastProfileId = uuid;
         } else if (text.getString().matches("Sending to server (?:mini|mega)\\d*.{1,3}\\.{3}")) {
             lastServerSwap = System.currentTimeMillis();
+            lastServer = text.getString().replaceAll("Sending to server ((?:mini|mega)\\d*.{1,3})\\.{3}", "$1");
             ServerSwapEvent.SERVER_SWAP.invoker().onServerSwap();
         }
     }

@@ -8,7 +8,8 @@
     "ItemBackgroundRenderMixin",
     "PlayerListUpdateMixin",
     "PositionedSoundInstanceMixin",
-    "ScreenHandlerUpdateEventMixin"
+    "ScreenHandlerUpdateEventMixin",
+    "ExplosionLargeParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -91,6 +91,14 @@ public class ExceptionHandler {
 		}
 	}
 
+	public static <T> T removeThrowsSilent(ThrowableFunction<T> throwableFunction, T defaultObject) {
+		try {
+			return throwableFunction.run();
+		} catch (Throwable e) {
+			return defaultObject;
+		}
+	}
+
 	public static <T> T wrap(T function) {
 		AtomicBoolean failed = new AtomicBoolean();
 

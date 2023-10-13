@@ -30,6 +30,10 @@ public class LocationUtils {
         return currentArea.getValue();
     }
 
+    public static Islands getCurrentIsland() {
+        return Islands.getIsland(getCurrentArea());
+    }
+
     public static CachedValue<Area> currentArea = new CachedValue<>(() -> {
         String currentLocation = getCurrentLocation().trim();
         for (Area value : Area.values()) {
@@ -76,6 +80,11 @@ public class LocationUtils {
         public boolean isIsland(Area areas) {
             return this.isIsland.apply(areas);
         }
+
+        public static Islands valueOfOrUnknown(String value) {
+            return ExceptionHandler.removeThrowsSilent(() -> Enum.valueOf(Islands.class, value), UNKNOWN_ISLAND);
+        }
+
 
         public static Islands getIsland(Area area) {
             for (Islands value : Islands.values()) {
