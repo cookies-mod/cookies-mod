@@ -38,6 +38,7 @@ public class ConfigManager {
 		return config;
 	}
 
+	@Getter
 	private static final Path configFolder = Path.of("config/cookiesmod");
 	private static final Path configFile = configFolder.resolve("config.json");
 
