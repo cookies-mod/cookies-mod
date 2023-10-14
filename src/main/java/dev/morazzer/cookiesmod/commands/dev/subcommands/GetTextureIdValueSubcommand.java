@@ -24,17 +24,17 @@ public class GetTextureIdValueSubcommand extends ClientCommand {
                 return -1;
             }
             context.getSource().sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor)
-                    .append(Text.literal("Item Id: ").append(String.valueOf(s.get().hashCode() / 1000000f))
+                    .append(Text.literal("Item Id: ").append(String.valueOf(s.get().hashCode()))
                             .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
-                                    String.valueOf(s.get().hashCode() / 1000000f)
+                                    String.valueOf(s.get().hashCode())
                             )))));
             return 1;
         }).then(argument("id", StringArgumentType.word()).executes(context -> {
             String id = context.getArgument("id", String.class);
             context.getSource().sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor)
-                    .append(Text.literal("Item Id: ").append(String.valueOf(id.hashCode() / 1000000f))
+                    .append(Text.literal("Item Id: ").append(String.valueOf(id.hashCode()))
                             .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
-                                    String.valueOf(id.hashCode() / 1000000f)
+                                    String.valueOf(id.hashCode())
                             )))));
             return 1;
         }));

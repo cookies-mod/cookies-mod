@@ -130,11 +130,10 @@ public class FuelBarHud extends HudElement {
                 .orElse(false)) {
             return;
         }
-        Optional<NbtCompound> optionalItemNbt = ItemUtils.getNbtFromMainHand();
-        if (optionalItemNbt.isEmpty()) return;
-        NbtCompound itemNbt = optionalItemNbt.get();
+        Optional<NbtCompound> optionalAttributes = ItemUtils.getMainHand().flatMap(ItemUtils::getSkyblockAttributes);
+        if (optionalAttributes.isEmpty()) return;
+        NbtCompound extraAttributes = optionalAttributes.get();
 
-        NbtCompound extraAttributes = itemNbt.getCompound("ExtraAttributes");
         final int maxFuel = ItemUtils.skyblockIdToIdentifier(extraAttributes.getString("drill_part_fuel_tank"))
                 .map(this.parts::get)
                 .orElse(3000);

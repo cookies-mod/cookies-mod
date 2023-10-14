@@ -18,8 +18,12 @@ import java.util.Optional;
 public class ItemUtils {
     private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
 
+    public static Optional<NbtCompound> getSkyblockAttributes(ItemStack itemStack) {
+        return Optional.ofNullable(itemStack.getSubNbt("ExtraAttributes"));
+    }
+
     public static Optional<String> getSkyblockId(ItemStack itemStack) {
-        return Optional.ofNullable(itemStack.getSubNbt("ExtraAttributes"))
+        return getSkyblockAttributes(itemStack)
                 .map(nbtCompound -> nbtCompound.getString("id"));
     }
 
@@ -36,7 +40,7 @@ public class ItemUtils {
     }
 
     public static boolean doesCurrentItemHaveEnchantments(String... enchantments) {
-        return getNbtFromMainHand().map(nbt -> nbt.getCompound("ExtraAttributes"))
+        return getMainHand().flatMap(ItemUtils::getSkyblockAttributes)
                 .map(extraAttributes -> extraAttributes.getCompound("enchantments")).map(enchantmentsContainer -> {
                     for (String enchantment : enchantments) {
                         if (enchantmentsContainer.contains(enchantment)) {
