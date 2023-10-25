@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class Waypoint {
 
-    public Area[] area;
+    public Area[] area = new Area[]{};
     public Vec3d position;
     public Text name;
     public Color color;

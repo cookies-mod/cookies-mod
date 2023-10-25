@@ -1,10 +1,14 @@
 package dev.morazzer.cookiesmod.data.profile;
 
 import dev.morazzer.cookiesmod.data.player.PlayerStorage;
+import dev.morazzer.cookiesmod.events.api.ProfileSwapEvent;
+import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.util.Identifier;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,6 +20,19 @@ import java.util.Optional;
  * Storage for the {@linkplain dev.morazzer.cookiesmod.data.profile.ProfileData} to always get the correct instance.
  */
 public class ProfileStorage {
+
+    private static final Identifier SHOW_LOADING_SAVING_MESSAGES = DevUtils.createIdentifier(
+            "storage/profiles/show_load_save");
+
+    static {
+        ProfileSwapEvent.AFTER_SET_NO_UUID.register(() -> {
+            saveCurrentProfile();
+            loadCurrentProfile();
+        });
+    }
+
+
+    static Path profileDataFolder = Path.of("config/cookiesmod/profiles");
 
     static final Path profileDataFolder = Path.of("config/cookiesmod/profiles");
 
@@ -33,9 +50,14 @@ public class ProfileStorage {
             return;
         }
 
+       if (DevUtils.isEnabled(SHOW_LOADING_SAVING_MESSAGES)) {
+            CookiesUtils.sendMessage("Saving " + profileData.getProfileUuid());
+        }
+
         Path playerDirectory = profileDataFolder.resolve(profileData.getPlayerUuid().toString());
         Path profileFile = playerDirectory.resolve(profileData.getProfileUuid() + ".json");
 
+        ExceptionHandler.removeThrows(() -> Files.createDirectories(profileFile.getParent()));
         ExceptionHandler.removeThrows(() -> Files.writeString(
                 profileFile,
                 GsonUtils.gson.toJson(profileData),
@@ -51,6 +73,10 @@ public class ProfileStorage {
     private static void loadCurrentProfile() {
         if (PlayerStorage.getCurrentPlayer().isEmpty() || SkyblockUtils.getLastProfileId().isEmpty()) {
             return;
+        }
+
+        if (DevUtils.isEnabled(SHOW_LOADING_SAVING_MESSAGES)) {
+            CookiesUtils.sendMessage("Loading " + SkyblockUtils.getLastProfileId().get());
         }
 
         Path playerDirectory = profileDataFolder.resolve(PlayerStorage.getCurrentPlayer().get().toString());
@@ -90,7 +116,7 @@ public class ProfileStorage {
         saveCurrentProfile();
         loadCurrentProfile();
 
-        return Optional.of(profileData);
+        return Optional.ofNullable(profileData);
     }
 
 }

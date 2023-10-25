@@ -66,12 +66,11 @@ public class RepositoryManager {
             }
         }
 
-        RepositoryItemManager.loadItems();
-        //TagManager.loadTags();
-        RepositoryRecipeManager.loadRecipes();
-        reloadCallbacks.forEach(Runnable::run);
-        finishedLoading = true;
-    }
+		RepositoryItemManager.loadItems();
+		RepositoryRecipeManager.loadRecipes();
+		reloadCallbacks.forEach(Runnable::run);
+		finishedLoading = true;
+	}
 
     /**
      * Gets a resource from the repository as byte[].
@@ -80,7 +79,7 @@ public class RepositoryManager {
      * @return The resource.
      */
     public static Optional<byte[]> getResource(String path) {
-        return Optional.of(ExceptionHandler.removeThrows(() -> Files.readAllBytes(repoRoot.resolve(path))));
+        return Optional.ofNullable(ExceptionHandler.removeThrows(() -> Files.readAllBytes(repoRoot.resolve(path))));
     }
 
 }

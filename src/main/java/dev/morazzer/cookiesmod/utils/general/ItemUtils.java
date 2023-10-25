@@ -18,6 +18,7 @@ import java.util.Optional;
 public class ItemUtils {
 
     private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
+    public static final String NBT_KEY = "ExtraAttributes";
 
     /**
      * Gets the skyblock attribute tag of an item.
@@ -26,7 +27,7 @@ public class ItemUtils {
      * @return The tag.
      */
     public static Optional<NbtCompound> getSkyblockAttributes(ItemStack itemStack) {
-        return Optional.ofNullable(itemStack.getSubNbt("ExtraAttributes"));
+        return Optional.ofNullable(itemStack.getSubNbt(NBT_KEY));
     }
 
     /**

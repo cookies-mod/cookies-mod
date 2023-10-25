@@ -68,12 +68,17 @@ public class SkyblockUtils implements Module {
                     text.getString().substring(12).trim()
             );
             UUID uuid = UUID.fromString(text.getString().substring(12).trim());
-            if (lastProfileId == null) return;
-            if (!lastProfileId.equals(uuid)) {
+
+            if (lastProfileId == null || !lastProfileId.equals(uuid)) {
                 ProfileSwapEvent.EVENT.invoker().swapProfile(lastProfileId, uuid);
                 ProfileSwapEvent.EVENT_NO_UUID.invoker().run();
             }
+
+            UUID previous = lastProfileId;
             lastProfileId = uuid;
+
+            ProfileSwapEvent.AFTER_SET.invoker().swapProfile(previous, uuid);
+            ProfileSwapEvent.AFTER_SET_NO_UUID.invoker().run();
         } else if (text.getString().matches("Sending to server (?:mini|mega)\\d*.{1,3}\\.{3}")) {
             lastServerSwap = System.currentTimeMillis();
             lastServer = text.getString().replaceAll("Sending to server ((?:mini|mega)\\d*.{1,3})\\.{3}", "$1");

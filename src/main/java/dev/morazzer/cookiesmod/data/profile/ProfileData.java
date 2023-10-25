@@ -1,6 +1,7 @@
 package dev.morazzer.cookiesmod.data.profile;
 
 import dev.morazzer.cookiesmod.data.player.PlayerStorage;
+import dev.morazzer.cookiesmod.data.profile.mining.DwarvenMinesData;
 import dev.morazzer.cookiesmod.utils.general.ScoreboardUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import lombok.AccessLevel;
@@ -23,6 +24,7 @@ public class ProfileData {
     private UUID profileUuid;
     @Setter(AccessLevel.PRIVATE)
     private GameMode gameMode = GameMode.UNKNOWN;
+    private DwarvenMinesData dwarvenMinesData = new DwarvenMinesData();
 
     /**
      * Create a profile.
