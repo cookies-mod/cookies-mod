@@ -10,63 +10,85 @@ import java.util.stream.Collectors;
 
 @Getter
 public enum RomanNumerals {
-	I(1), IV(4), V(5), IX(9), X(10), XL(40), L(50), XC(90), C(100), CD(400), D(500), CM(900), M(1000);
+    I(1),
+    IV(4),
+    V(5),
+    IX(9),
+    X(10),
+    XL(40),
+    L(50),
+    XC(90),
+    C(100),
+    CD(400),
+    D(500),
+    CM(900),
+    M(1000);
 
-	private final int value;
+    private final int value;
 
-	RomanNumerals(int value) {
-		this.value = value;
-	}
+    RomanNumerals(int value) {
+        this.value = value;
+    }
 
-	public static List<RomanNumerals> getReverseSortedValues() {
-		return Arrays.stream(values())
-				.sorted(Comparator.comparing((RomanNumerals e) -> e.value).reversed())
-				.collect(Collectors.toList());
-	}
+    public static List<RomanNumerals> getReverseSortedValues() {
+        return Arrays.stream(values())
+                .sorted(Comparator.comparing((RomanNumerals e) -> e.value).reversed())
+                .collect(Collectors.toList());
+    }
 
+    /**
+     * Get the decimal representation.
+     *
+     * @param input The roman number.
+     * @return The arabic number.
+     */
+    public static int romanToArabic(String input) {
+        String romanNumeral = input.toUpperCase();
+        int result = 0;
 
-	@SuppressWarnings("unused") // will be used in the future
-	public static int romanToArabic(String input) {
-		String romanNumeral = input.toUpperCase();
-		int result = 0;
+        List<RomanNumerals> romanNumerals = RomanNumerals.getReverseSortedValues();
 
-		List<RomanNumerals> romanNumerals = RomanNumerals.getReverseSortedValues();
+        int i = 0;
 
-		int i = 0;
+        while ((!romanNumeral.isEmpty()) && (i < romanNumerals.size())) {
+            RomanNumerals symbol = romanNumerals.get(i);
+            if (romanNumeral.startsWith(symbol.name())) {
+                result += symbol.getValue();
+                romanNumeral = romanNumeral.substring(symbol.name().length());
+            } else {
+                i++;
+            }
+        }
 
-		while ((!romanNumeral.isEmpty()) && (i < romanNumerals.size())) {
-			RomanNumerals symbol = romanNumerals.get(i);
-			if (romanNumeral.startsWith(symbol.name())) {
-				result += symbol.getValue();
-				romanNumeral = romanNumeral.substring(symbol.name().length());
-			} else {
-				i++;
-			}
-		}
+        if (!romanNumeral.isEmpty()) {
+            return -1;
+        }
 
-		if (!romanNumeral.isEmpty()) {
-			return -1;
-		}
+        return result;
+    }
 
-		return result;
-	}
+    /**
+     * Get the roman number.
+     *
+     * @param number The arabic number.
+     * @return The roman number.
+     */
+    public static String toRoman(@Range(from = 1, to = 3999) int number) {
+        List<RomanNumerals> romanNumerals = RomanNumerals.getReverseSortedValues();
 
-	public static String toRoman(@Range(from = 1, to = 3999) int number) {
-		List<RomanNumerals> romanNumerals = RomanNumerals.getReverseSortedValues();
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
 
-		int i = 0;
-		StringBuilder sb = new StringBuilder();
+        while ((number > 0) && (i < romanNumerals.size())) {
+            RomanNumerals currentSymbol = romanNumerals.get(i);
+            if (currentSymbol.getValue() <= number) {
+                sb.append(currentSymbol.name());
+                number -= currentSymbol.getValue();
+            } else {
+                i++;
+            }
+        }
 
-		while ((number > 0) && (i < romanNumerals.size())) {
-			RomanNumerals currentSymbol = romanNumerals.get(i);
-			if (currentSymbol.getValue() <= number) {
-				sb.append(currentSymbol.name());
-				number -= currentSymbol.getValue();
-			} else {
-				i++;
-			}
-		}
-
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

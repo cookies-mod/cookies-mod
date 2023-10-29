@@ -1,10 +1,10 @@
 package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.config.ConfigManager;
-import dev.morazzer.cookiesmod.config.categories.farming.GardenCategory;
+import dev.morazzer.cookiesmod.config.categories.farming.VisitorFoldable;
 import dev.morazzer.cookiesmod.features.price.bazaar.Bazaar;
-import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.RepositoryRecipeManager;
 import dev.morazzer.cookiesmod.modules.LoadModule;
@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Helper to show items required for garden visitors.
+ */
 @LoadModule("garden/visitor_helper")
 public class VisitorHelper implements Module {
 
@@ -33,6 +36,24 @@ public class VisitorHelper implements Module {
 
     private final DecimalFormat numberFormatter = new DecimalFormat("###,##0");
 
+    @Override
+    public void load() {
+        visitorHelper = new VisitorHelper();
+        ItemTooltipCallback.EVENT.register(visitorHelper::modifyAcceptItem);
+    }
+
+    @Override
+    public String getIdentifierPath() {
+        return "garden/visitor_helper";
+    }
+
+    /**
+     * Modify the accept item stack to contain the total amounts of the lower versions.
+     *
+     * @param itemStack      The item to modify.
+     * @param tooltipContext The tooltip context.
+     * @param texts          The current lore.
+     */
     private void modifyAcceptItem(ItemStack itemStack, TooltipContext tooltipContext, List<Text> texts) {
         if (!Garden.isOnGarden()) return;
         if (!Plot.getCurrentPlot().isBarn()) return;
@@ -84,6 +105,14 @@ public class VisitorHelper implements Module {
         texts.addAll(newTooltip);
     }
 
+    /**
+     * Create a list of all materials that are required to craft the root ingredient
+     *
+     * @param rootIngredient The ingredient to get the items for.
+     * @param deep           The depth of the recursive call.
+     * @param visited        The ingredients that have been visited to prevent cyclic calls.
+     * @return A list of items that are required.
+     */
     private List<Text> createMaterialList(Ingredient rootIngredient, int deep, ArrayList<Ingredient> visited) {
         ArrayList<Text> texts = new ArrayList<>();
         if (rootIngredient.getPath().equals("items/wheat") || rootIngredient.getPath().equals("items/golden_carrot")) {
@@ -93,7 +122,10 @@ public class VisitorHelper implements Module {
 
         for (Ingredient ingredient : ingredientListSorted) {
             Ingredient finalIngredient = ingredient.withAmount(ingredient.getAmount() * rootIngredient.getAmount());
-            RepositoryItem item = RepositoryItemManager.getItem(finalIngredient);
+            SkyblockItem item = RepositoryItemManager.getItem(finalIngredient);
+
+            if (visited.contains(finalIngredient)) continue;
+            visited.add(finalIngredient);
 
             if (item == null) {
                 texts.add(Text.literal(StringUtils.leftPad("", deep)).append(" -> ")
@@ -113,7 +145,7 @@ public class VisitorHelper implements Module {
                 name = Text.literal(item.getName().getString()).formatted(Formatting.GRAY);
             }
 
-            if (ConfigManager.getConfig().gardenCategory.visitors.countPosition.getValue() == GardenCategory.Visitors.CountPosition.LEFT) {
+            if (ConfigManager.getConfig().gardenCategory.visitors.countPosition.getValue() == VisitorFoldable.CountPosition.LEFT) {
                 text.append(amount).append("x ").append(name);
             } else {
                 text.append(name).append(" x").append(amount);
@@ -131,14 +163,19 @@ public class VisitorHelper implements Module {
             texts.add(text);
 
             if (deep == 10) continue;
-            if (visited.contains(finalIngredient)) continue;
-            visited.add(finalIngredient);
             texts.addAll(createMaterialList(finalIngredient, deep + 1, new ArrayList<>(visited)));
         }
 
         return texts;
     }
 
+    /**
+     * Get the price of an ingredient if possible.
+     *
+     * @param ingredient The item to get the price for.
+     * @param amount     The amount that is needed.
+     * @return The price as text.
+     */
     private Optional<MutableText> createPrice(Identifier ingredient, int amount) {
         return Bazaar.getInstance().getProductInformation(ingredient)
                 .map(productInformation -> (double) switch (ConfigManager.getConfig().gardenCategory.visitors.buyType.getValue()) {
@@ -153,15 +190,4 @@ public class VisitorHelper implements Module {
                 .map(Text::literal).map(priceText -> priceText.formatted(Formatting.GOLD));
     }
 
-
-    @Override
-    public void load() {
-        visitorHelper = new VisitorHelper();
-        ItemTooltipCallback.EVENT.register(visitorHelper::modifyAcceptItem);
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "garden/visitor_helper";
-    }
 }

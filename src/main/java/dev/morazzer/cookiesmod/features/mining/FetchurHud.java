@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.morazzer.cookiesmod.features.hud.HudElement;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
 import dev.morazzer.cookiesmod.utils.GsonUtils;
 import dev.morazzer.cookiesmod.utils.NpcUtils;
@@ -25,9 +25,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Render the current fetchur item as a hud element.
+ */
 public class FetchurHud extends HudElement {
 
-    List<Ingredient> items = new LinkedList<>();
+    final List<Ingredient> items = new LinkedList<>();
 
     long lastUpdate = System.currentTimeMillis();
     Ingredient currentItem = new Ingredient("skyblock:items/stained_glass_4:20");
@@ -38,27 +41,6 @@ public class FetchurHud extends HudElement {
         RepositoryManager.addReloadCallback(this::updateItems);
         if (RepositoryManager.isFinishedLoading()) {
             this.updateItems();
-        }
-    }
-
-    private void updateItems() {
-        this.items.clear();
-        Optional<byte[]> resource = RepositoryManager.getResource("constants/fetchur_items.json");
-        if (resource.isEmpty()) {
-            return;
-        }
-        String path = new String(resource.get());
-        JsonArray jsonElements = GsonUtils.gsonClean.fromJson(path, JsonArray.class);
-        for (JsonElement jsonElement : jsonElements) {
-            if (!jsonElement.isJsonPrimitive()) {
-                continue;
-            }
-            if (!jsonElement.getAsJsonPrimitive().isString()) {
-                continue;
-            }
-
-            String stringIdentifier = jsonElement.getAsString();
-            this.items.add(new Ingredient(stringIdentifier));
         }
     }
 
@@ -82,13 +64,6 @@ public class FetchurHud extends HudElement {
         return true;
     }
 
-    public void update() {
-        int dayOfMonth = ZonedDateTime.now(ZoneId.of("Canada/Eastern")).getDayOfMonth();
-        int currentItem = (dayOfMonth - 1) % this.items.size();
-
-        this.currentItem = this.items.get(currentItem);
-    }
-
     @Override
     protected void renderOverlay(DrawContext drawContext, float delta) {
         if (this.entity == null) {
@@ -104,16 +79,12 @@ public class FetchurHud extends HudElement {
         this.entity.setCustomName(Text.literal("test"));
         this.entity.setCustomNameVisible(true);
 
-        RepositoryItem item = RepositoryItemManager.getItem(this.currentItem);
+        SkyblockItem item = RepositoryItemManager.getItem(this.currentItem);
         if (item == null) {
             drawContext.drawText(MinecraftClient.getInstance().textRenderer, Text.literal("Item not found!").formatted(
                     Formatting.RED), 0, 0, -1, true);
             return;
         }
-        //drawContext.drawItem(item.getItemStack(), 0, 0);
-        //drawContext.drawItemInSlot(MinecraftClient.getInstance().textRenderer, item.getItemStack(), 0, 0,
-        //        String.valueOf(this.currentItem.getAmount())
-        //);
 
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
         entityRenderDispatcher.setRenderShadows(false);
@@ -144,4 +115,39 @@ public class FetchurHud extends HudElement {
         );
         drawContext.getMatrices().push();
     }
+
+    /**
+     * Update the current item list/load it from the repository.
+     */
+    private void updateItems() {
+        this.items.clear();
+        Optional<byte[]> resource = RepositoryManager.getResource("constants/fetchur_items.json");
+        if (resource.isEmpty()) {
+            return;
+        }
+        String path = new String(resource.get());
+        JsonArray jsonElements = GsonUtils.gsonClean.fromJson(path, JsonArray.class);
+        for (JsonElement jsonElement : jsonElements) {
+            if (!jsonElement.isJsonPrimitive()) {
+                continue;
+            }
+            if (!jsonElement.getAsJsonPrimitive().isString()) {
+                continue;
+            }
+
+            String stringIdentifier = jsonElement.getAsString();
+            this.items.add(new Ingredient(stringIdentifier));
+        }
+    }
+
+    /**
+     * Update the current item.
+     */
+    private void update() {
+        int dayOfMonth = ZonedDateTime.now(ZoneId.of("Canada/Eastern")).getDayOfMonth();
+        int currentItem = (dayOfMonth - 1) % this.items.size();
+
+        this.currentItem = this.items.get(currentItem);
+    }
+
 }

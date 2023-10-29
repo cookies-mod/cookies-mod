@@ -26,10 +26,13 @@ import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Display the price of the compost/the missing compost in the plot menu.
+ */
 @LoadModule("farming/garden/desk/price_breakdown")
 public class PlotPriceDisplay implements Module {
 
-    private static final int[][] costs = new int[][]{
+    private static final int[][] costs = new int[][] {
             {13, 21, 23, 31}, // inner
             {12, 14, 30, 32}, // middle
             {3, 4, 5, 11, 15, 20, 24, 29, 33, 39, 40, 41}, // edges
@@ -51,27 +54,21 @@ public class PlotPriceDisplay implements Module {
             if (!PlotCostData.loaded()) return;
 
             ScreenEvents.afterRender(screen)
-                    .register(ExceptionHandler.wrap(this::modifyItems));
+                    .register(ExceptionHandler.wrap(this::renderPlotCostBreakdown));
         });
     }
 
-    private void modifyItems(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
-        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
-
-        if (this.lastRefresh + 10000 < System.currentTimeMillis()) {
-            updateList(handledScreen);
-        }
-
-        drawContext.drawTooltip(
-                MinecraftClient.getInstance().textRenderer,
-                this.lines,
-                HoveredTooltipPositioner.INSTANCE,
-                handledScreen.x - this.lineWidth - 32,
-                handledScreen.y + 16
-        );
+    @Override
+    public String getIdentifierPath() {
+        return "farming/garden/desk/price_breakdown";
     }
 
-    public void updateList(HandledScreen<?> handledScreen) {
+    /**
+     * Method to update the stored values.
+     *
+     * @param handledScreen The screen the items are in.
+     */
+    private void updateList(HandledScreen<?> handledScreen) {
         int missingCompost = 0;
         int missingBundles = 0;
         int missingPlots = 0;
@@ -166,8 +163,35 @@ public class PlotPriceDisplay implements Module {
         this.lineWidth = maxLineWidth;
     }
 
-    @Override
-    public String getIdentifierPath() {
-        return "farming/garden/desk/price_breakdown";
+    /**
+     * Render the plot cost breakdown on the side of the inventory.
+     *
+     * @param screen      The screen to render it at.
+     * @param drawContext The current draw context.
+     * @param mouseX      The current x position of the mouse.
+     * @param mouseY      The current y position of the mouse.
+     * @param tickDelta   The difference in time between the last tick and now.
+     */
+    private void renderPlotCostBreakdown(
+            Screen screen,
+            DrawContext drawContext,
+            int mouseX,
+            int mouseY,
+            float tickDelta
+    ) {
+        HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
+
+        if (this.lastRefresh + 10000 < System.currentTimeMillis()) {
+            updateList(handledScreen);
+        }
+
+        drawContext.drawTooltip(
+                MinecraftClient.getInstance().textRenderer,
+                this.lines,
+                HoveredTooltipPositioner.INSTANCE,
+                handledScreen.x - this.lineWidth - 32,
+                handledScreen.y + 16
+        );
     }
+
 }

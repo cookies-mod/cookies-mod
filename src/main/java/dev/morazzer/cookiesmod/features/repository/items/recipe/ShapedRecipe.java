@@ -6,36 +6,53 @@ import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 
 import java.util.Optional;
 
+/**
+ * A shaped crafting recipe.
+ */
 public class ShapedRecipe extends RepositoryRecipe {
-	private final Ingredient result;
-	private final Ingredient[] materials = new Ingredient[9];
 
-	@Override
-	public Ingredient getOutput() {
-		return this.result;
-	}
+    private final Ingredient result;
+    private final Ingredient[] materials = new Ingredient[9];
 
-	@Override
-	public RecipeType getType() {
-		return RecipeType.CRAFTING;
-	}
+    /**
+     * Create a shaped crating recipe from a json object.
+     *
+     * @param jsonObject The json object.
+     */
+    public ShapedRecipe(JsonObject jsonObject) {
+        super(jsonObject);
 
-	@Override
-	public Ingredient[] getIngredients() {
-		return this.materials;
-	}
+        JsonObject craft = jsonObject.getAsJsonObject("crafting");
 
-	public ShapedRecipe(JsonObject jsonObject) {
-		super(jsonObject);
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                this.materials[x * 3 + y] = new Ingredient(Optional
+                        .ofNullable(craft.get("x%s;y%s".formatted(x, y)))
+                        .map(JsonElement::getAsString)
+                        .map(ItemUtils::withNamespace)
+                        .orElse("minecraft:air:1"));
+            }
+        }
 
-		JsonObject craft = jsonObject.getAsJsonObject("crafting");
+        this.result = new Ingredient("%s:%s".formatted(
+                ItemUtils.withNamespace(jsonObject.get("result").getAsString()),
+                jsonObject.get("count").getAsInt()
+        ));
+    }
 
-		for (int x = 0; x < 3; x++) {
-			for (int y = 0; y < 3; y++) {
-				this.materials[x * 3 + y] = new Ingredient(Optional.ofNullable(craft.get("x%s;y%s".formatted(x, y))).map(JsonElement::getAsString).map(ItemUtils::withNamespace).orElse("minecraft:air:1"));
-			}
-		}
+    @Override
+    public Ingredient getOutput() {
+        return this.result;
+    }
 
-		this.result = new Ingredient("%s:%s".formatted(ItemUtils.withNamespace(jsonObject.get("result").getAsString()), jsonObject.get("count").getAsInt()));
-	}
+    @Override
+    public RecipeType getType() {
+        return RecipeType.CRAFTING;
+    }
+
+    @Override
+    public Ingredient[] getIngredients() {
+        return this.materials;
+    }
+
 }

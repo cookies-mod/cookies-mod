@@ -5,10 +5,17 @@ import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import net.minecraft.text.Text;
 
+/**
+ * Category that describes all settings related to the profile viewer.
+ */
 public class ProfileViewerConfig extends Category {
 
     @Expose
-    public BooleanOption keepLastProfileOpen = new BooleanOption(Text.of("Keep last search"), Text.of("Keeps the last viewed profile open when you open pv again"), false);
+    public BooleanOption keepLastProfileOpen = new BooleanOption(
+            Text.of("Keep last search"),
+            Text.of("Keeps the last viewed profile open when you open pv again"),
+            false
+    );
 
     @Override
     public Text getName() {

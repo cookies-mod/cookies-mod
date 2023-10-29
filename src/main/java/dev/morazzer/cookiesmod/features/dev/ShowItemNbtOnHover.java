@@ -19,8 +19,12 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Debug method to view the item nbt directly in game.
+ */
 @LoadModule("dev/show_nbt")
 public class ShowItemNbtOnHover implements Module {
+
     private static final Identifier RENDER_NBT = DevUtils.createIdentifier("render_item_nbt");
 
     @Override
@@ -30,12 +34,26 @@ public class ShowItemNbtOnHover implements Module {
                 if (!DevUtils.isEnabled(RENDER_NBT)) {
                     return;
                 }
-                ScreenEvents.afterRender(screen).register(this::afterRender);
+                ScreenEvents.afterRender(screen).register(this::renderItemNbt);
             }
         });
     }
 
-    private void afterRender(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
+    @Override
+    public String getIdentifierPath() {
+        return "dev/show_nbt";
+    }
+
+    /**
+     * Render the item nbt of the currently hovered item.
+     *
+     * @param screen      The screen that is currently open.
+     * @param drawContext The current draw context.
+     * @param mouseX      The current x position of the mouse.
+     * @param mouseY      The current y position of the mouse.
+     * @param tickDelta   The difference in time between the last tick and now.
+     */
+    private void renderItemNbt(Screen screen, DrawContext drawContext, int mouseX, int mouseY, float tickDelta) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
         for (Slot slot : handledScreen.getScreenHandler().slots) {
@@ -61,8 +79,4 @@ public class ShowItemNbtOnHover implements Module {
         }
     }
 
-    @Override
-    public String getIdentifierPath() {
-        return "dev/show_nbt";
-    }
 }

@@ -5,8 +5,8 @@ import dev.morazzer.cookiesmod.config.categories.farming.CompostFoldable;
 import dev.morazzer.cookiesmod.features.farming.garden.Garden;
 import dev.morazzer.cookiesmod.features.farming.garden.Plot;
 import dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost;
-import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
@@ -24,7 +24,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-
+/**
+ * Breakdown for the composter cost in the garden.
+ */
 @LoadModule("farming/garden/compost_upgrades")
 public class CompostUpgradeBreakdown implements Module {
 
@@ -33,6 +35,18 @@ public class CompostUpgradeBreakdown implements Module {
         ItemTooltipCallback.EVENT.register(ExceptionHandler.wrap(this::tooltips));
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "farming/garden/compost_upgrades";
+    }
+
+    /**
+     * Check if an item is a composter upgrade and if so, then add lore to it.
+     *
+     * @param itemStack      The item to check for.
+     * @param tooltipContext The tooltip context.
+     * @param texts          The current lore.
+     */
     private void tooltips(ItemStack itemStack, TooltipContext tooltipContext, List<Text> texts) {
         if (!Garden.isOnGarden()) return;
         if (!Plot.getCurrentPlot().isBarn()) return;
@@ -113,7 +127,7 @@ public class CompostUpgradeBreakdown implements Module {
 
                 stream.forEach(ingredient -> {
                     MutableText entry = Text.literal("  ");
-                    RepositoryItem item = RepositoryItemManager.getItem(ingredient);
+                    SkyblockItem item = RepositoryItemManager.getItem(ingredient);
                     if (item == null) {
                         list.add(Text.literal("Can't find item %s".formatted(ingredient.toString())));
                         return;
@@ -134,8 +148,4 @@ public class CompostUpgradeBreakdown implements Module {
         texts.addAll(list);
     }
 
-    @Override
-    public String getIdentifierPath() {
-        return "farming/garden/compost_upgrades";
-    }
 }

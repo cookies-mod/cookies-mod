@@ -16,29 +16,66 @@ import java.util.Base64;
 import java.util.Optional;
 
 public class ItemUtils {
+
     private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
 
+    /**
+     * Get the skyblock attribute tag of an item.
+     *
+     * @param itemStack The item.
+     * @return The tag.
+     */
     public static Optional<NbtCompound> getSkyblockAttributes(ItemStack itemStack) {
         return Optional.ofNullable(itemStack.getSubNbt("ExtraAttributes"));
     }
 
+    /**
+     * Get the skyblock id of an item.
+     *
+     * @param itemStack The item.
+     * @return The skyblock id.
+     */
     public static Optional<String> getSkyblockId(ItemStack itemStack) {
         return getSkyblockAttributes(itemStack)
                 .map(nbtCompound -> nbtCompound.getString("id"));
     }
 
+    /**
+     * Parse the skyblock id to an internal skyblock id.
+     *
+     * @param skyblockId The skyblock id.
+     * @return The internal skyblock id.
+     */
     public static Optional<Identifier> skyblockIdToIdentifier(String skyblockId) {
         return Optional.ofNullable(NAMESPACE.withSuffixedPath(skyblockId.toLowerCase().replace(":", "_")));
     }
 
+    /**
+     * Get the identifier with the internal namespace.
+     *
+     * @param identifier The identifier.
+     * @return The formatted identifier.
+     */
     public static String withNamespace(String identifier) {
         return "%s:%s%s".formatted(NAMESPACE.getNamespace(), NAMESPACE.getPath(), identifier.toLowerCase());
     }
 
+    /**
+     * Get the skyblock id as internal identifier.
+     *
+     * @param itemStack The item.
+     * @return The id.
+     */
     public static Optional<Identifier> getSkyblockIdAsIdentifier(ItemStack itemStack) {
         return getSkyblockId(itemStack).flatMap(ItemUtils::skyblockIdToIdentifier);
     }
 
+    /**
+     * If the item in main hand has any enchantment of any level.
+     *
+     * @param enchantments The enchantments.
+     * @return If at least one enchantment is present.
+     */
     public static boolean doesCurrentItemHaveEnchantments(String... enchantments) {
         return getMainHand().flatMap(ItemUtils::getSkyblockAttributes)
                 .map(extraAttributes -> extraAttributes.getCompound("enchantments")).map(enchantmentsContainer -> {
@@ -51,20 +88,37 @@ public class ItemUtils {
                 }).orElse(false);
     }
 
+    /**
+     * If the item in the main hand is a skyblock item.
+     *
+     * @return If the item is a skyblock item.
+     */
     public static boolean hasSkyblockItemInMainHand() {
-        return Optional.ofNullable(MinecraftClient.getInstance()).map(client -> client.player)
-                .map(PlayerEntity::getMainHandStack).flatMap(ItemUtils::getSkyblockId).isPresent();
+        return getMainHand().flatMap(ItemUtils::getSkyblockId).isPresent();
     }
 
+    /**
+     * Get the nbt from the main hand.
+     *
+     * @return The nbt.
+     */
     public static Optional<NbtCompound> getNbtFromMainHand() {
         return getMainHand().map(ItemStack::getNbt);
     }
 
+    /**
+     * Get the item in the main hand.
+     *
+     * @return The item.
+     */
     public static Optional<ItemStack> getMainHand() {
         return Optional.ofNullable(MinecraftClient.getInstance()).map(client -> client.player)
                 .map(PlayerEntity::getMainHandStack);
     }
 
+    /**
+     * Print the skull texture of the current item into the chat.
+     */
     @TestEntrypoint("get_texture_from_item")
     public static void getTextureFromCurrentItem() {
         if (getMainHand().isEmpty()) return;

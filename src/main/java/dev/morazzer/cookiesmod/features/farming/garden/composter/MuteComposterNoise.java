@@ -7,6 +7,9 @@ import dev.morazzer.cookiesmod.features.farming.garden.Plot;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 
+/**
+ * Feature that allows to mute the composter.
+ */
 @LoadModule("farming/garden/composter_mute")
 public class MuteComposterNoise implements Module {
 
@@ -29,4 +32,5 @@ public class MuteComposterNoise implements Module {
     public String getIdentifierPath() {
         return "farming/garden/composter_mute";
     }
+
 }

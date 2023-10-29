@@ -28,22 +28,21 @@ public abstract class SkyblockIdModelData {
     private static void staticBlock(CallbackInfo ci) {
         GLOBAL.put(
                 ItemModelOverrides.ITEM_MODEL_PREDICATE_SKYBLOCK_ID,
-                (stack, world, entity, seed) -> ItemUtils.getSkyblockId(stack)
+                (stack, world, entity, seed) -> ItemUtils
+                        .getSkyblockId(stack)
                         .map(String::hashCode)
                         .map(Integer::floatValue)
                         .orElse(Float.NEGATIVE_INFINITY)
         );
-        GLOBAL.put(
-                ItemModelOverrides.ITEM_MODEL_PREDICATE_REFORGE,
-                (stack, world, entity, seed) -> {
-                    Optional<NbtCompound> skyblockAttributes = ItemUtils.getSkyblockAttributes(stack);
-                    Optional<String> s = skyblockAttributes.map(attributes -> attributes.getString("modifier"));
-                    return s.filter(Predicate.not(String::isEmpty))
-                            .map(String::hashCode)
-                            .map(Integer::floatValue)
-                            .orElse(Float.NEGATIVE_INFINITY);
-                }
-        );
+        GLOBAL.put(ItemModelOverrides.ITEM_MODEL_PREDICATE_REFORGE, (stack, world, entity, seed) -> {
+            Optional<NbtCompound> skyblockAttributes = ItemUtils.getSkyblockAttributes(stack);
+            Optional<String> s = skyblockAttributes.map(attributes -> attributes.getString("modifier"));
+            return s
+                    .filter(Predicate.not(String::isEmpty))
+                    .map(String::hashCode)
+                    .map(Integer::floatValue)
+                    .orElse(Float.NEGATIVE_INFINITY);
+        });
         GLOBAL.put(
                 ItemModelOverrides.ITEM_MODEL_PREDICATE_DISPLAY_NAME,
                 (stack, world, entity, seed) -> stack.getName().getString().hashCode()
@@ -53,4 +52,5 @@ public abstract class SkyblockIdModelData {
                 (stack, world, entity, seed) -> Float.NEGATIVE_INFINITY
         );
     }
+
 }

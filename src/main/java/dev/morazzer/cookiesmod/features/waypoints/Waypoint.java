@@ -7,6 +7,9 @@ import net.minecraft.util.math.Vec3d;
 import java.awt.Color;
 import java.util.UUID;
 
+/**
+ * A waypoint that can be rendered into the world.
+ */
 public class Waypoint {
 
     public Area[] area;

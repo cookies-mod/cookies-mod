@@ -9,14 +9,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Yes this accesses direct packet processing, but it doesn't modify or send anything to the server.
+ * Yes, this accesses direct packet processing, but it doesn't modify or send anything to the server.
  */
 @Mixin(ClientPlayNetworkHandler.class)
 public class InventorySlotUpdateEventMixin {
 
-	@Inject(method = "onInventory", at = @At("RETURN"))
-	public void onSlotUpdate(InventoryS2CPacket packet, CallbackInfo ci) {
-		InventoryUpdateEvent.EVENT.invoker().update(packet.getSyncId(), packet.getContents());
-	}
+    /**
+     * Called when the client receives new items for an inventory.
+     *
+     * @param packet The packet the client receives.
+     * @param ci     The callback information.
+     */
+    @Inject(method = "onInventory", at = @At("RETURN"))
+    public void onSlotUpdate(InventoryS2CPacket packet, CallbackInfo ci) {
+        InventoryUpdateEvent.EVENT.invoker().update(packet.getSyncId(), packet.getContents());
+    }
 
 }

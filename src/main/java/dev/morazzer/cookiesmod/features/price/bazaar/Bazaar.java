@@ -17,16 +17,29 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Helper to fetch the current prices of items from the bazaar.
+ */
 @LoadModule("prices/bazaar")
 @Slf4j
 public class Bazaar implements Module {
+
+    private static final String bazaarApiEndpoint = "https://api.hypixel.net/skyblock/bazaar";
     @Getter
     private static Bazaar instance;
+    private final ConcurrentHashMap<Identifier, ProductInformation> productMap = new ConcurrentHashMap<>();
     @Getter
     private long lastUpdated = -1;
 
-    private static final String bazaarApiEndpoint = "https://api.hypixel.net/skyblock/bazaar";
-    private final ConcurrentHashMap<Identifier, ProductInformation> productMap = new ConcurrentHashMap<>();
+    /**
+     * Get the product information for a specific item if present.
+     *
+     * @param identifier The item.
+     * @return The information.
+     */
+    public Optional<ProductInformation> getProductInformation(Identifier identifier) {
+        return Optional.ofNullable(this.productMap.getOrDefault(identifier, null));
+    }
 
     @Override
     public void load() {
@@ -34,6 +47,14 @@ public class Bazaar implements Module {
         ConcurrentUtils.scheduleAtFixedRate(this::updateProducts, 15, TimeUnit.MINUTES);
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "prices/bazaar";
+    }
+
+    /**
+     * Update the fetched data.
+     */
     private void updateProducts() {
         byte[] responseBody = HttpUtils.getResponseBody(URI.create(bazaarApiEndpoint));
         String body = new String(responseBody, StandardCharsets.UTF_8);
@@ -74,12 +95,4 @@ public class Bazaar implements Module {
         log.info("Added {} products to bazaar cache", this.productMap.size());
     }
 
-    public Optional<ProductInformation> getProductInformation(Identifier identifier) {
-        return Optional.ofNullable(this.productMap.getOrDefault(identifier, null));
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "prices/bazaar";
-    }
 }

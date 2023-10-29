@@ -11,34 +11,54 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HandledScreen.class)
 public class ItemBackgroundRenderMixin implements ItemBackgroundAccessor {
-	@Inject(method = "init", at = @At("HEAD"))
-	private void init(CallbackInfo ci) {
-		this.cookies$init();
-	}
 
-	@Inject(method = "drawSlot", at = @At("INVOKE"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawItem(Lnet/minecraft/item/ItemStack;III)V", shift = At.Shift.BEFORE)))
-	public void renderBackground(DrawContext context, Slot slot, CallbackInfo ci) {
-		this.backgroundCallbacks.invoker().renderBackground(context, slot);
-	}
+    @Unique
+    Event<ItemBackgroundRenderCallback> backgroundCallbacks;
 
-	Event<ItemBackgroundRenderCallback> backgroundCallbacks;
+    @Override
+    public Event<ItemBackgroundRenderCallback> cookies$itemRenderCallback() {
+        return this.backgroundCallbacks;
+    }
 
-	@Override
-	public Event<ItemBackgroundRenderCallback> cookies$itemRenderCallback() {
-		return this.backgroundCallbacks;
-	}
+    /**
+     * Called when a screen draws an item background.
+     *
+     * @param context The current draw context.
+     * @param slot    The slot the item is in.
+     * @param ci      The callback information.
+     */
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawItem(Lnet/minecraft/item/ItemStack;III)V", shift = At.Shift.BEFORE))
+    private void renderBackground(DrawContext context, Slot slot, CallbackInfo ci) {
+        this.backgroundCallbacks.invoker().renderBackground(context, slot);
+    }
 
-	@Unique
-	private void cookies$init() {
-		this.backgroundCallbacks = EventFactory.createArrayBacked(ItemBackgroundRenderCallback.class, itemBackgroundRenderCallbacks -> (drawContext, slot) -> {
-			for (ItemBackgroundRenderCallback itemBackgroundRenderCallback : itemBackgroundRenderCallbacks) {
-				itemBackgroundRenderCallback.renderBackground(drawContext, slot);
-			}
-		});
-	}
+    /**
+     * Called when a screen is opened or resized.
+     *
+     * @param ci The callback information.
+     */
+    @Inject(method = "init", at = @At("HEAD"))
+    private void init(CallbackInfo ci) {
+        this.cookies$init();
+    }
+
+    /**
+     * Set up the screen instance to have a working event instance.
+     */
+    @Unique
+    private void cookies$init() {
+        this.backgroundCallbacks = EventFactory.createArrayBacked(
+                ItemBackgroundRenderCallback.class,
+                itemBackgroundRenderCallbacks -> (drawContext, slot) -> {
+                    for (ItemBackgroundRenderCallback itemBackgroundRenderCallback : itemBackgroundRenderCallbacks) {
+                        itemBackgroundRenderCallback.renderBackground(drawContext, slot);
+                    }
+                }
+        );
+    }
+
 }

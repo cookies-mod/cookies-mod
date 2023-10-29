@@ -10,32 +10,10 @@ import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import java.time.Duration;
 import java.util.function.Function;
 
-
 public class LocationUtils {
 
-    public static String getCurrentLocation() {
-        return ScoreboardUtils.getCurrentLocation();
-    }
-
-    @TestEntrypoint("print_current_area")
-    public static void printCurrentArea() {
-        CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append(currentArea.getValue().name()));
-        CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append(Islands.getIsland(currentArea.getValue()).name()));
-    }
-
-    public static Area getCurrentArea() {
-        if (SkyblockUtils.getLastServerSwap() + 2000 < System.currentTimeMillis()) {
-            currentArea.updateNow();
-        }
-        return currentArea.getValue();
-    }
-
-    public static Islands getCurrentIsland() {
-        return Islands.getIsland(getCurrentArea());
-    }
-
-    public static CachedValue<Area> currentArea = new CachedValue<>(() -> {
-        String currentLocation = getCurrentLocation().trim();
+    public static final CachedValue<Area> currentArea = new CachedValue<>(() -> {
+        String currentLocation = ScoreboardUtils.getCurrentLocation().trim();
         for (Area value : Area.values()) {
             if (!value.regex) {
                 if (currentLocation.equals(value.scoreboard)) {
@@ -50,6 +28,36 @@ public class LocationUtils {
         }
         return Area.CATACOMBS_FLOOR_7;
     }, Duration.ofSeconds(5));
+
+    /**
+     * Print the current area and the current island.
+     */
+    @TestEntrypoint("print_current_area")
+    public static void printCurrentArea() {
+        CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append(currentArea.getValue().name()));
+        CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append(Islands.getIsland(currentArea.getValue()).name()));
+    }
+
+    /**
+     * Get the current area.
+     *
+     * @return The current area.
+     */
+    public static Area getCurrentArea() {
+        if (SkyblockUtils.getLastServerSwap() + 2000 < System.currentTimeMillis()) {
+            currentArea.updateNow();
+        }
+        return currentArea.getValue();
+    }
+
+    /**
+     * Get the current island.
+     *
+     * @return The current island.
+     */
+    public static Islands getCurrentIsland() {
+        return Islands.getIsland(getCurrentArea());
+    }
 
     public enum Islands {
         PRIVATE_ISLAND(Area::isIsland),
@@ -77,15 +85,22 @@ public class LocationUtils {
             this.isIsland = isIsland;
         }
 
-        public boolean isIsland(Area areas) {
-            return this.isIsland.apply(areas);
-        }
-
+        /**
+         * Get the island or unknown.
+         *
+         * @param value The value.
+         * @return The island.
+         */
         public static Islands valueOfOrUnknown(String value) {
             return ExceptionHandler.removeThrowsSilent(() -> Enum.valueOf(Islands.class, value), UNKNOWN_ISLAND);
         }
 
-
+        /**
+         * Get the island of the area.
+         *
+         * @param area The area.
+         * @return The island.
+         */
         public static Islands getIsland(Area area) {
             for (Islands value : Islands.values()) {
                 if (value.isIsland(area)) {
@@ -93,6 +108,16 @@ public class LocationUtils {
                 }
             }
             return UNKNOWN_ISLAND;
+        }
+
+        /**
+         * Check if the area is on the island.
+         *
+         * @param areas The area.
+         * @return If it is on the island.
+         */
+        public boolean isIsland(Area areas) {
+            return this.isIsland.apply(areas);
         }
     }
 

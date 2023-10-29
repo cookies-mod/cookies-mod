@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,55 +14,97 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Slf4j
 public class DevUtils {
 
-	private static final Set<Identifier> enabledTools = new CopyOnWriteArraySet<>();
-	@Getter
-	public static final Set<Identifier> availableTools = new HashSet<>();
-	@Getter
-	private static final Set<Identifier> disabledTools = new CopyOnWriteArraySet<>(availableTools);
+    @Getter
+    public static final Set<Identifier> availableTools = new HashSet<>();
+    private static final Set<Identifier> enabledTools = new CopyOnWriteArraySet<>();
+    @Getter
+    private static final Set<Identifier> disabledTools = new CopyOnWriteArraySet<>(availableTools);
 
-	private static final Identifier EXTRA_LOGGING = createIdentifier("extra_logging");
+    private static final Identifier EXTRA_LOGGING = createIdentifier("extra_logging");
 
-	public static void log(String key, Object message, Object... replacements) {
-		if (!enabledTools.contains(EXTRA_LOGGING)) return;
-		log.info("[%s]: %s".formatted(key, message), replacements);
-	}
+    /**
+     * Log a specific value to the console.
+     *
+     * @param key          The key of the logger.
+     * @param message      The message to log.
+     * @param replacements The replacements.
+     */
+    public static void log(String key, Object message, Object... replacements) {
+        if (!enabledTools.contains(EXTRA_LOGGING)) return;
+        LoggerFactory.getLogger(key).info("%s".formatted(message), replacements);
+    }
 
-	public static boolean enable(Identifier identifier) {
-		if (!availableTools.contains(identifier)) {
-			return false;
-		}
+    /**
+     * Enable a specific dev tool.
+     *
+     * @param identifier The tool to enable.
+     * @return If the tool was enabled.
+     */
+    public static boolean enable(Identifier identifier) {
+        if (!availableTools.contains(identifier)) {
+            return false;
+        }
 
-		enabledTools.add(identifier);
-		disabledTools.remove(identifier);
-		return true;
-	}
+        enabledTools.add(identifier);
+        disabledTools.remove(identifier);
+        return true;
+    }
 
-	public static boolean disable(Identifier identifier) {
-		if (!availableTools.contains(identifier)) {
-			return false;
-		}
+    /**
+     * Disable a specific dev tool.
+     *
+     * @param identifier The tool to disable.
+     * @return If the tool was disabled.
+     */
+    public static boolean disable(Identifier identifier) {
+        if (!availableTools.contains(identifier)) {
+            return false;
+        }
 
-		enabledTools.remove(identifier);
-		disabledTools.add(identifier);
-		return true;
-	}
+        enabledTools.remove(identifier);
+        disabledTools.add(identifier);
+        return true;
+    }
 
-	public static boolean isEnabled(Identifier identifier) {
-		return enabledTools.contains(identifier);
-	}
+    /**
+     * If a dev tool is enabled.
+     *
+     * @param identifier The tool to check.
+     * @return If it is enabled.
+     */
+    public static boolean isEnabled(Identifier identifier) {
+        return enabledTools.contains(identifier);
+    }
 
-	public static Set<Identifier> getEnabledTools() {
-		return Collections.unmodifiableSet(enabledTools);
-	}
+    /**
+     * Get a list of all enabled tools.
+     *
+     * @return A lost of tools.
+     */
+    public static Set<Identifier> getEnabledTools() {
+        return Collections.unmodifiableSet(enabledTools);
+    }
 
-	public static Identifier createIdentifier(String name) {
-		Identifier identifier = new Identifier("cookiesmod", "dev/" + name);
-		availableTools.add(identifier);
-		disable(identifier);
-		return identifier;
-	}
+    /**
+     * Create a dev tool.
+     *
+     * @param name The name of the tool.
+     * @return The identifier.
+     */
+    public static Identifier createIdentifier(String name) {
+        Identifier identifier = new Identifier("cookiesmod", "dev/" + name);
+        availableTools.add(identifier);
+        disable(identifier);
+        return identifier;
+    }
 
-	public static boolean isDevEnvironment() {
+    /**
+     * If the mod is running in a development environment.
+     *
+     * @return If it is a development environment.
+     */
+    public static boolean isDevEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
-	}
+    }
+
 }

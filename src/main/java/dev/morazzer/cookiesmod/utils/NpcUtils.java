@@ -39,6 +39,9 @@ import java.util.UUID;
 
 public class NpcUtils {
 
+    /**
+     * Print the textures of the targeted player.
+     */
     @TestEntrypoint("get_texture_from_player")
     public static void printTextureFromPlayer() {
         HitResult raycast = MinecraftClient.getInstance().crosshairTarget;
@@ -85,6 +88,13 @@ public class NpcUtils {
         }
     }
 
+    /**
+     * Create a npc that can be rendered onto the hud.
+     *
+     * @param name          The name of the npc.
+     * @param textureString The texture of the npc.
+     * @return The npc.
+     */
     public static PlayerEntity createRenderableNpc(String name, String textureString) {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
         gameProfile.getProperties().put("textures", new Property("textures", textureString));
@@ -92,6 +102,7 @@ public class NpcUtils {
     }
 
     private static class CookiesRenderablePlayer extends ClientPlayerEntity {
+
         private SkinTextures skinTextures;
 
         public CookiesRenderablePlayer(GameProfile gameProfile) {
@@ -121,11 +132,6 @@ public class NpcUtils {
         }
 
         @Override
-        public SkinTextures getSkinTextures() {
-            return this.skinTextures;
-        }
-
-        @Override
         public boolean isPartVisible(PlayerModelPart modelPart) {
             return true;
         }
@@ -135,5 +141,12 @@ public class NpcUtils {
         protected PlayerListEntry getPlayerListEntry() {
             return null;
         }
+
+        @Override
+        public SkinTextures getSkinTextures() {
+            return this.skinTextures;
+        }
+
     }
+
 }

@@ -11,6 +11,7 @@ import dev.morazzer.cookiesmod.features.hud.HudManager;
 import dev.morazzer.cookiesmod.utils.render.Position;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Used for simple toggle buttons in the config
@@ -24,6 +25,12 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
         super(name, description, value);
     }
 
+    /**
+     * Add a hud element to the button, this element will only be visible if the button is toggled on.
+     *
+     * @param hudElement The hud element to attach.
+     * @return The option.
+     */
     public BooleanOption withHudElement(HudElement hudElement) {
         HudManager.registerHudElement(hudElement);
         this.hudElement = hudElement;
@@ -31,7 +38,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
     }
 
     @Override
-    public void load(JsonElement jsonElement) {
+    public void load(@NotNull JsonElement jsonElement) {
         if (jsonElement instanceof JsonObject jsonObject) {
             if (!jsonObject.has("value")) {
                 log.warn("Error while loading config value, boolean object doesnt have a value");
@@ -72,7 +79,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
     }
 
     @Override
-    public JsonElement save() {
+    public @NotNull JsonElement save() {
         if (this.hudElement != null) {
             JsonObject jsonObject = new JsonObject();
 
@@ -87,7 +94,8 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
     }
 
     @Override
-    public ConfigOptionEditor<Boolean, BooleanOption> getEditor() {
+    public @NotNull ConfigOptionEditor<Boolean, BooleanOption> getEditor() {
         return new BooleanEditor(this);
     }
+
 }

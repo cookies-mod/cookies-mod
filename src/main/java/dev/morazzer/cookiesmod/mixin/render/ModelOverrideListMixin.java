@@ -19,17 +19,26 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ModelOverrideList.class)
 public class ModelOverrideListMixin {
 
-
     @Shadow
     @Final
     private Identifier[] conditionTypes;
 
     @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/json/ModelOverrideList$BakedOverride;test([F)Z"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     public void inject(
-            BakedModel model, ItemStack stack, ClientWorld world, LivingEntity entity, int seed,
-            CallbackInfoReturnable<BakedModel> cir, Item item, int i, float[] fs,
-            ModelOverrideList.BakedOverride[] var9, int var10, int var11,
-            ModelOverrideList.BakedOverride bakedOverride) {
+            BakedModel model,
+            ItemStack stack,
+            ClientWorld world,
+            LivingEntity entity,
+            int seed,
+            CallbackInfoReturnable<BakedModel> cir,
+            Item item,
+            int i,
+            float[] fs,
+            ModelOverrideList.BakedOverride[] var9,
+            int var10,
+            int var11,
+            ModelOverrideList.BakedOverride bakedOverride
+    ) {
         boolean respectOthers = true;
         for (Identifier conditionType : conditionTypes) {
             if (ItemModelOverrides.ITEM_MODEL_PREDICATE_DISABLE_RESPECT_FOR_OTHER.equals(conditionType)) {

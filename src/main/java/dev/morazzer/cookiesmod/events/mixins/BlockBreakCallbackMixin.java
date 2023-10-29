@@ -9,12 +9,21 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 @Mixin(Block.class)
 public class BlockBreakCallbackMixin {
 
-	@Inject(method = "onBroken", at = @At("RETURN"))
-	private void replace(WorldAccess world, BlockPos pos, BlockState state, CallbackInfo ci) {
-		BlockBreakCallback.EVENT.invoker().onBlockBreak(world, pos, state);
-	}
+    /**
+     * Called on block break/replace that has been caused by the player.
+     *
+     * @param world The world the block was in.
+     * @param pos   The position of the block.
+     * @param state The state of the block.
+     * @param ci    The callback information.
+     */
+    @Inject(method = "onBroken", at = @At("RETURN"))
+    private void replace(WorldAccess world, BlockPos pos, BlockState state, CallbackInfo ci) {
+        BlockBreakCallback.EVENT.invoker().onBlockBreak(world, pos, state);
+    }
 
 }

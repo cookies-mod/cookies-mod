@@ -9,28 +9,38 @@ import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Subcommand for disabling enabled "devtools" in the {@linkplain dev.morazzer.cookiesmod.utils.DevUtils} class.
+ */
 @DevSubcommand
 public class DisableToolsSubcommand extends ClientCommand {
+
     @Override
+    @NotNull
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         return literal("disable").then(argument(
                 "tool",
-                new RealIdentifierArgument(DevUtils.getEnabledTools())
+                new RealIdentifierArgument(DevUtils.getEnabledTools(), "cookiesmod", "dev/")
         ).executes(context -> {
             Identifier identifier = context.getArgument("tool", Identifier.class);
             boolean disabled = DevUtils.disable(identifier);
+
             if (!disabled) {
                 context.getSource()
-                        .sendError(CookiesMod.createPrefix(ColorUtils.failColor).append("No devtool found with name")
+                        .sendError(CookiesMod.createPrefix(ColorUtils.failColor)
+                                .append("No devtool found with name")
                                 .append(identifier.toString()));
                 return 0;
             }
 
             context.getSource()
-                    .sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor).append("Disabled devtool ")
+                    .sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor)
+                            .append("Disabled devtool ")
                             .append(identifier.toString()));
             return Command.SINGLE_SUCCESS;
         }));
     }
+
 }

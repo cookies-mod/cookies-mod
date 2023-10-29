@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Tracker for crop milestones.
+ */
 @LoadModule("garden/crop_milestone_tracker")
 public class CropMilestoneTracker implements Module {
 
@@ -36,17 +39,6 @@ public class CropMilestoneTracker implements Module {
             Blocks.MELON
     ).map(Registries.BLOCK::getId).collect(Collectors.toUnmodifiableSet());
 
-    private void blockBroken(
-            WorldAccess worldAccess,
-            BlockPos blockPos,
-            BlockState blockState) {
-        if (!Garden.isOnGarden()) return;
-
-        Identifier blockId = Registries.BLOCK.getId(blockState.getBlock());
-        if (!crops.contains(blockId)) return;
-        assert true; // reachable line of code to not cause warnings with the if statement above
-    }
-
     @Override
     public void load() {
         cropMilestoneTracker = this;
@@ -57,4 +49,24 @@ public class CropMilestoneTracker implements Module {
     public String getIdentifierPath() {
         return "garden/crop_milestone_tracker";
     }
+
+    /**
+     * Called when a block is broken to correctly count the crop.
+     *
+     * @param worldAccess The world accessor for the world.
+     * @param blockPos    The position of the block.
+     * @param blockState  The block state of the block.
+     */
+    private void blockBroken(
+            WorldAccess worldAccess,
+            BlockPos blockPos,
+            BlockState blockState
+    ) {
+        if (!Garden.isOnGarden()) return;
+
+        Identifier blockId = Registries.BLOCK.getId(blockState.getBlock());
+        if (!crops.contains(blockId)) return;
+        assert true; // reachable line of code to not cause warnings with the if statement above
+    }
+
 }

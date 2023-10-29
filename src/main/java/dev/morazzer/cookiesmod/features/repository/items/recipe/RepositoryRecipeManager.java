@@ -21,89 +21,146 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Manger to handle all recipes in the repository.
+ */
 public class RepositoryRecipeManager {
 
-	static Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
+    private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
+    static final Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
 
-	private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
+    /**
+     * Load all recipes from the repository.
+     */
+    public static void loadRecipes() {
+        try (Stream<Path> list = Files.list(recipes)) {
+            list.forEach(path -> {
+                try {
+                    JsonObject jsonObject = GsonUtils.gson.fromJson(
+                            Files.readString(path, StandardCharsets.UTF_8),
+                            JsonObject.class
+                    );
+                    RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
+                    RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
 
-	public static void loadRecipes() {
-		try (Stream<Path> list = Files.list(recipes)) {
-			list.forEach(path -> {
-				try {
-					JsonObject jsonObject = GsonUtils.gson.fromJson(Files.readString(path, StandardCharsets.UTF_8), JsonObject.class);
-					RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
-					RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
+                    map
+                            .computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>())
+                            .add(repositoryRecipe);
+                } catch (IOException e) {
+                    ExceptionHandler.handleException(e);
+                }
+            });
+        } catch (IOException e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
 
-					map.computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>()).add(repositoryRecipe);
-				} catch (IOException e) {
-					ExceptionHandler.handleException(e);
-				}
-			});
-		} catch (IOException e) {
-			ExceptionHandler.handleException(e);
-		}
-	}
+    /**
+     * Resolve all recipes to the lowest for a single item.
+     *
+     * @param identifier The item.
+     * @return The lowest single ingredient (if present).
+     */
+    public static Optional<Ingredient> resolveToLowestSingleIngredient(Identifier identifier) {
+        return resolveToLowestSingleIngredient(identifier, new ArrayList<>());
+    }
 
-	public static Optional<Ingredient> resolveToLowestSingleIngredient(Identifier identifier) {
-		return resolveToLowestSingleIngredient(identifier, new ArrayList<>());
-	}
+    /**
+     * Recursively resolve the lowest ingredient.
+     *
+     * @param identifier The root ingredient.
+     * @param visited    A list of all visited ingredients to prevent cyclic behaviour.
+     * @return The single lowest ingredient.
+     */
+    public static Optional<Ingredient> resolveToLowestSingleIngredient(
+            Identifier identifier,
+            ArrayList<Identifier> visited
+    ) {
+        visited.add(identifier);
+        List<Ingredient> ingredients = getRecipe(identifier, RecipeType.CRAFTING)
+                .map(RepositoryRecipe::getIngredients)
+                .map(Arrays::asList)
+                .map(Ingredient::mergeToList)
+                .orElse(Collections.emptyList());
 
-	public static Optional<Ingredient> resolveToLowestSingleIngredient(Identifier identifier, ArrayList<Identifier> visited) {
-		visited.add(identifier);
-		List<Ingredient> ingredients = getRecipe(identifier, RecipeType.CRAFTING)
-				.map(RepositoryRecipe::getIngredients)
-				.map(Arrays::asList)
-				.map(Ingredient::mergeToList)
-				.orElse(Collections.emptyList());
+        ingredients.removeIf(ingredient -> ingredient.getPath().equals("air"));
 
-		ingredients.removeIf(ingredient -> ingredient.getPath().equals("air"));
+        if (ingredients.size() != 1) {
+            return Optional.empty();
+        }
 
-		if (ingredients.size() != 1) {
-			return Optional.empty();
-		}
+        Ingredient lower = ingredients.get(0);
+        if (visited.contains(lower)) {
+            return Optional.empty();
+        }
+        return resolveToLowestSingleIngredient(lower, visited)
+                .map(craft -> craft.withAmount(craft.getAmount() * lower.getAmount()))
+                .or(() -> Optional.of(lower));
+    }
 
-		Ingredient lower = ingredients.get(0);
-		if (visited.contains(lower)) {
-			return Optional.empty();
-		}
-		return resolveToLowestSingleIngredient(lower, visited).map(craft -> craft.withAmount(craft.getAmount() * lower.getAmount())).or(() -> Optional.of(lower));
-	}
+    /**
+     * Get a list of all ingredients sorted from the highest amount to the lowest.
+     *
+     * @param identifier The root item.
+     * @return The ingredients required.
+     */
+    public static List<Ingredient> getIngredientListSorted(Identifier identifier) {
+        Optional<RepositoryRecipe> recipe = getRecipe(identifier, RecipeType.CRAFTING);
 
-	public static List<Ingredient> getIngredientListSorted(Identifier identifier) {
-		Optional<RepositoryRecipe> recipe = getRecipe(identifier, RecipeType.CRAFTING);
+        return recipe
+                .map(repositoryRecipe -> Ingredient
+                        .mergeIngredients(Arrays.asList(repositoryRecipe.getIngredients()), Collectors.toList())
+                        .stream()
+                        .filter(Predicate.not(Ingredient::isAir))
+                        .sorted(Comparator.comparingInt(Ingredient::getAmount))
+                        .toList())
+                .orElse(Collections.emptyList());
 
-		return recipe.map(repositoryRecipe -> Ingredient.mergeIngredients(Arrays.asList(repositoryRecipe.getIngredients()), Collectors.toList())
-				.stream()
-				.filter(Predicate.not(Ingredient::isAir))
-				.sorted(Comparator.comparingInt(Ingredient::getAmount))
-				.toList()).orElse(Collections.emptyList());
+    }
 
-	}
+    /**
+     * Get the first recipe of any type for the item.
+     *
+     * @param identifier The item.
+     * @return The recipe.
+     */
+    @SuppressWarnings("unused")
+    public static Optional<RepositoryRecipe> getRecipe(Identifier identifier) {
+        return map
+                .getOrDefault(identifier, Collections.emptyList())
+                .stream()
+                .findFirst();
+    }
 
-	@SuppressWarnings("unused")
-	public static Optional<RepositoryRecipe> getRecipe(Identifier identifier) {
-		return map
-				.getOrDefault(identifier, Collections.emptyList())
-				.stream()
-				.findFirst();
-	}
+    /**
+     * Get the first recipe of a specific type for the item.
+     *
+     * @param identifier The item.
+     * @param type       The type.
+     * @return The recipe.
+     */
+    public static Optional<RepositoryRecipe> getRecipe(Identifier identifier, RecipeType type) {
+        return map
+                .getOrDefault(identifier, Collections.emptyList())
+                .stream()
+                .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
+                .findFirst();
+    }
 
-	public static Optional<RepositoryRecipe> getRecipe(Identifier identifier, RecipeType type) {
-		return map
-				.getOrDefault(identifier, Collections.emptyList())
-				.stream()
-				.filter(repositoryRecipe -> repositoryRecipe.getType() == type)
-				.findFirst();
-	}
-
-	@SuppressWarnings("unused")
-	public static List<RepositoryRecipe> getRecipes(Identifier identifier, RecipeType type) {
-		return map
-				.getOrDefault(identifier, Collections.emptyList())
-				.stream()
-				.filter(repositoryRecipe -> repositoryRecipe.getType() == type)
-				.toList();
-	}
+    /**
+     * Get all recipes of a specific type for an item.
+     *
+     * @param identifier The item.
+     * @param type       The type.
+     * @return The list of recipes.
+     */
+    @SuppressWarnings("unused")
+    public static List<RepositoryRecipe> getRecipes(Identifier identifier, RecipeType type) {
+        return map
+                .getOrDefault(identifier, Collections.emptyList())
+                .stream()
+                .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
+                .toList();
+    }
 
 }

@@ -17,6 +17,11 @@ public class HttpUtils {
     private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
     private static final Identifier LOG_HTTP_REQUESTS = DevUtils.createIdentifier("log_http_requests");
 
+    /**
+     * Get the response body from an http request.
+     * @param uri The uri.
+     * @return The response.
+     */
     public static byte[] getResponseBody(URI uri) {
         AtomicReference<byte[]> response = new AtomicReference<>(new byte[0]);
         getResponse(uri, httpResponse -> {
@@ -30,6 +35,11 @@ public class HttpUtils {
         return response.get();
     }
 
+    /**
+     * Request body of an uri.
+     * @param uri The uri.
+     * @param consumer The consumer to consume the body.
+     */
     public static void getResponse(URI uri, Consumer<CloseableHttpResponse> consumer) {
         try (CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build()) {
             CloseableHttpResponse execute = closeableHttpClient.execute(new HttpGet(uri));

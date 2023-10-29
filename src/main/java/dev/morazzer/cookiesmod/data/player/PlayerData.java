@@ -6,22 +6,26 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+/**
+ * Data associated with a player/user of the mod.
+ */
 @Getter
 @Setter
 public class PlayerData {
 
-	@SerializedName("player_uuid")
-	private UUID playerUUID;
-	private String test;
+    @SerializedName("player_uuid")
+    private UUID playerUUID;
+    private String test;
 
-	public PlayerData(UUID player) {
-		this.playerUUID = player;
-	}
+    public PlayerData(UUID player) {
+        this.playerUUID = player;
+    }
 
-	@Override
-	public String toString() {
-		return "PlayerData{" +
-				"playerUUID=" + playerUUID +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "PlayerData{" +
+                "playerUUID=" + playerUUID +
+                '}';
+    }
+
 }

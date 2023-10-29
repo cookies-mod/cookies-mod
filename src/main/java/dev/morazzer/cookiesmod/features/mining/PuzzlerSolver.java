@@ -5,6 +5,7 @@ import dev.morazzer.cookiesmod.events.api.ServerSwapEvent;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
+import dev.morazzer.cookiesmod.utils.LocationUtils;
 import lombok.RequiredArgsConstructor;
 import me.x150.renderer.render.Renderer3d;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -13,17 +14,20 @@ import net.minecraft.util.math.Vec3d;
 
 import java.awt.Color;
 
+/**
+ * Helper to show the correct puzzler block.
+ */
 @LoadModule("mining/puzzle_solver")
 public class PuzzlerSolver implements Module {
 
-    private Vec3d position = null;
     private final Vec3d puzzlerPosition = new Vec3d(181, 196, 135);
+    private Vec3d position = null;
 
     @Override
     public void load() {
         ServerSwapEvent.SERVER_SWAP.register(() -> position = null);
         ClientReceiveMessageEvents.GAME.register(ExceptionHandler.wrap((message, overlay) -> {
-            if (!MiningUtils.isInDwarven()) return;
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) return;
             if (!ConfigManager.getConfig().miningCategory.showPuzzlerSolution.getValue()) return;
             if (overlay) return;
 
@@ -53,7 +57,7 @@ public class PuzzlerSolver implements Module {
             this.position = solution;
         }));
         WorldRenderEvents.AFTER_TRANSLUCENT.register(ExceptionHandler.wrap(context -> {
-            if (!MiningUtils.isInDwarven()) return;
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) return;
             if (!ConfigManager.getConfig().miningCategory.showPuzzlerSolution.getValue()) return;
             if (position == null) {
                 return;
@@ -67,6 +71,9 @@ public class PuzzlerSolver implements Module {
         return "mining/puzzle_solver";
     }
 
+    /**
+     * Representation of the four possible directions and their respective vector.
+     */
     @RequiredArgsConstructor
     enum Directions {
         LEFT('◀', new Vec3d(1, 0, 0)),
@@ -77,6 +84,12 @@ public class PuzzlerSolver implements Module {
         final char literal;
         final Vec3d vector;
 
+        /**
+         * Get the direction based on the character.
+         *
+         * @param character The character.
+         * @return The direction.
+         */
         public static Directions getByChar(char character) {
             for (Directions value : values()) {
                 if (value.literal == character) {
@@ -86,4 +99,5 @@ public class PuzzlerSolver implements Module {
             return null;
         }
     }
+
 }

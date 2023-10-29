@@ -5,6 +5,9 @@ import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+/**
+ * Category that describes all settings related to waypoints.
+ */
 public class WaypointCategory extends Category {
 
     public BooleanOption enableWaypoints = new BooleanOption(
@@ -25,4 +28,5 @@ public class WaypointCategory extends Category {
     public Text getDescription() {
         return Text.literal("All settings related to waypoints");
     }
+
 }

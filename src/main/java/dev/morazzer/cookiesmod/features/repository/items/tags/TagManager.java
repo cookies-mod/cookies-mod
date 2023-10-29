@@ -8,36 +8,42 @@ import net.minecraft.util.Identifier;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+/**
+ * Manager to load all tags from the repository.
+ */
 public class TagManager {
 
-	public static ConcurrentHashMap<Identifier, Tag> concurrentHashMap = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<Identifier, Tag> concurrentHashMap = new ConcurrentHashMap<>();
 
-	public static void loadTags() {
-		concurrentHashMap.clear();
-		Path tags = RepositoryManager.getRepoRoot().resolve("tags");
-		try (Stream<Path> list = Files.list(tags)) {
-			list.forEach(TagManager::load);
-		} catch (IOException e) {
-			ExceptionHandler.handleException(e);
-		}
-	}
+    /**
+     * Load all tags from the repository into objects.
+     */
+    public static void loadTags() {
+        concurrentHashMap.clear();
+        Path tags = RepositoryManager.getRepoRoot().resolve("tags");
+        try (Stream<Path> list = Files.list(tags)) {
+            list.forEach(TagManager::load);
+        } catch (IOException e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
 
-	public static List<Identifier> grouped() {
-		return concurrentHashMap.values().stream().map(Tag::identifiers).flatMap(List::stream).toList();
-	}
-
-	private static void load(Path path) {
-		Gson gson = new Gson();
-		try {
-			Tag tag = gson.fromJson(Files.readString(path), Tag.class);
-			concurrentHashMap.put(tag.key(), tag);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    /**
+     * Load all tags from a specific path.
+     *
+     * @param path The path.
+     */
+    private static void load(Path path) {
+        Gson gson = new Gson();
+        try {
+            Tag tag = gson.fromJson(Files.readString(path), Tag.class);
+            concurrentHashMap.put(tag.key(), tag);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

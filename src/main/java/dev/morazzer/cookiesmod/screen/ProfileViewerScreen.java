@@ -1,7 +1,5 @@
 package dev.morazzer.cookiesmod.screen;
 
-import dev.morazzer.cookiesmod.features.PlayerManager;
-import dev.morazzer.cookiesmod.features.ProfileViewerManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -25,9 +23,6 @@ public class ProfileViewerScreen extends Screen {
                 ExceptionHandler.handleException(throwable);
                 return;
             }
-
-            this.uuid = ProfileViewerManager.getLastSearch();
-            this.userName = PlayerManager.getUserName(uuid);
 
             if (userName == null) {
                 return;

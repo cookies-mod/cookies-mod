@@ -13,12 +13,25 @@ import org.apache.commons.lang3.StringUtils;
 
 public class TextUtils {
 
+    /**
+     * Pretty print a json element.
+     *
+     * @param jsonElement The json element to pretty print.
+     * @return The text.
+     */
     public static Text prettyPrintJson(JsonElement jsonElement) {
         MutableText text = Text.empty();
         text.append(toText(jsonElement, 1));
         return text;
     }
 
+    /**
+     * Turn a json element into text.
+     *
+     * @param jsonElement The json element.
+     * @param depth       The depth of the recursive call.
+     * @return The text.
+     */
     private static Text toText(JsonElement jsonElement, int depth) {
         if (jsonElement instanceof JsonObject jsonObject) {
             MutableText object = Text.empty().append(Text.literal("{").formatted(Formatting.GOLD)).append("\n");
@@ -62,13 +75,9 @@ public class TextUtils {
                 String content = jsonPrimitive.getAsString();
                 MutableText literal = Text.literal(content);
                 if (content.startsWith("http")) {
-                    literal.setStyle(Style.EMPTY.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.OPEN_URL,
-                            content
-                    )));
+                    literal.setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, content)));
                 }
-                return Text.literal("\"").append(literal.formatted(Formatting.GREEN))
-                        .append("\"");
+                return Text.literal("\"").append(literal.formatted(Formatting.GREEN)).append("\"");
             }
         }
         return Text.empty();

@@ -5,22 +5,43 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * Gui element that works as a button.
+ */
 public class ButtonElement {
 
     private static final Identifier BUTTON = Identifier.of("cookiesmod", "gui/config/button.png");
     private final Runnable runnable;
     private final Text text;
 
+    /**
+     * Create a new button that can be rendered everywhere.
+     *
+     * @param runnable The runnable that will be executed if the button is clicked.
+     * @param text     The text that will be displayed on the button.
+     */
     public ButtonElement(Runnable runnable, Text text) {
         this.runnable = runnable;
         this.text = text;
     }
 
+    /**
+     * Render the button onto the current draw context.
+     *
+     * @param drawContext The current draw context.
+     */
     public void render(DrawContext drawContext) {
         drawContext.drawTexture(BUTTON, 0, 0, 0, 0, 48, 16, 48, 16);
         RenderUtils.renderCenteredTextWithMaxWidth(drawContext, text, 48, 24, 8, ~0, true);
     }
 
+    /**
+     * Check if the mouse click occurred above the button and if so, then execute the runnable.
+     *
+     * @param mouseX The current x position of the mouse.
+     * @param mouseY The current y position of the mouse.
+     * @return If the runnable was executed.
+     */
     public boolean mouseClicked(double mouseX, double mouseY) {
         if ((mouseX > 0) && (mouseX < (48))
                 && (mouseY > 0) && (mouseY < (16))) {

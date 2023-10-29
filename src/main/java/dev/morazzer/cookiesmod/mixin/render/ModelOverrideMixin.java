@@ -21,8 +21,13 @@ public class ModelOverrideMixin {
 
     @Inject(method = "deserializeMinPropertyValues", at = @At(value = "INVOKE", target = "Ljava/util/Map$Entry;getValue()Ljava/lang/Object;"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void allowStringPropertiesForAllCookiesmodIdentifiers(
-            JsonObject object, CallbackInfoReturnable<List<ModelOverride.Condition>> cir, Map<Identifier, Float> map,
-            JsonObject jsonObject, Iterator<?> iterator, Map.Entry<String, JsonElement> entry) {
+            JsonObject object,
+            CallbackInfoReturnable<List<ModelOverride.Condition>> cir,
+            Map<Identifier, Float> map,
+            JsonObject jsonObject,
+            Iterator<?> iterator,
+            Map.Entry<String, JsonElement> entry
+    ) {
         DataResult<Identifier> identifier = Identifier.validate(entry.getKey());
         if (identifier.result().isEmpty() || !identifier.result().get().getNamespace().equals("cookiesmod")) {
             return;
@@ -31,4 +36,5 @@ public class ModelOverrideMixin {
             entry.setValue(new JsonPrimitive(entry.getValue().getAsString().hashCode()));
         }
     }
+
 }

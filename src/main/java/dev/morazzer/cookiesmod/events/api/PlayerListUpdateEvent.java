@@ -5,33 +5,47 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.network.PlayerListEntry;
 
+/**
+ * Various events related to the player list.
+ */
 @FunctionalInterface
 public interface PlayerListUpdateEvent {
 
-	Event<PlayerListUpdateEvent> ADD_PLAYERS = EventFactory.createArrayBacked(
-			PlayerListUpdateEvent.class,
-			PlayerListUpdateEvent::spread
-	);
+    Event<PlayerListUpdateEvent> ADD_PLAYERS = EventFactory.createArrayBacked(
+            PlayerListUpdateEvent.class,
+            PlayerListUpdateEvent::spread
+    );
 
-	Event<PlayerListUpdateEvent> REMOVE_PLAYERS = EventFactory.createArrayBacked(
-			PlayerListUpdateEvent.class,
-			PlayerListUpdateEvent::spread
-	);
+    Event<PlayerListUpdateEvent> REMOVE_PLAYERS = EventFactory.createArrayBacked(
+            PlayerListUpdateEvent.class,
+            PlayerListUpdateEvent::spread
+    );
 
-	Event<PlayerListUpdateEvent> UPDATE_NAME = EventFactory.createArrayBacked(
-			PlayerListUpdateEvent.class,
-			PlayerListUpdateEvent::spread
-	);
+    Event<PlayerListUpdateEvent> UPDATE_NAME = EventFactory.createArrayBacked(
+            PlayerListUpdateEvent.class,
+            PlayerListUpdateEvent::spread
+    );
 
-	static PlayerListUpdateEvent spread(PlayerListUpdateEvent[] playerListUpdateEvents) {
-		return currentEntry -> ExceptionHandler.tryCatch(() -> {
-			for (PlayerListUpdateEvent playerListUpdateEvent : playerListUpdateEvents) {
-				playerListUpdateEvent.update(currentEntry);
-			}
-			return null;
-		});
-	}
+    /**
+     * Spread an event to all the subscribed listeners.
+     *
+     * @param playerListUpdateEvents The list of events.
+     * @return The invoker.
+     */
+    static PlayerListUpdateEvent spread(PlayerListUpdateEvent[] playerListUpdateEvents) {
+        return currentEntry -> ExceptionHandler.tryCatch(() -> {
+            for (PlayerListUpdateEvent playerListUpdateEvent : playerListUpdateEvents) {
+                playerListUpdateEvent.update(currentEntry);
+            }
+            return null;
+        });
+    }
 
-	void update(PlayerListEntry currentEntry);
+    /**
+     * Called when the player list was updated.
+     *
+     * @param currentEntry The entry that was updated/created/removed.
+     */
+    void update(PlayerListEntry currentEntry);
 
 }

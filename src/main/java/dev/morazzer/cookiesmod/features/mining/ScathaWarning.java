@@ -5,6 +5,7 @@ import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
+import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
@@ -13,11 +14,17 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
+/**
+ * Warnings if a scatha or worms spawns.
+ */
 @LoadModule("mining/scatha_alert")
 public class ScathaWarning implements Module {
 
     private static final String WORM_MESSAGE = "You hear the sound of something approaching...";
 
+    /**
+     * Play the scatha warning.
+     */
     @TestEntrypoint("scatha_alert")
     public static void playSound() {
         CookiesUtils.getPlayer().ifPresent(clientPlayerEntity -> {
@@ -34,7 +41,7 @@ public class ScathaWarning implements Module {
     public void load() {
         ClientReceiveMessageEvents.GAME.register(ExceptionHandler.wrap((message, overlay) -> {
             if (!ConfigManager.getConfig().miningCategory.scathaAlert.getValue()) return;
-            if (!MiningUtils.isInHollows()) return;
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.CRYSTAL_HOLLOWS) return;
             if (message.getString().equals(WORM_MESSAGE)) {
                 playSound();
             }
@@ -45,4 +52,5 @@ public class ScathaWarning implements Module {
     public String getIdentifierPath() {
         return "mining/scatha_alert";
     }
+
 }
