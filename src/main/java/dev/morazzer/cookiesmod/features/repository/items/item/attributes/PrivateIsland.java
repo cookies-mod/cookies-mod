@@ -1,7 +1,7 @@
 package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
 
 /**
- * All private island islands.
+ * All private island types.
  */
 public enum PrivateIsland {
     NETHER,

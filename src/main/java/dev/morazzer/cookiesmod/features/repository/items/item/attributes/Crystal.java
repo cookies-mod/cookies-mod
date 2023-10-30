@@ -1,7 +1,7 @@
 package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
 
 /**
- * All types of private island crystals
+ * All types of private island crystals.
  */
 public enum Crystal {
     FOREST_ISLAND,

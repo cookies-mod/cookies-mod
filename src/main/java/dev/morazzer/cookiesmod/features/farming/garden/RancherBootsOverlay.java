@@ -62,10 +62,10 @@ public class RancherBootsOverlay implements Module {
     }
 
     /**
-     * Check if the current sign is a valid rancher boots sign.
+     * Checks whether the current sign is a valid rancher boots sign.
      *
      * @param screen The sign.
-     * @return If the sign is a rancher boots sign.
+     * @return Whether the sign is a rancher boots sign.
      */
     private boolean isRancherBootsScreen(SignEditScreen screen) {
         return screen.messages[1].trim().equals("^^^^^^")
@@ -74,7 +74,7 @@ public class RancherBootsOverlay implements Module {
     }
 
     /**
-     * Check if the newly opened screen is a sign and if so initialize the rendering.
+     * Checks whether the newly opened screen is a sign and initialize the rendering if so.
      *
      * @param minecraftClient The minecraft client.
      * @param screen          The screen.
@@ -134,7 +134,7 @@ public class RancherBootsOverlay implements Module {
     }
 
     /**
-     * Create a text for the crop and speed.
+     * Creates a text for the crop and speed.
      *
      * @param crop  The crop.
      * @param speed The speed.
@@ -152,7 +152,7 @@ public class RancherBootsOverlay implements Module {
     }
 
     /**
-     * Render the speed list onto the sign.
+     * Renders the speed list onto the sign.
      *
      * @param screen    The screen.
      * @param context   The current draw context.
@@ -221,7 +221,8 @@ public class RancherBootsOverlay implements Module {
     }
 
     /**
-     * Check if the mouse was clicked on a text and if so, then change the speed to it.
+     * Checks whether the mouse was clicked on a text and change the speed to it if so.
+     *
      * @param screen The screen.
      * @param mouseX The current x position of the mouse.
      * @param mouseY The current y position of the mouse.

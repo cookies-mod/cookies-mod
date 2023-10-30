@@ -16,10 +16,10 @@ public interface ItemModelOverrides {
     Identifier[] ITEM_MODEL_SHOULD_RESPECT_OTHER_PREDICATES = new Identifier[] {ITEM_MODEL_PREDICATE_SKYBLOCK_ID, ITEM_MODEL_PREDICATE_REFORGE, ITEM_MODEL_PREDICATE_DISPLAY_NAME};
 
     /**
-     * If the item model override should respect the other overrides.
+     * Whether the item model override should respect the other overrides.
      *
      * @param identifier The override identifier.
-     * @return If it should respect others.
+     * @return Whether it should respect others.
      */
     static boolean shouldRespectOthers(Identifier identifier) {
         for (Identifier itemModelPreciseMatch : ITEM_MODEL_SHOULD_RESPECT_OTHER_PREDICATES) {
@@ -31,10 +31,10 @@ public interface ItemModelOverrides {
     }
 
     /**
-     * If the override should match the precise value instead of exact and higher.
+     * Whether the override should match the precise value instead of exact and higher.
      *
      * @param identifier The identifier.
-     * @return If the value should match precise.
+     * @return Whether the value should match precise.
      */
     static boolean shouldMatchPrecise(Identifier identifier) {
         for (Identifier itemModelPreciseMatch : ITEM_MODEL_PRECISE_MATCHES) {

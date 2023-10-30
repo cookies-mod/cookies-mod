@@ -13,26 +13,26 @@ public interface PlayerListUpdateEvent {
 
     Event<PlayerListUpdateEvent> ADD_PLAYERS = EventFactory.createArrayBacked(
             PlayerListUpdateEvent.class,
-            PlayerListUpdateEvent::spread
+            PlayerListUpdateEvent::distribute
     );
 
     Event<PlayerListUpdateEvent> REMOVE_PLAYERS = EventFactory.createArrayBacked(
             PlayerListUpdateEvent.class,
-            PlayerListUpdateEvent::spread
+            PlayerListUpdateEvent::distribute
     );
 
     Event<PlayerListUpdateEvent> UPDATE_NAME = EventFactory.createArrayBacked(
             PlayerListUpdateEvent.class,
-            PlayerListUpdateEvent::spread
+            PlayerListUpdateEvent::distribute
     );
 
     /**
-     * Spread an event to all the subscribed listeners.
+     * Distributes an event to all the subscribed listeners.
      *
      * @param playerListUpdateEvents The list of events.
      * @return The invoker.
      */
-    static PlayerListUpdateEvent spread(PlayerListUpdateEvent[] playerListUpdateEvents) {
+    static PlayerListUpdateEvent distribute(PlayerListUpdateEvent[] playerListUpdateEvents) {
         return currentEntry -> ExceptionHandler.tryCatch(() -> {
             for (PlayerListUpdateEvent playerListUpdateEvent : playerListUpdateEvents) {
                 playerListUpdateEvent.update(currentEntry);

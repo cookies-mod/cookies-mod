@@ -6,7 +6,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 /**
- * A requirement for a specific garden level
+ * A requirement for a specific garden level.
  */
 @AllArgsConstructor
 public class GardenLevelRequirement extends Requirement {

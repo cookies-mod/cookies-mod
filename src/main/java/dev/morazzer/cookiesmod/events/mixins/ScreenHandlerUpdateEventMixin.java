@@ -57,7 +57,7 @@ public class ScreenHandlerUpdateEventMixin implements ScreenHandlerUpdateEventAc
     }
 
     /**
-     * Get the event instance for ths screen handler instance.
+     * Gets the event instance for ths screen handler instance.
      *
      * @return The event instance.
      */

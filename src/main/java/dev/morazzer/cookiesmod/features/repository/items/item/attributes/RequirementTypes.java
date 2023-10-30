@@ -1,5 +1,8 @@
 package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
 
+/**
+ * All supporter types of item requirements.
+ */
 public enum RequirementTypes {
     SKILL,
     TROPHY_FISHING,
