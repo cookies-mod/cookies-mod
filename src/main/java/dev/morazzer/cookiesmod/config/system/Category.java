@@ -28,7 +28,7 @@ public abstract class Category {
     public abstract Text getDescription();
 
     /**
-     * Load the values of the options in the category from a json object.
+     * Loads the values of the options in the category from a {@linkplain com.google.gson.JsonObject}.
      *
      * @param jsonObject The json object.
      */
@@ -57,7 +57,7 @@ public abstract class Category {
     }
 
     /**
-     * Save the values of the current category to a json object.
+     * Saves the values of the current category to a {@linkplain com.google.gson.JsonObject}.
      *
      * @return The json object.
      */

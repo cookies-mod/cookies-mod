@@ -26,7 +26,7 @@ public enum Tier {
     }
 
     /**
-     * Get the tier by name or common.
+     * Gets the tier by name or common.
      *
      * @param name The name.
      * @return The tier.

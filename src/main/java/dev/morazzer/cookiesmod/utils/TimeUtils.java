@@ -4,7 +4,7 @@ package dev.morazzer.cookiesmod.utils;
 public class TimeUtils {
 
     /**
-     * Get the seconds formatted as string.
+     * Gets the seconds formatted as string.
      *
      * @param seconds The seconds.
      * @return The string.
@@ -38,7 +38,7 @@ public class TimeUtils {
     }
 
     /**
-     * Get the current time as epoch second.
+     * Gets the current time as epoch second.
      *
      * @return The time as epoch.
      */
@@ -47,7 +47,7 @@ public class TimeUtils {
     }
 
     /**
-     * Get the current time millis.
+     * Gets the current time millis.
      *
      * @return The time millis.
      */
@@ -56,7 +56,7 @@ public class TimeUtils {
     }
 
     /**
-     * Get the current nano time.
+     * Gets the current nano time.
      *
      * @return The nano time
      */
@@ -65,7 +65,7 @@ public class TimeUtils {
     }
 
     /**
-     * Get the current micro time.
+     * Gets the current micro time.
      *
      * @return The micro time.
      */
@@ -74,7 +74,7 @@ public class TimeUtils {
     }
 
     /**
-     * Time the runtime of a runnable.
+     * Times the runtime of a runnable.
      *
      * @param runnable The runnable to time
      * @param <T>      The return value of the runnable.
@@ -112,14 +112,14 @@ public class TimeUtils {
         private long end;
 
         /**
-         * Create a time that automatically starts.
+         * Creates a timer that automatically starts.
          */
         public Timer() {
             this(true);
         }
 
         /**
-         * Create a timer.
+         * Creates a timer.
          *
          * @param start If the timer should start.
          */
@@ -130,57 +130,49 @@ public class TimeUtils {
         }
 
         /**
-         * Start the timer.
+         * Starts the timer.
          */
         public void start() {
             this.start = TimeUtils.getTimeNano();
         }
 
         /**
-         * End the timer.
+         * Stops the timer.
          */
         public void stop() {
             this.end = TimeUtils.getTimeNano();
         }
 
         /**
-         * Get the nano time elapsed.
-         *
-         * @return The nano time.
+         * @return The nano time elapsed.
          */
         public long getNanoTime() {
             return this.end - this.start;
         }
 
         /**
-         * Get the micro time elapsed.
-         *
-         * @return The micro time.
+         * @return The micro time elapsed.
          */
         public long getMicroTime() {
             return this.getNanoTime() / 1000L;
         }
 
         /**
-         * Get the milli time elapsed.
-         *
-         * @return The milli time.
+         * @return The milli time elapsed.
          */
         public long getMillisTime() {
             return this.getNanoTime() / 1000000L;
         }
 
         /**
-         * Get the seconds elapsed.
-         *
-         * @return The seconds.
+         * @return The seconds elapsed.
          */
         public long getSecondsTime() {
             return this.getNanoTime() / 1000000000L;
         }
 
         /**
-         * Get the elapsed time as formatted string.
+         * Gets the elapsed time as formatted string.
          *
          * @return The elapsed time.
          */

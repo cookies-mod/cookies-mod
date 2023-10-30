@@ -117,7 +117,7 @@ public class FuelBarHud extends HudElement {
     }
 
     /**
-     * Render the fuel bar.
+     * Renders the fuel bar.
      *
      * @param drawContext    The current draw context.
      * @param fuelPercentage The percentage of fuel in the drill.

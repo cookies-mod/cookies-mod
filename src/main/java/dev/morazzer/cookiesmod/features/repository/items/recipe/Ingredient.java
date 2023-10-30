@@ -18,7 +18,7 @@ public class Ingredient extends Identifier {
     private int amount = -1;
 
     /**
-     * Create an ingredient which is an identifier with a fixed amount.
+     * Creates an ingredient which is an identifier with a fixed amount.
      *
      * @param namespace The namespace of the identifier.
      * @param path      The path of the identifier.
@@ -30,7 +30,7 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Create an ingredient from its string representation.
+     * Creates an ingredient from its string representation.
      * The string has to be formatted like the following: namespace:path:amount.
      * <p>
      * For example {@code skyblock:items/wheat:10} represents a wheat item with amount 10.
@@ -47,7 +47,7 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Create an ingredient from an existing identifier and an amount.
+     * Creates an ingredient from an existing identifier and an amount.
      *
      * @param identifier The identifier.
      * @param amount     The amount.
@@ -58,7 +58,7 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Merge an iterable of ingredients to a set.
+     * Merges an iterable of ingredients to a set.
      *
      * @param ingredients The ingredients.
      * @return The merged set.
@@ -68,7 +68,7 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Merge an iterable of ingredients to a list.
+     * Merges an iterable of ingredients to a list.
      *
      * @param ingredients The ingredients.
      * @return The merged list.
@@ -99,7 +99,7 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Create a new instance of the ingredient with a different amount.
+     * Creates a new instance of the ingredient with a different amount.
      *
      * @param amount The new amount.
      * @return The new ingredient.

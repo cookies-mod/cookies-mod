@@ -47,7 +47,7 @@ public class CompostWarning implements Module {
     }
 
     /**
-     * Check if the current player list entry is related to the composter.
+     * Checks whether the current player list entry is related to the composter.
      *
      * @param entry The entry to check.
      */

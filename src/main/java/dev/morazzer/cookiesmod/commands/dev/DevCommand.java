@@ -15,7 +15,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * The class representing the {@code /dev} command, most (if not all) of the command is dynamically loaded.
+ * The class representing the {@code /dev} command. Most (if not all) functions of the command are loaded dynamically.
  */
 @LoadCommand
 @Slf4j
@@ -31,7 +31,6 @@ public class DevCommand extends ClientCommand {
                 .setScanners(Scanners.TypesAnnotated));
 
         reflections.getTypesAnnotatedWith(DevSubcommand.class).forEach(devSubCommand -> {
-            log.debug("Found class annotated with @DevSubcommand");
             if (!ClientCommand.class.isAssignableFrom(devSubCommand)) {
                 log.warn("{} does not extend ClientCommand but is annotated with @DevSubcommand", devSubCommand);
                 return;

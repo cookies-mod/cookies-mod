@@ -46,7 +46,7 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     private Credits credits;
 
     /**
-     * Create a new editor.
+     * Creates a new editor.
      *
      * @param option The option that uses this editor.
      */
@@ -303,7 +303,8 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     }
 
     /**
-     * Helper method to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Person} from a json array
+     * Helper method
+     * to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Person} from a {@linkplain com.google.gson.JsonArray}.
      *
      * @param jsonArray A json array containing people.
      * @return A list of people.
@@ -324,7 +325,8 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     }
 
     /**
-     * Helper method to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Library} from a json array.
+     * Helper method
+     * to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Library} from a {@linkplain com.google.gson.JsonArray}.
      *
      * @param jsonArray A json array containing libraries.
      * @return A list of libraries.
@@ -354,7 +356,8 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     }
 
     /**
-     * Helper method to parse a json array into a list of {@linkplain net.minecraft.text.Text}.
+     * Helper method
+     * to parse a {@linkplain com.google.gson.JsonArray} into a list of {@linkplain net.minecraft.text.Text}.
      *
      * @param jsonArray A json array with text.
      * @return A list of text.

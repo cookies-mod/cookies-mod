@@ -18,7 +18,7 @@ import java.util.Optional;
 public class ConfigProcessor {
 
     /**
-     * Start the processing of a config.
+     * Starts the processing of a config.
      *
      * @param config       The config to process.
      * @param configReader The config reader to read the values.
@@ -44,7 +44,7 @@ public class ConfigProcessor {
     }
 
     /**
-     * Process a foldable and all of its fields.
+     * Processes a foldable and all of its fields.
      *
      * @param foldable     The foldable to process.
      * @param configReader The config reader to read the values.
@@ -54,7 +54,7 @@ public class ConfigProcessor {
     }
 
     /**
-     * Process any object and all of its fields.
+     * Processes any object and all of its fields.
      *
      * @param object       The object to process.
      * @param configReader The config reader to read the values.
@@ -91,7 +91,7 @@ public class ConfigProcessor {
     }
 
     /**
-     * Process a foldable and all of its fields.
+     * Processes a foldable and all of its fields.
      *
      * @param category     The category to process.
      * @param configReader The config reader to read the values.

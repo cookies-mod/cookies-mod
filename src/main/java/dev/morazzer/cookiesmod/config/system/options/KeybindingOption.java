@@ -24,7 +24,7 @@ public class KeybindingOption extends Option<InputUtil.Key, KeybindingOption> {
     }
 
     /**
-     * Set a default key that is different from the initial key.
+     * Sets a default key that is different from the initial key.
      *
      * @param key The new default key.
      * @return The option.

@@ -6,7 +6,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 /**
- * Gui element that works as a button.
+ * GUI element that works as a button.
  */
 public class ButtonElement {
 
@@ -15,7 +15,7 @@ public class ButtonElement {
     private final Text text;
 
     /**
-     * Create a new button that can be rendered everywhere.
+     * Creates a new button that can be rendered everywhere.
      *
      * @param runnable The runnable that will be executed if the button is clicked.
      * @param text     The text that will be displayed on the button.
@@ -26,7 +26,7 @@ public class ButtonElement {
     }
 
     /**
-     * Render the button onto the current draw context.
+     * Renders the button onto the current draw context.
      *
      * @param drawContext The current draw context.
      */
@@ -36,7 +36,7 @@ public class ButtonElement {
     }
 
     /**
-     * Check if the mouse click occurred above the button and if so, then execute the runnable.
+     * Checks if the mouse click occurred above the button and executes the runnable if so.
      *
      * @param mouseX The current x position of the mouse.
      * @param mouseY The current y position of the mouse.

@@ -17,7 +17,7 @@ public class WaypointCategory extends Category {
             true
     );
 
-    public WaypointOption waypointOption = new WaypointOption().withHiddenKeys("waypoint", "waypoints");
+    public WaypointOption waypointOption = new WaypointOption().withTags("waypoint", "waypoints");
 
     @Override
     public Text getName() {

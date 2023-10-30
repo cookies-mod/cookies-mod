@@ -16,9 +16,9 @@ public class Garden implements Module {
     private static final Identifier DISABLE_GARDEN_CHECK = DevUtils.createIdentifier("garden/disable_garden_check");
 
     /**
-     * If the player is currently on the island
+     * Checks whether the player is currently on the garden.
      *
-     * @return If the player is on the garden.
+     * @return Whether the player is on the garden.
      */
     public static boolean isOnGarden() {
         return DevUtils.isEnabled(DISABLE_GARDEN_CHECK) || LocationUtils.getCurrentIsland() == LocationUtils.Islands.GARDEN;

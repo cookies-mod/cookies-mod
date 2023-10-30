@@ -17,7 +17,7 @@ public class ScoreboardUtils {
     private static final String SKYBLOCK_SCOREBOARD_OBJECTIVE_NAME = "SBScoreboard";
 
     /**
-     * Get the title of the scoreboard.
+     * Gets the title of the scoreboard.
      *
      * @return The title.
      */
@@ -26,7 +26,7 @@ public class ScoreboardUtils {
     }
 
     /**
-     * Get all lines on the scoreboard.
+     * Gets all lines on the scoreboard.
      *
      * @return The lines.
      */
@@ -54,7 +54,7 @@ public class ScoreboardUtils {
     }
 
     /**
-     * Get the current location as String.
+     * Gets the current location as String.
      *
      * @return The location.
      */
@@ -68,7 +68,7 @@ public class ScoreboardUtils {
     }
 
     /**
-     * Get the game mode of the current profile.
+     * Gets the game mode of the current profile.
      *
      * @return The game mode.
      */
@@ -82,7 +82,7 @@ public class ScoreboardUtils {
     }
 
     /**
-     * Get the skyblock scoreboard objective.
+     * Gets the skyblock scoreboard objective.
      *
      * @return The scoreboard objective.
      */

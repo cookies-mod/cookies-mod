@@ -19,7 +19,7 @@ public class CompostFoldable extends Foldable {
 
     public final BooleanOption showWarnings = new BooleanOption(
             Text.literal("Show compost warnings"),
-            Text.literal("If you should get notified for low fuel/organic matter"),
+            Text.literal("Whether you should get notified for low fuel/organic matter"),
             false
     );
 
@@ -44,7 +44,7 @@ public class CompostFoldable extends Foldable {
 
     public final EnumDropdownOption<ItemSortMode> itemSort = new EnumDropdownOption<>(
             Text.literal("Upgrade item sort"),
-            Text.literal("If the items should be from highest to lowest or the other way around"),
+            Text.literal("Whether the items should be from highest to lowest or the other way around"),
             ItemSortMode.DOWN
     )
             .withSupplier(value -> switch (value) {

@@ -20,7 +20,7 @@ public class ItemUtils {
     private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
 
     /**
-     * Get the skyblock attribute tag of an item.
+     * Gets the skyblock attribute tag of an item.
      *
      * @param itemStack The item.
      * @return The tag.
@@ -30,7 +30,7 @@ public class ItemUtils {
     }
 
     /**
-     * Get the skyblock id of an item.
+     * Gets the skyblock id of an item.
      *
      * @param itemStack The item.
      * @return The skyblock id.
@@ -41,7 +41,7 @@ public class ItemUtils {
     }
 
     /**
-     * Parse the skyblock id to an internal skyblock id.
+     * Parses the skyblock id to an internal skyblock id.
      *
      * @param skyblockId The skyblock id.
      * @return The internal skyblock id.
@@ -51,7 +51,7 @@ public class ItemUtils {
     }
 
     /**
-     * Get the identifier with the internal namespace.
+     * Gets the identifier with the internal namespace.
      *
      * @param identifier The identifier.
      * @return The formatted identifier.
@@ -61,7 +61,7 @@ public class ItemUtils {
     }
 
     /**
-     * Get the skyblock id as internal identifier.
+     * Gets the skyblock id as internal identifier.
      *
      * @param itemStack The item.
      * @return The id.
@@ -71,10 +71,10 @@ public class ItemUtils {
     }
 
     /**
-     * If the item in main hand has any enchantment of any level.
+     * Whether the item in main hand has any enchantment of any level.
      *
      * @param enchantments The enchantments.
-     * @return If at least one enchantment is present.
+     * @return Whether at least one enchantment is present.
      */
     public static boolean doesCurrentItemHaveEnchantments(String... enchantments) {
         return getMainHand().flatMap(ItemUtils::getSkyblockAttributes)
@@ -89,16 +89,16 @@ public class ItemUtils {
     }
 
     /**
-     * If the item in the main hand is a skyblock item.
+     * Whether the item in the main hand is a skyblock item.
      *
-     * @return If the item is a skyblock item.
+     * @return Whether the item is a skyblock item.
      */
     public static boolean hasSkyblockItemInMainHand() {
         return getMainHand().flatMap(ItemUtils::getSkyblockId).isPresent();
     }
 
     /**
-     * Get the nbt from the main hand.
+     * Gets the nbt from the main hand.
      *
      * @return The nbt.
      */
@@ -107,7 +107,7 @@ public class ItemUtils {
     }
 
     /**
-     * Get the item in the main hand.
+     * Gets the item in the main hand.
      *
      * @return The item.
      */
@@ -117,7 +117,7 @@ public class ItemUtils {
     }
 
     /**
-     * Print the skull texture of the current item into the chat.
+     * Prints the skull texture of the current item into the chat.
      */
     @TestEntrypoint("get_texture_from_item")
     public static void getTextureFromCurrentItem() {

@@ -15,7 +15,7 @@ import java.util.Optional;
 public abstract class Config<T extends Config<T>> {
 
     /**
-     * Save to config to a json object.
+     * Saves the config to a {@linkplain com.google.gson.JsonObject}.
      *
      * @return The config as json object.
      */
@@ -36,7 +36,7 @@ public abstract class Config<T extends Config<T>> {
     }
 
     /**
-     * Load all categories and values from a json object.
+     * Loads all categories and values from a {@linkplain com.google.gson.JsonObject}.
      *
      * @param jsonObject The json object.
      */
@@ -56,7 +56,7 @@ public abstract class Config<T extends Config<T>> {
     }
 
     /**
-     * Get the title of the config that will always be displayed.
+     * Gets the title of the config that will always be displayed.
      *
      * @return The title.
      */

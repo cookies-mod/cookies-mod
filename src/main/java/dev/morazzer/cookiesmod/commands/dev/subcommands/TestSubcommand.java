@@ -17,7 +17,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
 /**
- * Subcommand to add various methods to the command tree, these methods have to be annotated with the {@linkplain dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint} annotation
+ * Subcommand to add various methods to the command tree.
+ * These methods must be annotated with the {@linkplain dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint} annotation.
  */
 @DevSubcommand
 @Slf4j

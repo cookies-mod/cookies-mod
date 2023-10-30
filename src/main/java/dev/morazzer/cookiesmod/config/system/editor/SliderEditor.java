@@ -178,9 +178,9 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
     }
 
     /**
-     * Get the value in string form
+     * Gets the value as string.
      *
-     * @return The value.
+     * @return The value as string.
      */
     @NotNull
     private String getValue() {
@@ -218,7 +218,7 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
     }
 
     /**
-     * Save the current value to the option instance and update the text field.
+     * Saves the current value to the option instance and updates the text field.
      */
     private void saveValue() {
         this.option.setValue(Double.parseDouble(this.textFieldWidget.getText()));

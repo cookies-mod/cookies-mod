@@ -18,7 +18,7 @@ public class LinearInterpolatedInteger {
     private boolean hasReachedTarget;
 
     /**
-     * Create a linear interpolated integer.
+     * Creates a linear interpolated integer.
      *
      * @param timeToTarget The time to reach the target value.
      * @param startValue   The start value.
@@ -31,7 +31,7 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * Set the time to reach the target value.
+     * Sets the time to reach the target value.
      *
      * @param timeToTarget The time.
      */
@@ -40,7 +40,7 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * Set the target value.
+     * Sets the target value.
      *
      * @param targetValue The target value.
      */
@@ -49,7 +49,7 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * Set the target value.
+     * Sets the target value.
      *
      * @param targetValue The new target.
      * @param force       If the target should be set even if its same.
@@ -66,7 +66,7 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * Tick the value.
+     * Ticks the value.
      */
     public void tick() {
         if (this.hasReachedTarget) {
@@ -76,7 +76,7 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * Tick the value with a custom time difference.
+     * Ticks the value with a custom time difference.
      *
      * @param deltaTime The difference in time.
      */
@@ -97,7 +97,7 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * Set the current value.
+     * Sets the current value.
      *
      * @param value The value.
      */
@@ -106,16 +106,16 @@ public class LinearInterpolatedInteger {
     }
 
     /**
-     * If the integer has reached its target.
+     * Whether the integer has reached its target.
      *
-     * @return If it is done.
+     * @return Whether it is done.
      */
     public boolean hasReachedTarget() {
         return this.hasReachedTarget;
     }
 
     /**
-     * The current target.
+     * Gets the current target.
      *
      * @return The target.
      */

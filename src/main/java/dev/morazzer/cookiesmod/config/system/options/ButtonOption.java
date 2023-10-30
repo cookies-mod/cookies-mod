@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A simple button in the config
+ * A simple button in the config.
  */
 @Getter
 public class ButtonOption extends Option<Runnable, ButtonOption> {

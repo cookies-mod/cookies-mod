@@ -15,6 +15,8 @@ import java.util.Optional;
 
 /**
  * Subcommand to get the internal value that is used to check for skyblock ids on items.
+ * This value is used in the
+ * {@linkplain dev.morazzer.cookiesmod.mixin.render.ModelOverrideMixin} to dynamically replace item models for different skyblock items.
  */
 @DevSubcommand
 public class GetTextureIdValueSubcommand extends ClientCommand {

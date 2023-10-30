@@ -7,7 +7,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 /**
- * Speeds to
+ * Speeds for farming.
  */
 public class Speeds extends Foldable {
 

@@ -20,7 +20,7 @@ public abstract class Requirement {
     public RequirementTypes requirementType;
 
     /**
-     * Parse a json object into an instance of a requirement.
+     * Parses a {@linkplain com.google.gson.JsonObject} into an instance of a requirement.
      *
      * @param jsonObject The json object.
      * @return The new requirement.

@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class CookiesMod implements ModInitializer {
 
-    private static final String prefix = "Cookies mod > ";
+    private static final String prefix = "Cookies Mod > ";
     public static final Identifier ROOT = new Identifier("cookiesmod", "root");
     @Getter
     private static CookiesMod instance;
@@ -96,7 +96,7 @@ public class CookiesMod implements ModInitializer {
     }
 
     /**
-     * Load all modules and check if they are force disabled.
+     * Loads all modules and check if they are force disabled.
      */
     private void loadModules() {
         AtomicReference<JsonArray> jsonArrayAtomicReference = new AtomicReference<>();

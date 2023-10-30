@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import java.util.function.Function;
 
 /**
- * Gui element to render a dropdown menu everywhere.
+ * GUI element to render a dropdown menu everywhere.
  *
  * @param <T> The type of the elements.
  */
@@ -23,7 +23,7 @@ public class DropdownElement<T> {
     private T selected;
 
     /**
-     * Create a new dropdown element.
+     * Creates a new dropdown element.
      *
      * @param elements     An array of elements that can be selected.
      * @param textSupplier A function to map the values to a human-readable text.
@@ -34,7 +34,7 @@ public class DropdownElement<T> {
     }
 
     /**
-     * Change the currently selected element to a different one.
+     * Changes the currently selected element to a different one.
      *
      * @param selected The selected element.
      */
@@ -48,7 +48,7 @@ public class DropdownElement<T> {
     }
 
     /**
-     * Render the dropdown onto the current draw context.
+     * Renders the dropdown onto the current draw context.
      *
      * @param drawContext   The current draw context.
      * @param dropdownWidth The width the dropdown should be rendered at.
@@ -64,7 +64,7 @@ public class DropdownElement<T> {
     }
 
     /**
-     * Render the overlay of the dropdown, also known as the list of items.
+     * Renders the overlay of the dropdown, also known as the list of items.
      *
      * @param context       The current draw context.
      * @param dropdownWidth The width the dropdown should be rendered at.
@@ -114,7 +114,7 @@ public class DropdownElement<T> {
     }
 
     /**
-     * Check if the mouse click occurred above the dropdown menu and if so, then change the value to the clicked one.
+     * Checks if the mouse click occurred above the button and change the value if so.
      *
      * @param mouseX        The current x position of the mouse.
      * @param mouseY        The current y position of the mouse.

@@ -13,7 +13,7 @@ public class NumberFormat {
     );
 
     /**
-     * Format a number to a string.
+     * Formats a number to a string.
      *
      * @param number The number.
      * @return The string.
@@ -33,7 +33,7 @@ public class NumberFormat {
     }
 
     /**
-     * Format a number to a formatted string.
+     * Formats a number to a formatted string.
      *
      * @param number The number.
      * @return The string.
@@ -43,7 +43,7 @@ public class NumberFormat {
     }
 
     /**
-     * Parse a number from a string.
+     * Parses a number from a string.
      *
      * @param number The number as string.
      * @return The number.

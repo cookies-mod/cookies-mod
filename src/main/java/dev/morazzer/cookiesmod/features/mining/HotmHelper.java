@@ -42,7 +42,7 @@ public class HotmHelper implements Module {
     final List<String> gemstonePowder = new LinkedList<>();
 
     /**
-     * Update the constants from the repository.
+     * Updates the constants from the repository.
      */
     public void update() {
         Optional<byte[]> resource = RepositoryManager.getResource("constants/hotm_perks.json");
@@ -138,7 +138,7 @@ public class HotmHelper implements Module {
     }
 
     /**
-     * Update the data in the heart of the mountain for a specific item/slot.
+     * Updates the data in the heart of the mountain for a specific item/slot.
      *
      * @param slot      The slot the item is in.
      * @param itemStack The item stack to update.

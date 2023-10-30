@@ -20,7 +20,7 @@ public class ExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("cookies-exception-handler");
 
     /**
-     * Handle an exception and print it to std.err and to the chat.
+     * Handles an exception and print it to std.err and to the chat.
      *
      * @param exception The exception to handle.
      */
@@ -67,7 +67,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Get the stacktrace as string.
+     * Gets the stacktrace as string.
      *
      * @param throwable The throwable.
      * @return The stack trace.
@@ -80,7 +80,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Handle the exception that might occur while running a function.
+     * Handles the exception that might occur while running a function.
      *
      * @param throwableFunction The function.
      * @return If the function failed.
@@ -96,7 +96,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Handle the exception that might occur while running a function.
+     * Handles the exception that might occur while running a function.
      *
      * @param throwableFunction The function.
      * @param <T>               The return type of the function.
@@ -107,7 +107,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Handle the exception that might occur while running a function.
+     * Handles the exception that might occur while running a function.
      *
      * @param throwableFunction The function.
      * @param defaultObject     The object to return if there was an exception.
@@ -124,7 +124,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Remove the exception and return the default object if it fails.
+     * Removes the exception and return the default object if it fails.
      *
      * @param throwableFunction The function.
      * @param defaultObject     The default object.
@@ -140,7 +140,7 @@ public class ExceptionHandler {
     }
 
     /**
-     * Create a proxy instance for a function call to handle exceptions and disable if it fails.
+     * Creates a proxy instance for a function call to handle exceptions and disable if it fails.
      *
      * @param function The function to wrap.
      * @param <T>      The type of the function.

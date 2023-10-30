@@ -48,7 +48,7 @@ public class VisitorHelper implements Module {
     }
 
     /**
-     * Modify the accept item stack to contain the total amounts of the lower versions.
+     * Modifies the accept item stack to contain the total amounts of the lower versions.
      *
      * @param itemStack      The item to modify.
      * @param tooltipContext The tooltip context.

@@ -41,7 +41,7 @@ public class CompostUpgradeBreakdown implements Module {
     }
 
     /**
-     * Check if an item is a composter upgrade and if so, then add lore to it.
+     * Checks if an item is a composter upgrade and if so, then add lore to it.
      *
      * @param itemStack      The item to check for.
      * @param tooltipContext The tooltip context.

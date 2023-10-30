@@ -23,9 +23,9 @@ public class PlotCostData {
     List<Cost> corners;
 
     /**
-     * If the data was loaded, if not, it tries to load it.
+     * Whether the data was loaded, if not try to load it.
      *
-     * @return If the data was successfully loaded.
+     * @return Whether the data was successfully loaded.
      */
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json"))) {
@@ -37,7 +37,7 @@ public class PlotCostData {
     }
 
     /**
-     * Get the corresponding plot cost list by the index.
+     * Gets the corresponding plot cost list by the index.
      *
      * @param index The index of the plot list.
      * @return The list.

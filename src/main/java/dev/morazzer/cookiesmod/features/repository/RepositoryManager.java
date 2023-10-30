@@ -26,7 +26,7 @@ public class RepositoryManager {
     private static boolean finishedLoading = false;
 
     /**
-     * Add a callback that is run if the repository is reloaded.
+     * Adds a callback that's run if the repository is reloaded.
      *
      * @param runnable The callback to run.
      */
@@ -35,7 +35,7 @@ public class RepositoryManager {
     }
 
     /**
-     * Reload all repository entries.
+     * Reloads all repository entries.
      */
     public static void reload() {
         RepositoryItemManager.reloadItems();
@@ -43,7 +43,7 @@ public class RepositoryManager {
     }
 
     /**
-     * Load the repository and download if not present.
+     * Loads the repository and download if not present.
      */
     public static void load() {
         if (!Files.exists(repoRoot)) {
@@ -74,7 +74,7 @@ public class RepositoryManager {
     }
 
     /**
-     * Get a resource from the repository as byte[].
+     * Gets a resource from the repository as byte[].
      *
      * @param path The path relative to the repository root.
      * @return The resource.

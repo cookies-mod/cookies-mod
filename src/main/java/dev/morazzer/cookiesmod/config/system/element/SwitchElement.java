@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 /**
- * Gui element to render a button everywhere.
+ * GUI element to render a button everywhere.
  */
 public class SwitchElement {
 
@@ -22,7 +22,7 @@ public class SwitchElement {
     boolean booleanValue;
 
     /**
-     * Create a new button.
+     * Creates a new button.
      *
      * @param value The value that will be used initially.
      */
@@ -31,14 +31,14 @@ public class SwitchElement {
     }
 
     /**
-     * Initialize the button to be rendered correctly.
+     * Initializes the button to be rendered correctly.
      */
     public void init() {
         value.setTargetValue(booleanValue ? 100 : 0);
     }
 
     /**
-     * Render the button onto the current draw context.
+     * Renders the button onto the current draw context.
      *
      * @param drawContext The current draw context.
      */
@@ -65,7 +65,7 @@ public class SwitchElement {
     }
 
     /**
-     * Check if the button was clicked and if then change its value.
+     * Checks if the button was clicked and change its value if so.
      *
      * @param mouseX The current x position of the mouse.
      * @param mouseY The current y position of the mouse.
@@ -86,7 +86,7 @@ public class SwitchElement {
     }
 
     /**
-     * Change the target value of the {@linkplain dev.morazzer.cookiesmod.utils.maths.LinearInterpolatedInteger}.
+     * Changes the target value of the {@linkplain dev.morazzer.cookiesmod.utils.maths.LinearInterpolatedInteger}.
      *
      * @param targetValue The target value between 0 and 100.
      */

@@ -15,7 +15,7 @@ public class ShapedRecipe extends RepositoryRecipe {
     private final Ingredient[] materials = new Ingredient[9];
 
     /**
-     * Create a shaped crating recipe from a json object.
+     * Creates a shaped crating recipe from a {@linkplain com.google.gson.JsonObject}.
      *
      * @param jsonObject The json object.
      */

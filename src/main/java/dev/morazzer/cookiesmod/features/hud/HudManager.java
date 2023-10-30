@@ -25,7 +25,7 @@ public class HudManager implements Module {
     }
 
     /**
-     * Register an hud element to be rendered.
+     * Registers an hud element to be rendered.
      *
      * @param hudElement The hud element to add.
      */
@@ -37,14 +37,14 @@ public class HudManager implements Module {
     }
 
     /**
-     * Run the {@linkplain HudElement#init()} method for all registered elements.
+     * Runs the {@linkplain HudElement#init()} method for all registered elements.
      */
     public static void init() {
         getInstance().getElements().forEach(HudElement::init);
     }
 
     /**
-     * Get all currently registered elements.
+     * Gets all currently registered elements.
      *
      * @return An iterable list of all hud elements.
      */
@@ -63,7 +63,7 @@ public class HudManager implements Module {
     }
 
     /**
-     * Render all hud elements onto the screen,
+     * Renders all hud elements onto the screen,
      * if the {@linkplain dev.morazzer.cookiesmod.features.hud.HudEditor} is not open.
      *
      * @param drawContext The current draw context.

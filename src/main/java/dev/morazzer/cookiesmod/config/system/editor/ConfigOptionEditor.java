@@ -16,7 +16,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     private boolean isDragging;
 
     /**
-     * Create a new option editor.
+     * Creates a new option editor.
      *
      * @param option The option the editor belongs to.
      */
@@ -25,7 +25,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     }
 
     /**
-     * Get the height of the option.
+     * Gets the height of the option.
      *
      * @param optionWidth The width of the option.
      * @return The height of the option.
@@ -36,7 +36,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     }
 
     /**
-     * Get the height of the option.
+     * Gets the height of the option.
      *
      * @return The height of the option.
      */
@@ -51,7 +51,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     public void init() {}
 
     /**
-     * Render the editor.
+     * Renders the editor.
      *
      * @param drawContext The current draw context.
      * @param mouseX      The current x position of the mouse.
@@ -105,14 +105,14 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     }
 
     /**
-     * If the option matches a user-defined search parameter.
+     * Checks whether the option matches a user-defined search parameter.
      *
      * @param search The search parameter.
-     * @return Rather or not, the option matches the parameter.
+     * @return Whether the option matches the parameter.
      */
     public boolean doesMatchSearch(@NotNull @NotBlank String search) {
         return this.option.getName().getString().contains(search) || this.option.getDescription().getString()
-                .contains(search) || this.option.getHiddenKeys()
+                .contains(search) || this.option.getTags()
                 .stream()
                 .anyMatch(
                         key -> key.contains(
@@ -192,9 +192,9 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     }
 
     /**
-     * If there is currently an element that is being dragged in the editor.
+     * Whether there is currently an element that is being dragged in the editor.
      *
-     * @return If there is a dragged element.
+     * @return Whether there is a dragged element.
      */
     public boolean isDragging() {
         return isDragging;
@@ -268,7 +268,7 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     ) {}
 
     /**
-     * Get the {@linkplain net.minecraft.client.font.TextRenderer} instance.
+     * Gets the {@linkplain net.minecraft.client.font.TextRenderer} instance.
      *
      * @return The {@linkplain net.minecraft.client.font.TextRenderer}.
      */

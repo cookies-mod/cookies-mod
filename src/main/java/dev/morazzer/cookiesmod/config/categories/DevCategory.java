@@ -6,7 +6,7 @@ import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import net.minecraft.text.Text;
 
 /**
- * Category that describes all settings that mostly are only important to developers.
+ * Category that describes all developer settings.
  */
 public class DevCategory extends Category {
 
@@ -15,7 +15,7 @@ public class DevCategory extends Category {
             Text.literal("Show repo options"),
             Text.literal("Shows repo options in the /dev command"),
             true
-    ).withHiddenKeys("repo", "dev options", "item list");
+    ).withTags("repo", "dev options", "item list");
 
     @Expose
     public final BooleanOption hideSpam = new BooleanOption(

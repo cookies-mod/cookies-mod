@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * A list of descriptions that if met will allow a person to be listed in the credit section
+ * A list of descriptions that if met will allow a person to be listed in the credit section.
  *
  * @param maintainer        A list of text describing what a maintainer has to do.
  * @param discordStaff      A list of text describing how the discord staff get into the credits.

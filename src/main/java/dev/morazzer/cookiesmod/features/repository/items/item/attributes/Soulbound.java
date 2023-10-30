@@ -9,7 +9,7 @@ public enum Soulbound {
     NONE;
 
     /**
-     * Get the soulbound state from a string or none.
+     * Gets the soulbound state from a string or {@linkplain dev.morazzer.cookiesmod.features.repository.items.item.attributes.Soulbound#NONE}.
      *
      * @param value The value.
      * @return The state.

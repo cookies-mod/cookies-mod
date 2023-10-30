@@ -16,7 +16,7 @@ public class ItemListConfig extends Category {
             Text.literal("Enable Item List"),
             Text.literal("Enables the item list"),
             true
-    ).withHiddenKeys("item list", "toggle items", "toggle list");
+    ).withTags("item list", "toggle items", "toggle list");
     @Expose
     public final Filters filters = new Filters();
     @Expose
@@ -46,14 +46,14 @@ public class ItemListConfig extends Category {
                 Text.literal("Enable Category Filter"),
                 Text.literal("Shows or hides the category filter"),
                 true
-        ).withHiddenKey("type");
+        ).withTag("type");
 
         @Expose
         public final BooleanOption enableRarityFilter = new BooleanOption(
                 Text.literal("Enable Rarity Filter"),
                 Text.literal("Shows or hides the item rarity filter"),
                 true
-        ).withHiddenKey("tier");
+        ).withTag("tier");
 
         @Override
         public Text getName() {
@@ -76,8 +76,7 @@ public class ItemListConfig extends Category {
                 Text.literal("Enable Item Rarity Sort"),
                 Text.literal("Shows or hides the item rarity sort button"),
                 true
-        )
-                .withHiddenKey("type");
+        ).withTag("type");
 
         @Override
         public Text getName() {

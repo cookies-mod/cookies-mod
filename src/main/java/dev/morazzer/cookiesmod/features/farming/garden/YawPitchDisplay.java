@@ -12,7 +12,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 
 /**
- *
+ * HUD element to display the current yaw/pitch on the screen.
  */
 public class YawPitchDisplay extends HudElement {
 

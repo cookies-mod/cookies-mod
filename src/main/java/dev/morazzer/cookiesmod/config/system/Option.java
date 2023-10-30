@@ -5,6 +5,7 @@ import dev.morazzer.cookiesmod.config.system.editor.ConfigOptionEditor;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public abstract class Option<T, O extends Option<T, O>> {
     private final Text description;
     protected T value;
     protected List<ValueChangeCallback<T>> callbacks = new ArrayList<>();
-    private List<String> hiddenKeys = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
 
     /**
-     * Create a new option
+     * Creates a new option.
      *
      * @param name        The name.
      * @param description The description.
@@ -41,7 +42,7 @@ public abstract class Option<T, O extends Option<T, O>> {
     }
 
     /**
-     * Set the value.
+     * Sets the value.
      *
      * @param value The value.
      */
@@ -52,36 +53,57 @@ public abstract class Option<T, O extends Option<T, O>> {
     }
 
     /**
-     * Add a hidden key that can be searched for to the option.
+     * Adds a hidden key that can be searched for to the option.
      *
      * @param key The key to add.
      * @return The option.
      */
+    @Deprecated(forRemoval = true)
     public final O withHiddenKey(@NotNull String key) {
         return this.withHiddenKeys(key);
     }
 
     /**
-     * Add multiple hidden keys that can all be searched for to the option.
+     * Adds multiple hidden keys that can all be searched for to the option.
      *
      * @param keys The keys to add.
      * @return The option.
      */
+    @Deprecated(forRemoval = true)
     public final O withHiddenKeys(@NotNull String... keys) {
-        this.hiddenKeys.addAll(Arrays.asList(keys));
-        //noinspection unchecked
-        return (O) this;
+        return this.withTags(keys);
     }
 
     /**
-     * Load the option from a json element.
+     * Adds a tag that cna be searched for to the option.
+     *
+     * @param tag The tag to add.
+     * @return The option.
+     */
+    public final O withTag(@NotNull @NotBlank String tag) {
+        return this.withTags(tag);
+    }
+
+    /**
+     * Adds multiple tags that can all be searched for to the option.
+     *
+     * @param tags The tags to add.
+     * @return The option.
+     */
+    public final O withTags(@NotNull @NotBlank String... tags) {
+        this.tags.addAll(Arrays.asList(tags));
+        return this.asOption();
+    }
+
+    /**
+     * Loads the option from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      */
     public abstract void load(@NotNull JsonElement jsonElement);
 
     /**
-     * Save the option to a json element.
+     * Saves the option to a {@linkplain com.google.gson.JsonElement}.
      *
      * @return The json element.
      */
@@ -89,7 +111,7 @@ public abstract class Option<T, O extends Option<T, O>> {
     public abstract JsonElement save();
 
     /**
-     * The config editor which will be used to render the option in the config.
+     * Gets the config editor which will be used to render the option in the config.
      *
      * @return The editor.
      */
@@ -97,8 +119,8 @@ public abstract class Option<T, O extends Option<T, O>> {
     public abstract ConfigOptionEditor<T, O> getEditor();
 
     /**
-     * If the option can be serialized or not.
-     * Returning false will disable calls to {@link Option#save()} and {@link Option#load(com.google.gson.JsonElement)}
+     * Whether the option can be serialized or not.
+     * Returning false will disable calls to {@link Option#save()} and {@link Option#load(com.google.gson.JsonElement)}.
      *
      * @return If the option is serializable.
      */
@@ -107,7 +129,7 @@ public abstract class Option<T, O extends Option<T, O>> {
     }
 
     /**
-     * Add a callback that will be called when the value is changed.
+     * Adds a callback that will be called when the value is changed.
      *
      * @param valueChangeCallback The callback to add.
      * @return The option.
@@ -115,12 +137,11 @@ public abstract class Option<T, O extends Option<T, O>> {
     @NotNull
     public final O withCallback(@NotNull ValueChangeCallback<T> valueChangeCallback) {
         this.callbacks.add(valueChangeCallback);
-        //noinspection unchecked
-        return (O) this;
+        return this.asOption();
     }
 
     /**
-     * Cast the option to the type of the option, this should not be needed.
+     * Casts the option to the type of the option.
      *
      * @return The option.
      */
@@ -131,7 +152,7 @@ public abstract class Option<T, O extends Option<T, O>> {
     }
 
     /**
-     * Run all callbacks that are currently registered.
+     * Runs all callbacks that are currently registered.
      *
      * @param oldValue The old value.
      */

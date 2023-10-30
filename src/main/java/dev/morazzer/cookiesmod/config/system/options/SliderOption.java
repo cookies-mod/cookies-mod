@@ -31,7 +31,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Create a new integer slider.
+     * Creates a new integer slider.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
@@ -45,7 +45,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Create a new float slider.
+     * Creates a new float slider.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
@@ -59,7 +59,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Create a new byte slider.
+     * Creates a new byte slider.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
@@ -73,7 +73,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Create a new long slider.
+     * Creates a new long slider.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
@@ -87,7 +87,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Create a new double slider.
+     * Creates a new double slider.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
@@ -101,7 +101,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Create a new short slider.
+     * Creates a new short slider.
      *
      * @param name        The name of the option.
      * @param description The description of the option.
@@ -115,7 +115,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Set a minimum for the value, it can't get lower than this.
+     * Sets an inclusive minimum for the value, it can't get lower than this.
      *
      * @param min The minimum value.
      * @return The option.
@@ -126,7 +126,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Set a maximum for the value, it can't get higher than this.
+     * Sets an inclusive maximum for the value, it can't get higher than this.
      *
      * @param max The maximum value.
      * @return The option.
@@ -137,7 +137,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Set the step size for the slider, it will set the value to the next closest step.
+     * Sets the step size for the slider, it will set the value to the next closest step.
      *
      * @param step The step size.
      * @return The option.
@@ -148,7 +148,9 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Set the value of the option.
+     * Sets the value of the option.
+     * This method does not have minimum/maximum checks
+     * and setting the value to high or to low might cause displaying issues.
      *
      * @param number The number to set it to.
      * @param <N>    The type of the number.

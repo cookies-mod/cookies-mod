@@ -38,7 +38,7 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     private int enumIndex = 0;
 
     /**
-     * Create a new enum cycle widget.
+     * Creates a new enum cycle widget.
      *
      * @param x                  The x position of the widget.
      * @param y                  The y position of the widget.
@@ -72,7 +72,7 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     }
 
     /**
-     * Update the current icon identifier.
+     * Updates the current icon identifier.
      */
     @SuppressWarnings("unchecked")
     public void updateIdentifier() {
@@ -80,7 +80,7 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     }
 
     /**
-     * Reconstruct the tooltip.
+     * Reconstructs the tooltip.
      */
     @SuppressWarnings("unchecked")
     public void constructTooltip() {
@@ -99,7 +99,7 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     }
 
     /**
-     * Get the current value.
+     * Gets the current value.
      *
      * @return The value.
      */

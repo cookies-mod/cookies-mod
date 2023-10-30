@@ -30,7 +30,7 @@ public class RepositoryRecipeManager {
     static final Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
 
     /**
-     * Load all recipes from the repository.
+     * Loads all recipes from the repository.
      */
     public static void loadRecipes() {
         try (Stream<Path> list = Files.list(recipes)) {
@@ -56,7 +56,7 @@ public class RepositoryRecipeManager {
     }
 
     /**
-     * Resolve all recipes to the lowest for a single item.
+     * Resolves all recipes to the lowest for a single item.
      *
      * @param identifier The item.
      * @return The lowest single ingredient (if present).
@@ -66,7 +66,7 @@ public class RepositoryRecipeManager {
     }
 
     /**
-     * Recursively resolve the lowest ingredient.
+     * Recursively resolves the lowest ingredient.
      *
      * @param identifier The root ingredient.
      * @param visited    A list of all visited ingredients to prevent cyclic behaviour.
@@ -99,7 +99,7 @@ public class RepositoryRecipeManager {
     }
 
     /**
-     * Get a list of all ingredients sorted from the highest amount to the lowest.
+     * Gets a list of all ingredients sorted from the highest amount to the lowest.
      *
      * @param identifier The root item.
      * @return The ingredients required.
@@ -119,7 +119,7 @@ public class RepositoryRecipeManager {
     }
 
     /**
-     * Get the first recipe of any type for the item.
+     * Gets the first recipe of any type for the item.
      *
      * @param identifier The item.
      * @return The recipe.
@@ -133,7 +133,7 @@ public class RepositoryRecipeManager {
     }
 
     /**
-     * Get the first recipe of a specific type for the item.
+     * Gets the first recipe of a specific type for the item.
      *
      * @param identifier The item.
      * @param type       The type.
@@ -148,7 +148,7 @@ public class RepositoryRecipeManager {
     }
 
     /**
-     * Get all recipes of a specific type for an item.
+     * Gets all recipes of a specific type for an item.
      *
      * @param identifier The item.
      * @param type       The type.

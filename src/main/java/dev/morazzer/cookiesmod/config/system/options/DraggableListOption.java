@@ -27,7 +27,7 @@ public class DraggableListOption extends Option<List<String>, DraggableListOptio
     }
 
     /**
-     * Add a value supplier to the option to correctly map the strings to their respective display variant.
+     * Adds a value supplier to the option to correctly map the strings to their respective display variant.
      *
      * @param valueSupplier The supplier for the {@linkplain net.minecraft.text.Text}.
      * @return The option.

@@ -18,7 +18,7 @@ public record Position(
 ) {
 
     /**
-     * Create a position with center top left.
+     * Creates a position with center top left.
      *
      * @param x The x coordinate.
      * @param y The y coordinate.
@@ -28,7 +28,7 @@ public record Position(
     }
 
     /**
-     * Get the x coordinate with overflow protection.
+     * Gets the x coordinate with overflow protection.
      *
      * @param objectWidth The width of the object.
      * @return The coordinate.
@@ -43,7 +43,7 @@ public record Position(
     }
 
     /**
-     * Get the y coordinate with overflow protection.
+     * Gets the y coordinate with overflow protection.
      *
      * @param objectHeight The height of the object.
      * @return The coordinate.
@@ -57,7 +57,7 @@ public record Position(
     }
 
     /**
-     * Add a value on top of the position.
+     * Adds a value on top of the position.
      *
      * @param x The x to add.
      * @param y The y to add.

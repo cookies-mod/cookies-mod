@@ -22,7 +22,7 @@ public class SkyblockDateTime {
     private final Instant skyblockInstant;
 
     /**
-     * Get the skyblock time instance of an {@linkplain java.time.Instant}.
+     * Gets the skyblock time instance of an {@linkplain java.time.Instant}.
      *
      * @param instant The instant.
      */
@@ -32,7 +32,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the skyblock time of a skyblock instant.
+     * Gets the skyblock time of a skyblock instant.
      *
      * @param instant The instant.
      * @return The corresponding skyblock time.
@@ -42,7 +42,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the current skyblock time.
+     * Gets the current skyblock time.
      *
      * @return The current time.
      */
@@ -51,7 +51,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the skyblock time corresponding to an epoch instant.
+     * Gets the skyblock time corresponding to an epoch instant.
      *
      * @param second The seconds.
      * @return The skyblock time.
@@ -61,9 +61,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * If the time is in the future.
-     *
-     * @return If it is in the future.
+     * @return Whether the time is in the future.
      */
     public boolean isInFuture() {
         SkyblockDateTime now = now();
@@ -71,9 +69,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * If the date is the currently active skyblock day.
-     *
-     * @return If it is the current day.
+     * @return Whether the date is the currently active skyblock day.
      */
     public boolean isCurrentDay() {
         SkyblockDateTime now = now();
@@ -81,9 +77,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * If the date is in the past.
-     *
-     * @return If it is in the past.
+     * @return Whether the date is in the past.
      */
     public boolean isInPast() {
         SkyblockDateTime now = now();
@@ -91,9 +85,9 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Return the instance as a string with all active events.
+     * Gets the instance as a string with all active events.
      *
-     * @return The string.
+     * @return The instance as string.
      */
     public String toStringWithEvents() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -113,7 +107,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date with a new year.
+     * Gets the date with a new year.
      *
      * @param year The new year.
      * @return The new date.
@@ -124,7 +118,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date with a new month.
+     * Gets the date with a new month.
      *
      * @param month The new month.
      * @return The new year.
@@ -135,7 +129,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date with a new day.
+     * Gets the date with a new day.
      *
      * @param day The new day.
      * @return The new date.
@@ -146,7 +140,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date with a different minute.
+     * Gets the date with a different minute.
      *
      * @param minute The new minute.
      * @return The new date.
@@ -157,7 +151,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date with the minute set to 0.
+     * Gets the date with the minute set to 0.
      *
      * @return The new date.
      */
@@ -167,7 +161,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date with a different hour.
+     * Gets the date with a different hour.
      *
      * @param hour The new hour.
      * @return The new date.
@@ -178,7 +172,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Check if a specific skyblock even is currently active.
+     * Checks if a specific skyblock even is currently active.
      *
      * @param events The skyblock event to check for.
      * @return If it is active.
@@ -205,7 +199,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the next time a skyblock event is active.
+     * Gets the next time a skyblock event is active.
      *
      * @param skyblockEvents The skyblock event.
      * @return The next time.
@@ -300,7 +294,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the date as string.
+     * Gets the date as string.
      *
      * @return The date.
      */
@@ -316,7 +310,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the skyblock instant.
+     * Gets the skyblock instant.
      *
      * @return The skyblock instant.
      */
@@ -325,7 +319,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get all skyblock minutes elapsed.
+     * Gets all skyblock minutes elapsed.
      *
      * @return The skyblock minutes.
      */
@@ -334,7 +328,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the current skyblock minute.
+     * Gets the current skyblock minute.
      *
      * @return The skyblock minute.
      */
@@ -343,7 +337,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get all skyblock hours elapsed.
+     * Gets all skyblock hours elapsed.
      *
      * @return The skyblock hours.
      */
@@ -352,7 +346,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the current skyblock hour.
+     * Gets the current skyblock hour.
      *
      * @return The skyblock hour.
      */
@@ -361,7 +355,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get all skyblock days elapsed.
+     * Gets all skyblock days elapsed.
      *
      * @return The skyblock days.
      */
@@ -370,7 +364,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the current skyblock day.
+     * Gets the current skyblock day.
      *
      * @return The skyblock day.
      */
@@ -379,7 +373,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get all skyblock months elapsed.
+     * Gets all skyblock months elapsed.
      *
      * @return The skyblock months.
      */
@@ -388,7 +382,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the current skyblock month.
+     * Gets the current skyblock month.
      *
      * @return The skyblock month.
      */
@@ -397,7 +391,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the current skyblock year.
+     * Gets the current skyblock year.
      *
      * @return The current skyblock year.
      */
@@ -406,7 +400,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * Get the skyblock date with different values.
+     * Gets the skyblock date with different values.
      *
      * @param minute The new minutes.
      * @param hour   The new hour.
@@ -421,7 +415,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * All skyblock events supported.
+     * All supported skyblock events.
      */
     public enum SkyblockEvents {
         FARMING_CONTEST,

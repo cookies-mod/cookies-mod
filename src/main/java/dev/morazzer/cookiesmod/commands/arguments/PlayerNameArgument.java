@@ -18,10 +18,12 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Used to read one player name as an argument for commands and disallow everything else,
- * this includes all valid player names matching the regex [a-zA-z0-9_]{1,16}.
+ * Used to read a player's name as an argument for commands and disallow everything else.
+ * This includes all valid player names matching the regex [a-zA-z0-9_]{1,16}.
  */
 public class PlayerNameArgument implements ArgumentType<String> {
+
+    private static final int PLAYER_NAME_LENGTH = 16;
 
     private static final DynamicCommandExceptionType COMMAND_EXCEPTION = new DynamicCommandExceptionType(o -> CookiesMod
             .createPrefix(ColorUtils.failColor)
@@ -40,7 +42,11 @@ public class PlayerNameArgument implements ArgumentType<String> {
     }
 
     /**
-     * Parser to get a valid sting username from the input.
+     * Parser to get a valid string username from the input.
+     *
+     * @param reader The string reader.
+     * @return The parsed player name.
+     * @throws CommandSyntaxException If the provided reader doesn't contain a player name.
      */
     @Override
     public String parse(@NotNull StringReader reader) throws CommandSyntaxException {
@@ -52,7 +58,7 @@ public class PlayerNameArgument implements ArgumentType<String> {
 
         String playerName = reader.getString().substring(i, reader.getCursor());
 
-        if (playerName.length() > 16) {
+        if (playerName.length() > PLAYER_NAME_LENGTH) {
             reader.setCursor(i);
             throw COMMAND_EXCEPTION.createWithContext(reader, playerName);
         }
@@ -61,12 +67,12 @@ public class PlayerNameArgument implements ArgumentType<String> {
     }
 
     /**
-     * Suggestions for the player names
+     * Suggestions for the player names.
      *
-     * @param context The {@link com.mojang.brigadier.context.CommandContext} provided by the {@link com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
-     * @param builder A {@link com.mojang.brigadier.suggestion.SuggestionsBuilder} which is also provided by the {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
-     * @param <S>     The {@link net.minecraft.command.CommandSource} type.
-     * @return A future for the suggestions which will almost ever be completed.
+     * @param context The {@linkplain com.mojang.brigadier.context.CommandContext} provided by the {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
+     * @param builder A {@linkplain com.mojang.brigadier.suggestion.SuggestionsBuilder} which is also provided by the {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
+     * @param <S>     The {@linkplain net.minecraft.command.CommandSource} type.
+     * @return A future that will resolve to the suggestions.
      */
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(
@@ -86,7 +92,7 @@ public class PlayerNameArgument implements ArgumentType<String> {
     }
 
     /**
-     * Check if a character is a valid player name character.
+     * Checks if a character is a valid player name character.
      *
      * @param peek The character to check.
      * @return Rather or not, the character is valid.

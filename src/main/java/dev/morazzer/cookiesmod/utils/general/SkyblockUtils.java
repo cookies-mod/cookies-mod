@@ -34,9 +34,7 @@ public class SkyblockUtils implements Module {
     private static UUID lastProfileId;
 
     /**
-     * If the user is currently in skyblock.
-     *
-     * @return If they are in skyblock.
+     * @return Whether the user is in skyblock.
      */
     public static boolean isCurrentlyInSkyblock() {
         if (lastServerSwap + 5000 > System.currentTimeMillis()) {
@@ -46,7 +44,7 @@ public class SkyblockUtils implements Module {
     }
 
     /**
-     * Get the last profile id that was logged.
+     * Gets the last profile id that was logged.
      *
      * @return The last profile id.
      */
@@ -55,7 +53,7 @@ public class SkyblockUtils implements Module {
     }
 
     /**
-     * Look for any incoming profile id or server switch messages.
+     * Looks for any incoming profile id or server switch messages.
      *
      * @param text    The message.
      * @param overlay If the message is in the overlay.

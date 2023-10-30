@@ -32,7 +32,7 @@ public class Bazaar implements Module {
     private long lastUpdated = -1;
 
     /**
-     * Get the product information for a specific item if present.
+     * Gets the product information for a specific item if present.
      *
      * @param identifier The item.
      * @return The information.
@@ -53,7 +53,7 @@ public class Bazaar implements Module {
     }
 
     /**
-     * Update the fetched data.
+     * Updates the fetched data.
      */
     private void updateProducts() {
         byte[] responseBody = HttpUtils.getResponseBody(URI.create(bazaarApiEndpoint));

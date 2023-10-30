@@ -9,20 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Command to open the profile viewer (currently not implemented)
+ * Command to open the profile viewer (currently not implemented).
  */
 public class ProfileViewerCommand extends ClientCommand {
 
     @Override
     @NotNull
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
-        return literal("pv");
+        return literal("profileviewer");
     }
 
     @Override
     @NotNull
     public List<String> getAliases() {
-        return Arrays.asList("profileviewer", "profile", "view");
+        return Arrays.asList("pv", "profile", "view");
     }
 
 }

@@ -30,7 +30,7 @@ public class LocationUtils {
     }, Duration.ofSeconds(5));
 
     /**
-     * Print the current area and the current island.
+     * Prints the current area and the current island.
      */
     @TestEntrypoint("print_current_area")
     public static void printCurrentArea() {
@@ -39,7 +39,7 @@ public class LocationUtils {
     }
 
     /**
-     * Get the current area.
+     * Gets the current area.
      *
      * @return The current area.
      */
@@ -51,7 +51,7 @@ public class LocationUtils {
     }
 
     /**
-     * Get the current island.
+     * Gets the current island.
      *
      * @return The current island.
      */
@@ -86,7 +86,7 @@ public class LocationUtils {
         }
 
         /**
-         * Get the island or unknown.
+         * Gets the island or unknown.
          *
          * @param value The value.
          * @return The island.
@@ -96,7 +96,7 @@ public class LocationUtils {
         }
 
         /**
-         * Get the island of the area.
+         * Gets the island of the area.
          *
          * @param area The area.
          * @return The island.
@@ -111,10 +111,10 @@ public class LocationUtils {
         }
 
         /**
-         * Check if the area is on the island.
+         * Checks whether the area is on the island.
          *
          * @param areas The area.
-         * @return If it is on the island.
+         * @return Whether it is on the island.
          */
         public boolean isIsland(Area areas) {
             return this.isIsland.apply(areas);

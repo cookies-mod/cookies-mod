@@ -7,7 +7,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The option that describes the {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Credits} section
+ * The option that describes the {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Credits} section.
  */
 public class AboutOption extends Option<Object, AboutOption> {
 

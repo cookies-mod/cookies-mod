@@ -103,7 +103,6 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
 
         if (this.option.isAllowAlpha()) {
             drawContext.setShaderColor(value.getRed() / 255f, value.getGreen() / 255f, value.getBlue() / 255f, 1);
-            //context.drawTexture(COLOR_OPACITY, overlayX + 90, overlayY + 5, 0, 0, 10, 64, 10, 64);
             drawContext.fillGradient(
                     overlayX + 90,
                     overlayY + 6,

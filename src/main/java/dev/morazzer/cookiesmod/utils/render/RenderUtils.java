@@ -20,7 +20,7 @@ public class RenderUtils {
     private static final int ALPHA = 0xff000000;
 
     /**
-     * Render a filled rectangle.
+     * Renders a filled rectangle.
      *
      * @param drawContext The current draw context.
      * @param x           The x coordinate.
@@ -47,7 +47,7 @@ public class RenderUtils {
     }
 
     /**
-     * Get the text renderer or null.
+     * Gets the text renderer or null.
      *
      * @return The text renderer.
      */
@@ -56,7 +56,7 @@ public class RenderUtils {
     }
 
     /**
-     * Draw a centered text with a max width.
+     * Draws a centered text with a max width.
      *
      * @param drawContext The current draw context.
      * @param text        The text to render.
@@ -90,7 +90,7 @@ public class RenderUtils {
     }
 
     /**
-     * Draw a text with a max width.
+     * Draws a text with a max width.
      *
      * @param drawContext The current draw context.
      * @param text        The text to render.
@@ -122,7 +122,7 @@ public class RenderUtils {
     }
 
     /**
-     * Draw a text at a scale.
+     * Draws a text at a scale.
      *
      * @param drawContext The current draw context.
      * @param text        The text to render.
@@ -152,7 +152,7 @@ public class RenderUtils {
     }
 
     /**
-     * Render a centered text at a scale.
+     * Renders a centered text at a scale.
      *
      * @param drawContext The current draw context.
      * @param text        The text to render.
@@ -186,7 +186,7 @@ public class RenderUtils {
     }
 
     /**
-     * Render a text into the world as a billboard.
+     * Renders a text into the world as a billboard.
      *
      * @param matrixStack            The current matrix stack.
      * @param position               The position.
@@ -234,7 +234,7 @@ public class RenderUtils {
                 false,
                 matrixStack.peek().getPositionMatrix(),
                 vertexConsumerProvider,
-                throughWalls ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL,
+                TextRenderer.TextLayerType.SEE_THROUGH,
                 background,
                 0xF000F0
         );

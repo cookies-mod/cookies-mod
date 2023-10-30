@@ -129,7 +129,7 @@ public class SkyblockItem {
     private final MutableText name;
 
     /**
-     * Create an item from a json object.
+     * Creates an item from a {@linkplain com.google.gson.JsonObject}.
      *
      * @param jsonObject The json object.
      */
@@ -293,26 +293,20 @@ public class SkyblockItem {
     }
 
     /**
-     * If the item can be reforged or not.
-     *
-     * @return If the item can be reforged.
+     * @return Whether the item can be reforged.
      */
     public boolean canBeReforged() {
         return this.canBeReforged;
     }
 
     /**
-     * If the item can have attributes or not.
-     *
-     * @return If the item can have attributes.
+     * @return Whether the item can have attributes.
      */
     public boolean canHaveAttributes() {
         return this.canHaveAttributes;
     }
 
     /**
-     * Get the catacomb requirements.
-     *
      * @return The catacomb requirements.
      */
     public Optional<List<CatacombsRequirement>> getCatacombsRequirement() {
@@ -320,16 +314,14 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the color of the item.
-     *
-     * @return The color.
+     * @return The color of the item.
      */
     public Optional<Color> getColor() {
         return Optional.ofNullable(this.color);
     }
 
     /**
-     * Set the color for the itemstack.
+     * Sets the color for the itemstack.
      *
      * @param itemStack The itemstack.
      */
@@ -340,7 +332,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the tooltip to be rendered.
+     * Gets the tooltip to be rendered.
      *
      * @param context The context.
      * @return The tooltip.
@@ -357,7 +349,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the crystal type of the item.
+     * Gets the crystal type of the item.
      *
      * @return The crystal type.
      */
@@ -366,44 +358,34 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the dungeon item conversion cost of the item.
-     *
-     * @return The item conversion cost.
+     * @return The dungeon item conversion cost of the item.
      */
     public Optional<DungeonItemConversionCost> getDungeonItemConversionCost() {
         return Optional.ofNullable(this.dungeonItemConversionCost);
     }
 
     /**
-     * Get the enchantments of the item.
-     *
-     * @return The enchantments.
+     * @return The enchantments of the item.
      */
     public Optional<Map<String, Integer>> getEnchantments() {
         return Optional.ofNullable(this.enchantments);
     }
 
     /**
-     * Get the furniture string of the item.
-     *
-     * @return The furniture.
+     * @return The furniture string of the item.
      */
     public Optional<String> getFurniture() {
         return Optional.ofNullable(this.furniture);
     }
 
     /**
-     * Get all gemstone slots of the item.
-     *
-     * @return The slots.
+     * @return The gemstone slots of the item.
      */
     public Optional<List<GemstoneSlot>> getGemstoneSlots() {
         return Optional.ofNullable(this.gemstoneSlots);
     }
 
     /**
-     * Get the generator type.
-     *
      * @return The generator type.
      */
     public Optional<String> getGenerator() {
@@ -411,95 +393,77 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the tier of the generator.
-     *
-     * @return The tier.
+     * @return The tier of the generator.
      */
     public Optional<Integer> getGeneratorTier() {
         return Optional.ofNullable(this.generatorTier);
     }
 
     /**
-     * If the item loses its mote value if transferred.
-     *
-     * @return If the item loses its value.
+     * @return Whether the item loses its mote value if transferred.
      */
     public boolean doesLoseMotesValueOnTransfer() {
         return this.loseMotesValueOnTransfer;
     }
 
     /**
-     * If the item can be put in the museum or not.
-     *
-     * @return If the item can be in the museum.
+     * @return Whether the item can be in the museum.
      */
     public boolean canBeInMuseum() {
         return this.museum;
     }
 
     /**
-     * Get the origin of the item.
-     *
-     * @return The origin.
+     * @return The origin of the item.
      */
     public Optional<Origin> getOrigin() {
         return Optional.ofNullable(this.origin);
     }
 
     /**
-     * Get the prestige item for the item.
+     * @return The prestige item for the item.
      */
     public Optional<Prestige> getPrestige() {
         return Optional.ofNullable(this.prestige);
     }
 
     /**
-     * Get the private island type the item spawns.
-     *
-     * @return The private island type.
+     * @return The private island type the item spawns.
      */
     public Optional<PrivateIsland> getPrivateIsland() {
         return Optional.ofNullable(this.privateIsland);
     }
 
     /**
-     * Get the requirements of the item.
-     *
-     * @return The requirements.
+     * @return The requirements of the item.
      */
     public Optional<List<Requirement>> getRequirements() {
         return Optional.ofNullable(this.requirements);
     }
 
     /**
-     * Get the salvage of the item.
-     *
-     * @return The salvage.
+     * @return The salvage of the item.
      */
     public Optional<SalvageUpgrade<Identifier>> getSalvage() {
         return Optional.ofNullable(this.salvage);
     }
 
     /**
-     * Get the salvage results of the item.
-     *
-     * @return The salvage results.
+     * @return The salvage results of the item.
      */
     public Optional<List<SalvageUpgrade<?>>> getSalvages() {
         return Optional.ofNullable(this.salvages);
     }
 
     /**
-     * Get the skin of the item.
-     *
-     * @return The skin.
+     * @return The skin of the item.
      */
     public Optional<String> getSkin() {
         return Optional.ofNullable(this.skin);
     }
 
     /**
-     * Set the skin for the itemstack.
+     * Sets the skin for the itemstack.
      *
      * @param itemStack The itemstack.
      */
@@ -517,17 +481,13 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the stats of the item.
-     *
-     * @return The stats.
+     * @return The stats of the item.
      */
     public Optional<Map<Stats, Double>> getStats() {
         return Optional.ofNullable(this.stats);
     }
 
     /**
-     * Get the sword type.
-     *
      * @return The sword type.
      */
     public Optional<SwordType> getSwordType() {
@@ -535,25 +495,21 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the tiered stats for the item.
-     *
-     * @return The tiered stats.
+     * @return The tiered stats for the item.
      */
     public Optional<Map<Stats, int[]>> getTieredStats() {
         return Optional.ofNullable(this.tieredStats);
     }
 
     /**
-     * Get the upgrade costs.
-     *
-     * @return Upgrade costs.
+     * @return The upgrade costs.
      */
     public Optional<List<List<SalvageUpgrade<?>>>> getUpgradeCosts() {
         return Optional.ofNullable(this.upgradeCosts);
     }
 
     /**
-     * Get the item name as an alphanumerical string. Except also including § (\<span>u00A7</span>).
+     * Gets the item name as an alphanumerical string. Except also including § (\<span>u00A7</span>).
      *
      * @return The item name.
      */
@@ -565,7 +521,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Get the tooltip as one string.
+     * Gets the tooltip as one string.
      *
      * @param basic The tooltip context to use.
      * @return The tooltip.
@@ -579,7 +535,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse an integer from a json element or print an error.
+     * Parses an integer from a {@linkplain com.google.gson.JsonElement} or print an error.
      *
      * @param jsonElement The json element.
      * @param string      The key it's parsed for.
@@ -600,7 +556,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse a string from a json element or print an error.
+     * Parses a string from a {@linkplain com.google.gson.JsonElement} or print an error.
      *
      * @param jsonElement The json element.
      * @param string      The key it's parsed for.
@@ -621,7 +577,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse a boolean from a json element or print an error.
+     * Parses a boolean from a {@linkplain com.google.gson.JsonElement} or print an error.
      *
      * @param jsonElement The json element.
      * @param string      The key it's parsed for.
@@ -642,7 +598,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the name from a json element.
+     * Parses the name from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The name or null.
@@ -664,7 +620,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse stats from a json element.
+     * Parses stats from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The stats or null.
@@ -690,7 +646,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the salvages from a json element.
+     * Parses the salvages from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The salvages or null.
@@ -711,7 +667,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse a color from a json element.
+     * Parses a color from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The color or null.
@@ -734,7 +690,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the requirements from a json element.
+     * Parses the requirements from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The requirements or null.
@@ -758,7 +714,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the description from a json element.
+     * Parses the description from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The description or null.
@@ -782,7 +738,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the upgrade costs from a json element.
+     * Parses the upgrade costs from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The upgrade costs or null.
@@ -807,7 +763,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the gemstone slots from a json element.
+     * Parses the gemstone slots from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The gemstone slots or null.
@@ -855,7 +811,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the dungeon item conversion cost from a json element.
+     * Parses the dungeon item conversion cost from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The dungeon item conversion cost or null.
@@ -877,7 +833,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the catacombs requirements from a json element.
+     * Parses the catacombs requirements from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The catacombs requirements or null.
@@ -906,7 +862,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the enchantments from a json element.
+     * Parses the enchantments from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The enchantments or null.
@@ -932,7 +888,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the tiered stats from a json element.
+     * Parses the tiered stats from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The tiered stats or null.
@@ -968,7 +924,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parse the salvage from a json element.
+     * Parses the salvage from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The salvage or null.
@@ -992,7 +948,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Parser the prestige from a json element.
+     * Parser the prestige from a {@linkplain com.google.gson.JsonElement}.
      *
      * @param jsonElement The json element.
      * @return The prestige or null.
@@ -1018,7 +974,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Populate a list of {@linkplain dev.morazzer.cookiesmod.features.repository.items.item.attributes.SalvageUpgrade} for a json array.
+     * Populates a list of {@linkplain dev.morazzer.cookiesmod.features.repository.items.item.attributes.SalvageUpgrade} for a json array.
      *
      * @param jsonArray The json array.
      * @param list      The list to populate.
@@ -1050,7 +1006,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Construct the itemstack for this item.
+     * Constructs the itemstack for this item.
      *
      * @return The itemstack.
      */
@@ -1079,7 +1035,7 @@ public class SkyblockItem {
     }
 
     /**
-     * Set the itemstack glowing (have glint).
+     * Sets the itemstack glowing (have glint).
      *
      * @param itemStack The itemstack.
      */

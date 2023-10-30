@@ -18,7 +18,7 @@ public abstract class HudElement {
     private boolean enabled;
 
     /**
-     * Create a new hud element that will not be registered.
+     * Creates a new hud element that will not be registered.
      *
      * @param position The position where to render the element.
      */
@@ -32,35 +32,29 @@ public abstract class HudElement {
     public void init() {}
 
     /**
-     * Get the width of a hud element.
-     *
      * @return The width.
      */
     public abstract int getWidth();
 
     /**
-     * Get the height of a hud element.
-     *
      * @return The height.
      */
     public abstract int getHeight();
 
     /**
-     * Get the identifier of the element.
-     *
      * @return The identifier.
      */
     public abstract String getIdentifierPath();
 
     /**
-     * If the element should be rendered or not, use this instead of if checks in the render call.
+     * Whether the element should be rendered. Use this instead of if checks in the render call.
      *
-     * @return If the element should render.
+     * @return Whether the element should render.
      */
     public abstract boolean shouldRender();
 
     /**
-     * Get the x coordinate of the element.
+     * Gets the x coordinate of the element.
      *
      * @return The x coordinate.
      */
@@ -69,7 +63,7 @@ public abstract class HudElement {
     }
 
     /**
-     * Get the y coordinate of the element.
+     * Gets the y coordinate of the element.
      *
      * @return The y coordinate.
      */
@@ -78,7 +72,7 @@ public abstract class HudElement {
     }
 
     /**
-     * Get the {@linkplain dev.morazzer.cookiesmod.features.hud.HudElement#getIdentifierPath()} as {@linkplain net.minecraft.util.Identifier} with a namespace.
+     * Gets the {@linkplain dev.morazzer.cookiesmod.features.hud.HudElement#getIdentifierPath()} as {@linkplain net.minecraft.util.Identifier} with a namespace.
      *
      * @return The identifier.
      */
@@ -87,7 +81,7 @@ public abstract class HudElement {
     }
 
     /**
-     * Render the element with the {@linkplain dev.morazzer.cookiesmod.features.hud.HudElement#shouldRender()} check.
+     * Renders the element with the {@linkplain dev.morazzer.cookiesmod.features.hud.HudElement#shouldRender()} check.
      *
      * @param drawContext The current draw context.
      * @param tickDelta   The difference in time between the last tick and now.
@@ -100,7 +94,7 @@ public abstract class HudElement {
     }
 
     /**
-     * Render the element without extra checks.
+     * Renders the element without extra checks.
      *
      * @param drawContext The current draw context.
      * @param tickDelta   The difference in time between the last tick and now.
@@ -122,7 +116,7 @@ public abstract class HudElement {
     }
 
     /**
-     * Toggle the hud element on or off. This method should only be used by the config option.
+     * Toggles the hud element on or off. This method should only be used by the config option.
      *
      * @param toggle The new value.
      */
@@ -131,8 +125,6 @@ public abstract class HudElement {
     }
 
     /**
-     * Set a new position for the element.
-     *
      * @param position The new position.
      */
     public void setPosition(Position position) {
@@ -140,7 +132,7 @@ public abstract class HudElement {
     }
 
     /**
-     * Render the overlay for the element.
+     * Renders the overlay for the element.
      *
      * @param drawContext The current draw context.
      * @param tickDelta   The difference in time between the last tick and now.

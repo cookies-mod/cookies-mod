@@ -23,7 +23,7 @@ public class ScathaWarning implements Module {
     private static final String WORM_MESSAGE = "You hear the sound of something approaching...";
 
     /**
-     * Play the scatha warning.
+     * Plays the scatha warning.
      */
     @TestEntrypoint("scatha_alert")
     public static void playSound() {

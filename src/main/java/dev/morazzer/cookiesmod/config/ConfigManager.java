@@ -37,7 +37,7 @@ public class ConfigManager {
     private static ConfigReader configReader;
 
     /**
-     * Get the config instance or process it if it's not available.
+     * Gets the config instance or process it if it's not available.
      *
      * @return The config.
      */
@@ -50,9 +50,9 @@ public class ConfigManager {
     }
 
     /**
-     * Save the current state of the config.
+     * Saves the current state of the config.
      *
-     * @param createBackup If there should be a backup of the old config.
+     * @param createBackup Whether there should be a backup of the old config.
      * @param reason       The reason why the save was called.
      */
     public static void saveConfig(boolean createBackup, String reason) {
@@ -90,16 +90,16 @@ public class ConfigManager {
     }
 
     /**
-     * Reload the config from the file.
+     * Reloads the config from the file.
      */
     public static void reload() {
         config.load(loadConfig());
     }
 
     /**
-     * Load or create the config file if not available.
+     * Loads or creates the config file if it's not available.
      *
-     * @return The config as json object.
+     * @return The config as {@linkplain com.google.gson.JsonObject}.
      */
     private static JsonObject loadConfig() {
         if (Files.exists(configFile)) {
@@ -115,7 +115,7 @@ public class ConfigManager {
     }
 
     /**
-     * Process the config.
+     * Processes the config.
      */
     public static void processConfig() {
         config = new CookiesConfig();

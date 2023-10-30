@@ -27,8 +27,6 @@ public class ConfigReader {
     private ProcessedCategory currentCategory;
 
     /**
-     * Begin a new category.
-     *
      * @param category The category that begins.
      */
     public void beginCategory(Category category) {
@@ -36,9 +34,6 @@ public class ConfigReader {
         this.categories.add(this.currentCategory);
     }
 
-    /**
-     * End the current category.
-     */
     public void endCategory() {
         this.foldableId.set(0);
         if (!this.foldableStack.isEmpty()) {
@@ -48,8 +43,6 @@ public class ConfigReader {
     }
 
     /**
-     * Open a new foldable.
-     *
      * @param foldable The foldable to open.
      */
     public void beginFoldable(Foldable foldable) {
@@ -66,30 +59,22 @@ public class ConfigReader {
         this.foldableStack.push(this.foldableId.get());
     }
 
-    /**
-     * Close the current foldable.
-     */
     public void endFoldable() {
         this.foldableStack.pop();
     }
 
     /**
-     * Begin the config.
-     *
      * @param config The config.
      */
     public void beginConfig(Config<?> config) {
         this.config = config;
     }
 
-    /**
-     * End the current config.
-     */
     @SuppressWarnings("EmptyMethod")
     public void endConfig() {}
 
     /**
-     * Mark an option as processed and add it to the finished list.
+     * Marks an option as processed and add it to the finished list.
      *
      * @param option The option to be processed.
      * @param <T>    The type of the value.

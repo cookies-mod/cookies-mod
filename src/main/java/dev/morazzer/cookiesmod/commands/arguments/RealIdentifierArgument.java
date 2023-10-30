@@ -23,9 +23,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
- * A "real identifier" argument, which is nothing else then just an identifier from a predefined {@linkplain java.util.Collection} instance.
+ * A "real identifier" argument is nothing else then just an identifier from a predefined {@linkplain java.util.Collection} instance.
  * Meaning you can always adjust the values of that {@linkplain java.util.Collection} instance while the argument exists.
- * Not that you might want to use a thread save version of the {@linkplain java.util.Collection} type for this to avoid {@linkplain java.util.ConcurrentModificationException}s.
+ * Note that you might want to use a thread-save version of the {@linkplain java.util.Collection} type to avoid {@linkplain java.util.ConcurrentModificationException}s.
  */
 public class RealIdentifierArgument implements ArgumentType<Identifier> {
 
@@ -41,7 +41,7 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
 
     /**
      * Constructor to create a {@linkplain dev.morazzer.cookiesmod.commands.arguments.RealIdentifierArgument} with no namespace and no path prefix.
-     * The namespace therefor will default to "minecraft".
+     * The namespace defaults to "minecraft".
      *
      * @param identifierCollection The {@linkplain java.util.Collection} instance which describes the allowed values.
      */
@@ -67,7 +67,8 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
      *
      * @param identifierCollection The {@linkplain java.util.Collection} instance which describes the allowed values.
      * @param namespace            The namespace all values default to, this still allows the use of other namespaces.
-     * @param pathPrefix           The prefix that will be prepended to the path if it's not matching a valid identifier, this prefix should have a trailing '/'.
+     * @param pathPrefix           The prefix that will be prepended to the path if it's not matching a valid identifier.
+     *                             This prefix should have a trailing '/'.
      */
     public RealIdentifierArgument(
             @NotNull Collection<Identifier> identifierCollection, @NotNull @NotBlank String namespace,
@@ -79,6 +80,8 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
     }
 
     /**
+     * Creates an identifier from a string reader.
+     *
      * @param reader The reader to read the identifier from.
      * @return The Identifier if it matches the {@linkplain net.minecraft.util.Identifier#isNamespaceValid(String)} and the {@linkplain net.minecraft.util.Identifier#isPathValid(String)} methods.
      * @throws CommandSyntaxException If the provided argument is not a valid identifier.
@@ -99,9 +102,11 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
     }
 
     /**
+     * Parser to get a valid identifier from a string reader.
+     *
      * @param reader The reader to read the identifier from.
-     * @return The identifier if it's a valid identifier from the provided Collection.
-     * @throws CommandSyntaxException If the provided identifier is invalid or not in the collection.
+     * @return The identifier if it's a valid identifier from the provided {@linkplain java.util.Collection}.
+     * @throws CommandSyntaxException If the provided identifier is invalid or not in the {@linkplain java.util.Collection}.
      */
     @Override
     public Identifier parse(@NotNull StringReader reader) throws CommandSyntaxException {
@@ -114,12 +119,12 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
     }
 
     /**
-     * Suggestions the identifiers
+     * Suggestions for the identifiers.
      *
      * @param context The {@link com.mojang.brigadier.context.CommandContext} provided by the {@link com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
      * @param builder A {@link com.mojang.brigadier.suggestion.SuggestionsBuilder} which is also provided by the {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
      * @param <S>     The {@link net.minecraft.command.CommandSource} type.
-     * @return A future for the suggestions which will almost ever be completed.
+     * @return A future that will resolve to the suggestions.
      */
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(
@@ -156,10 +161,10 @@ public class RealIdentifierArgument implements ArgumentType<Identifier> {
     }
 
     /**
-     * Used to create a string array with a default namespace and a prefixed path
+     * Used to create a string array with the default namespace and the prefixed path.
      *
-     * @param id The identifier in string form
-     * @return A string array representing the namespace at [0] and the path at [1]
+     * @param id The identifier in string form.
+     * @return A string array representing with namespace at index zero and the path at index one.
      */
     @NotNull
     @Contract(pure = true)

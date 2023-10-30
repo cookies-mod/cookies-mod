@@ -34,7 +34,7 @@ public class NextJacobContestHud extends HudElement {
     }
 
     /**
-     * The format to use for the timestamp
+     * Changes the used time format.
      *
      * @param format The new format
      */
@@ -119,7 +119,7 @@ public class NextJacobContestHud extends HudElement {
     }
 
     /**
-     * Update the number of contests to display.
+     * Updates the number of contests to display.
      *
      * @param number The number of contests.
      */

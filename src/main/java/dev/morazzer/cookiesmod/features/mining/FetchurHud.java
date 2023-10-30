@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Render the current fetchur item as a hud element.
+ * Renders the current fetchur item as a hud element.
  */
 public class FetchurHud extends HudElement {
 
@@ -141,7 +141,7 @@ public class FetchurHud extends HudElement {
     }
 
     /**
-     * Update the current item.
+     * Updates the current item.
      */
     private void update() {
         int dayOfMonth = ZonedDateTime.now(ZoneId.of("Canada/Eastern")).getDayOfMonth();

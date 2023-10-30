@@ -19,7 +19,7 @@ public enum Plot {
     NONE;
 
     /**
-     * Get the plot the player currently is on.
+     * Gets the plot the player currently is on.
      *
      * @return The plot.
      */
@@ -32,7 +32,7 @@ public enum Plot {
     }
 
     /**
-     * Get the plot based on the coordinates.
+     * Gets the plot based on the coordinates.
      *
      * @param position The coordinates.
      * @return The plot.
@@ -45,7 +45,7 @@ public enum Plot {
     }
 
     /**
-     * Get the plot based on plot coordinates.
+     * Gets the plot based on plot coordinates.
      *
      * @param x The x coordinate of the plot.
      * @param z The y coordinate of the plot.
@@ -56,7 +56,7 @@ public enum Plot {
     }
 
     /**
-     * Get the plot based on the absolute plot coordinates.
+     * Gets the plot based on the absolute plot coordinates.
      *
      * @param absoluteX The absolute x coordinate.
      * @param absoluteY The absolute y coordinate.
@@ -79,7 +79,7 @@ public enum Plot {
     }
 
     /**
-     * Modify the plot coordinate to be in the center of the plot.
+     * Modifies the plot coordinate to be in the center of the plot.
      *
      * @param coordinate The coordinate.
      * @return The coordinate moved to the center.
@@ -89,7 +89,7 @@ public enum Plot {
     }
 
     /**
-     * Change the plot coordinate to be on the corner.
+     * Modifies the plot coordinate to be on the corner.
      *
      * @param coordinate The coordinate.
      * @return The coordinate moved to the center.
@@ -99,7 +99,7 @@ public enum Plot {
     }
 
     /**
-     * Get the center coordinate of the plot.
+     * Gets the center coordinate of the plot.
      *
      * @param position The coordinate.
      * @return The center coordinate.
@@ -109,54 +109,54 @@ public enum Plot {
     }
 
     /**
-     * Check if the plot is a valid plot, or if it's out of bounds.
+     * Checks whether the plot is a valid plot, or if it's out of bounds.
      *
-     * @return If it's valid.
+     * @return Whether it's valid.
      */
     public boolean isValidPlot() {
         return ordinal() != 5;
     }
 
     /**
-     * If the plot is in the inner circle.
+     * Checks whether the plot is in the inner circle.
      *
-     * @return If the plot is in the inner circle.
+     * @return Whether the plot is in the inner circle.
      */
     public boolean isInnerCircle() {
         return ordinal() == 1 || ordinal() == 2;
     }
 
     /**
-     * If the plot is in the outer circle.
+     * Checks whether the plot is in the outer circle.
      *
-     * @return If the plot is in the outer circle.
+     * @return Whether the plot is in the outer circle.
      */
     public boolean isOuterCircle() {
         return ordinal() == 3 || ordinal() == 4;
     }
 
     /**
-     * If the plot is the barn or not.
+     * Checks whether the plot is the barn or not.
      *
-     * @return If the plot is the barn.
+     * @return Whether the plot is the barn.
      */
     public boolean isBarn() {
         return ordinal() == 0;
     }
 
     /**
-     * If the plot is on the edge.
+     * Checks whether the plot is on the edge.
      *
-     * @return The plot is on the edge.
+     * @return Whether the plot is on the edge.
      */
     public boolean isEdge() {
         return ordinal() == 1 || ordinal() == 3;
     }
 
     /**
-     * If the plot is a corner plot.
+     * Checks Whether the plot is a corner plot.
      *
-     * @return If the plot is a corner plot.
+     * @return Whether the plot is a corner plot.
      */
     public boolean isCorner() {
         return ordinal() == 2 || ordinal() == 4;

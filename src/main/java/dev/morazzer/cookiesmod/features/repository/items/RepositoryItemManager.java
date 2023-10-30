@@ -35,11 +35,10 @@ public class RepositoryItemManager {
     private static final CopyOnWriteArrayList<Identifier> itemList = new CopyOnWriteArrayList<>();
 
     /**
-     * Load all items from the official item list.
+     * Loads all items from the official item list.
      *
      * @return If the items where loaded successfully.
      */
-    @SuppressWarnings("unused")
     public static boolean loadOfficialItemList() {
         JsonObject jsonObject = GsonUtils.gson.fromJson(new String(HttpUtils.getResponseBody(URI.create(
                 "https://api.hypixel.net/resources/skyblock/items"))), JsonObject.class);
@@ -80,7 +79,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Load all items from the local repository copy.
+     * Loads all items from the local repository copy.
      */
     public static void loadItems() {
         try (Stream<Path> list = Files.list(items)) {
@@ -93,7 +92,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Load one item from the local repository copy.
+     * Loads one item from the local repository copy.
      *
      * @param path The path to load the item from.
      * @return If the item was loaded successfully.
@@ -126,7 +125,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Get one item by its internal id.
+     * Gets one item by its internal id.
      *
      * @param identifier The item id.
      * @return The item.
@@ -136,7 +135,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Find one item by its name.
+     * Finds one item by its name.
      *
      * @param name The name of the item.
      * @return The item.
@@ -148,7 +147,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Update the item list.
+     * Updates the item list.
      */
     private static void updateItemList() {
         itemList.clear();
@@ -156,7 +155,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Get all items in the item list.
+     * Gets all items in the item list.
      *
      * @return The item list.
      */

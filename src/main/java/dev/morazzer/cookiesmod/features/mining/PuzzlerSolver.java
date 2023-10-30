@@ -85,7 +85,7 @@ public class PuzzlerSolver implements Module {
         final Vec3d vector;
 
         /**
-         * Get the direction based on the character.
+         * Gets the direction based on the character.
          *
          * @param character The character.
          * @return The direction.

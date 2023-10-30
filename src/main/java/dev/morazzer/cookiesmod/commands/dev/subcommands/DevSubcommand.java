@@ -6,9 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to find all subcommands for the {@code /dev} command on runtime.
+ * Used to find all subcommands of the {@code /dev} command on runtime.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface DevSubcommand {
-}
+public @interface DevSubcommand {}

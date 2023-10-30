@@ -10,7 +10,7 @@ public abstract class RepositoryRecipe {
     private final JsonObject jsonObject;
 
     /**
-     * Create a repository recipe from a json object.
+     * Creates a repository recipe from a json object.
      *
      * @param jsonObject The json object.
      */
@@ -19,14 +19,14 @@ public abstract class RepositoryRecipe {
     }
 
     /**
-     * Get the item that will be the output of the recipe.
+     * Gets the item that will be the output of the recipe.
      *
      * @return The output.
      */
     public abstract Ingredient getOutput();
 
     /**
-     * Get the {@linkplain dev.morazzer.cookiesmod.features.repository.items.recipe.RecipeType}
+     * Gets the {@linkplain dev.morazzer.cookiesmod.features.repository.items.recipe.RecipeType}
      * associated with the recipe.
      *
      * @return The type.

@@ -64,7 +64,7 @@ public class PlotPriceDisplay implements Module {
     }
 
     /**
-     * Method to update the stored values.
+     * Updates the stored values.
      *
      * @param handledScreen The screen the items are in.
      */

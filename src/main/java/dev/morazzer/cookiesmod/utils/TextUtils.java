@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 public class TextUtils {
 
     /**
-     * Pretty print a json element.
+     * Pretty prints a json element.
      *
      * @param jsonElement The json element to pretty print.
      * @return The text.
@@ -26,7 +26,7 @@ public class TextUtils {
     }
 
     /**
-     * Turn a json element into text.
+     * Turns a json element into text.
      *
      * @param jsonElement The json element.
      * @param depth       The depth of the recursive call.

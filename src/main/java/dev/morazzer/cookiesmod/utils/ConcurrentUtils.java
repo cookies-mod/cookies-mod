@@ -19,7 +19,7 @@ public class ConcurrentUtils {
     }
 
     /**
-     * Run a runnable async.
+     * Runs a runnable async.
      *
      * @param runnable The runnable.
      */
@@ -28,7 +28,7 @@ public class ConcurrentUtils {
     }
 
     /**
-     * Run a runnable at a fixed rate.
+     * Runs a runnable at a fixed rate.
      *
      * @param runnable The runnable
      * @param time     The time.
@@ -39,7 +39,7 @@ public class ConcurrentUtils {
     }
 
     /**
-     * Run a runnable after a fixed time.
+     * Runs a runnable after a fixed time.
      *
      * @param runnable The runnable.
      * @param time     The time.

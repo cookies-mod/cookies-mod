@@ -31,8 +31,9 @@ public abstract class ClientCommand implements Helper {
     private String originalCommandName;
 
     /**
-     * Loads all the commands into the command registry, at the moment this loads all classes that
-     * extend {@linkplain dev.morazzer.cookiesmod.commands.helpers.ClientCommand} and are annotated with {@linkplain dev.morazzer.cookiesmod.commands.helpers.LoadCommand}.
+     * Loads all classes that
+     * extend {@linkplain dev.morazzer.cookiesmod.commands.helpers.ClientCommand}
+     * and are annotated with {@linkplain dev.morazzer.cookiesmod.commands.helpers.LoadCommand} into the command registry.
      *
      * @param reflections A {@linkplain org.reflections.Reflections} instance with predefined path to narrow in the scan.
      * @param dispatcher  The command dispatcher that is provided by the {@linkplain net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback}.
@@ -69,7 +70,7 @@ public abstract class ClientCommand implements Helper {
     public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
 
     /**
-     * Register an instance of a command with all the respective checks and aliases/namespaces.
+     * Registers an instance of a command with all the respective checks and aliases/namespaces.
      *
      * @param dispatcher The command dispatcher.
      */
@@ -128,9 +129,9 @@ public abstract class ClientCommand implements Helper {
     }
 
     /**
-     * Gets all the aliases of the current command instance
+     * Gets all the aliases of the current command instance.
      *
-     * @return All aliases
+     * @return All aliases.
      */
     @NotNull
     @Contract(pure = true)
@@ -139,9 +140,9 @@ public abstract class ClientCommand implements Helper {
     }
 
     /**
-     * If the current command should be available on servers.
+     * Checks whether the current command is available on servers.
      *
-     * @return If the command is available on servers.
+     * @return Whether the command is available on servers.
      */
     public boolean isAvailableOnServers() {
         return true;

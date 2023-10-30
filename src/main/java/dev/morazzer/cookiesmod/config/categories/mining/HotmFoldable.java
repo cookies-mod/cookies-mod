@@ -14,13 +14,13 @@ public class HotmFoldable extends Foldable {
             Text.literal("Show total powder"),
             Text.literal("Show total powder cost for a perk"),
             false
-    ).withHiddenKeys("gemstone", "mithril");
+    ).withTags("gemstone", "mithril");
 
     public final BooleanOption showNextTenPowder = new BooleanOption(
             Text.literal("Show next 10 cost"),
             Text.literal("Show cost for next 10 level of a perk"),
             false
-    ).withHiddenKeys("gemstone", "mithril");
+    ).withTags("gemstone", "mithril");
 
     public final BooleanOption showLevelInCount = new BooleanOption(
             Text.literal("Show perk level as count"),

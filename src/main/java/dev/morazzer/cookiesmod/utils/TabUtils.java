@@ -5,13 +5,13 @@ import net.minecraft.client.network.PlayerListEntry;
 public class TabUtils {
 
     /**
-     * If the entry is in a specific range.
+     * Whether the entry is in a specific range.
      *
      * @param column The column.
      * @param start  The start in the column.
      * @param end    The end in the column.
      * @param entry  The entry.
-     * @return If the entry is in the range.
+     * @return Whether the entry is in the range.
      */
     public static boolean isInRange(int column, int start, int end, PlayerListEntry entry) {
         String name = entry.getProfile().getName();
@@ -27,7 +27,7 @@ public class TabUtils {
     }
 
     /**
-     * Get the row of the entry.
+     * Gets the row of the entry.
      *
      * @param entry The entry.
      * @return The row.
@@ -37,7 +37,7 @@ public class TabUtils {
     }
 
     /**
-     * Get the column of the entry.
+     * Gets the column of the entry.
      *
      * @param entry The entry.
      * @return The column.

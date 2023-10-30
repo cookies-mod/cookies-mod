@@ -33,7 +33,7 @@ public class MiningCategory extends Category {
             Text.literal("Fuel percentage"),
             Text.literal("Show the remaining fuel percentage in the fuel bar"),
             false
-    ).withHiddenKeys("drill", "fuel", "bar", "drill fuel bar");
+    ).withTags("drill", "fuel", "bar", "drill fuel bar");
 
     public final BooleanOption scathaAlert = new BooleanOption(
             Text.literal("Scatha Alert"),

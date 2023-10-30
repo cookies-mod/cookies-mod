@@ -160,7 +160,7 @@ public class WaypointManager implements Module {
         for (Waypoint waypoint : value.waypoints) {
             Color color = Objects.requireNonNullElse(waypoint.color, value.color);
             double v = waypoint.position.distanceTo(MinecraftClient.getInstance().player != null ? MinecraftClient.getInstance().player.getPos() : Vec3d.ZERO);
-            if (v < 100) {
+            if (v < 0) {
                 Renderer3d.renderFilled(
                         context.matrixStack(),
                         new Color((color.getRGB() & 0xFFFFFF) | 0x99 << 24, true),

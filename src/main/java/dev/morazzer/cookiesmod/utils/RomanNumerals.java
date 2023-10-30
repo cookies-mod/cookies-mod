@@ -37,7 +37,7 @@ public enum RomanNumerals {
     }
 
     /**
-     * Get the decimal representation.
+     * Gets the decimal representation.
      *
      * @param input The roman number.
      * @return The arabic number.
@@ -68,7 +68,7 @@ public enum RomanNumerals {
     }
 
     /**
-     * Get the roman number.
+     * Gets the roman number.
      *
      * @param number The arabic number.
      * @return The roman number.

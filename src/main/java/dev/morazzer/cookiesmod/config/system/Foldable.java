@@ -14,13 +14,13 @@ import java.util.Optional;
 public abstract class Foldable {
 
     /**
-     * Get the display name of the foldable.
+     * Gets the display name of the foldable.
      * @return The name.
      */
     public abstract Text getName();
 
     /**
-     * Load the values of the fields in the foldable from a json object.
+     * Loads the values of the fields in the foldable from a {@linkplain com.google.gson.JsonObject}.
      * @param jsonObject The json object.
      */
     public final void load(JsonElement jsonObject) {
@@ -49,7 +49,7 @@ public abstract class Foldable {
     }
 
     /**
-     * Save the values of the fields in the foldable to a json object.
+     * Saves the values of the fields in the foldable to a {@linkplain com.google.gson.JsonObject}.
      * @return The json object.
      */
     public final JsonElement save() {

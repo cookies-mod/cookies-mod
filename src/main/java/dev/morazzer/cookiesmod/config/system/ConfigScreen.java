@@ -72,7 +72,7 @@ public class ConfigScreen extends Screen {
     private int categoryScrollbarRight;
 
     /**
-     * Create a new option screen.
+     * Creates a new option screen.
      *
      * @param configReader The config reader.
      */
@@ -478,7 +478,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Recalculate all variables used to display the category scrollbar.
+     * Recalculates all variables used to display the category scrollbar.
      */
     private void recalculateCategoryBarSize() {
         this.categoryScrollbarMin = this.categoryViewport / 20;
@@ -506,7 +506,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Recalculate all variables used to display the option scrollbar.
+     * Recalculates all variables used to display the option scrollbar.
      */
     private void recalculateOptionBarSize() {
         this.optionsScrollbarMin = this.optionsViewport / 20;
@@ -542,7 +542,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Set the search bar width to a newly calculated value.
+     * Sets the search bar width to a newly calculated value.
      */
     private void setSearchBarWidth() {
         int length = this.textRenderer.getWidth(this.searchField.getText());
@@ -554,7 +554,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Repopulate the active foldable list to reflect the current state.
+     * Repopulates the active foldable list to reflect the current state.
      */
     private void repopulateActiveFoldables() {
         this.activeFoldables.clear();
@@ -584,7 +584,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Get the size that an option has to be rendered in.
+     * Gets the size that an option has to be rendered in.
      *
      * @param processedOption The option to get the size for.
      * @return The size the option has to be rendered in.
@@ -603,7 +603,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Update the current search results to include/exclude new changes.
+     * Updates the current search results to include/exclude new changes.
      */
     private void updateSearchResults() {
         String search = this.searchField.getText();
@@ -622,7 +622,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Change the selected category.
+     * Changes the selected category.
      *
      * @param processedCategory The new category.
      */
@@ -638,7 +638,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Repopulate a list of all currently hidden options, which have been excluded through the search.
+     * Repopulates a list of all currently hidden options, which have been excluded through the search.
      */
     private void repopulateHiddenOptions() {
         String search = this.searchField.getText();
@@ -658,7 +658,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Execute an operation for all options that are in the current category.
+     * Executes an operation for all options that are in the current category.
      *
      * @param executor The executor to be called.
      * @param all      If all or only, the visible options should be used.
@@ -692,7 +692,7 @@ public class ConfigScreen extends Screen {
     }
 
     /**
-     * Execute an operation for all options that are in the current category that are visible and not hidden.
+     * Executes an operation for all options that are in the current category that are visible and not hidden.
      *
      * @param executor The executor to be called.
      */

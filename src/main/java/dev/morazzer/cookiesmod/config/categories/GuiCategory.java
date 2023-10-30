@@ -8,26 +8,26 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
 /**
- * Category to describe all gui related settings.
+ * Category that describes all GUI related settings.
  */
 public class GuiCategory extends Category {
 
     @Expose
     public ButtonOption buttonOption = new ButtonOption(
             Text.literal("Edit Locations"),
-            Text.literal("Let's you move all hud elements"),
+            Text.literal("Lets you move all HUD elements"),
             () -> MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new HudEditor())),
             Text.literal("Edit")
     );
 
     @Override
     public Text getName() {
-        return Text.literal("Gui Settings");
+        return Text.literal("GUI Settings");
     }
 
     @Override
     public Text getDescription() {
-        return Text.literal("Edit settings related to the hud/gui");
+        return Text.literal("Edit settings related to the HUD/GUI");
     }
 
 }

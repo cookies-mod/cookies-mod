@@ -18,7 +18,7 @@ public class ColorUtils {
             "show_stacktrace_on_gradient_hover");
 
     /**
-     * Get a text with an applied gradient.
+     * Gets a text with an applied gradient.
      *
      * @param text       The text.
      * @param startColor The start color of the gradient.

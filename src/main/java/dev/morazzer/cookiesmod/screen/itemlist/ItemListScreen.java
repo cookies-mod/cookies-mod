@@ -57,7 +57,7 @@ public class ItemListScreen implements Module {
     private TextFieldWidget textFieldWidget;
 
     /**
-     * Filter and sort all items.
+     * Filters and sort all items.
      */
     public void filterAndSort() {
         if (this.textFieldWidget == null) {
@@ -68,7 +68,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Sort all items.
+     * Sorts all items.
      */
     public void sort() {
         this.items.sort(this.sortRarity.getValue()
@@ -77,7 +77,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Filter all items.
+     * Filters all items.
      */
     public void filter() {
         this.items.clear();
@@ -90,14 +90,14 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Ensure that the current page is a valid page.
+     * Ensures that the current page is a valid page.
      */
     public void ensurePageIsValid() {
         this.page = MathHelper.clamp(this.page, 0, this.pageCount);
     }
 
     /**
-     * Draw the background of the item list
+     * Draws the background of the item list
      *
      * @param context The current draw context.
      * @param screen  The current screen.
@@ -107,7 +107,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Draw the page text.
+     * Draws the page text.
      *
      * @param context The current draw context.
      */
@@ -122,7 +122,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Draw the item list onto the screen.
+     * Draws the item list onto the screen.
      *
      * @param screen  The current screen.
      * @param context The current draw context.
@@ -156,7 +156,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Draw the item tooltip for the hovered item.
+     * Draws the item tooltip for the hovered item.
      *
      * @param screen    The current screen.
      * @param context   The current draw context.
@@ -178,7 +178,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Draw the control bar.
+     * Draws the control bar.
      *
      * @param context   The current draw context.
      * @param mouseX    The current x position of the mouse.
@@ -338,7 +338,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Test if the item matches the search.
+     * Tests if the item matches the search.
      *
      * @param identifier The item id.
      * @return If the item matcher.
@@ -374,7 +374,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Check if the identifier matches the identifier part
+     * Checks if the identifier matches the identifier part
      *
      * @param identifier     The identifier to test.
      * @param identifierPart The part to match.
@@ -387,7 +387,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Handle a key press.
+     * Handles a key press.
      *
      * @param screen    The current screen.
      * @param keyCode   The keycode.
@@ -415,7 +415,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Handle a mouse click onto the screen.
+     * Handles a mouse click onto the screen.
      *
      * @param screen The current screen.
      * @param mouseX The current x position of the mouse.
@@ -436,7 +436,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Initialize the item list for a screen.
+     * Initializes the item list for a screen.
      *
      * @param screen The screen.
      */
@@ -534,7 +534,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Render the modifications onto the screen.
+     * Renders the modifications onto the screen.
      *
      * @param screen    The current screen.
      * @param context   The current draw context.

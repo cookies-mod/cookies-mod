@@ -18,7 +18,7 @@ public class HttpUtils {
     private static final Identifier LOG_HTTP_REQUESTS = DevUtils.createIdentifier("log_http_requests");
 
     /**
-     * Get the response body from an http request.
+     * Gets the response body from an http request.
      * @param uri The uri.
      * @return The response.
      */
@@ -36,7 +36,7 @@ public class HttpUtils {
     }
 
     /**
-     * Request body of an uri.
+     * Requests body of an uri.
      * @param uri The uri.
      * @param consumer The consumer to consume the body.
      */

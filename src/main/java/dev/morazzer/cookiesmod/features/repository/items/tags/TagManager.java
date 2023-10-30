@@ -19,7 +19,7 @@ public class TagManager {
     public static final ConcurrentHashMap<Identifier, Tag> concurrentHashMap = new ConcurrentHashMap<>();
 
     /**
-     * Load all tags from the repository into objects.
+     * Loads all tags from the repository into objects.
      */
     public static void loadTags() {
         concurrentHashMap.clear();
@@ -32,7 +32,7 @@ public class TagManager {
     }
 
     /**
-     * Load all tags from a specific path.
+     * Loads all tags from a specific path.
      *
      * @param path The path.
      */

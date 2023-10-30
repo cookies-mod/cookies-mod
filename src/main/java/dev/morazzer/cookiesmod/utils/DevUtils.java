@@ -23,7 +23,7 @@ public class DevUtils {
     private static final Identifier EXTRA_LOGGING = createIdentifier("extra_logging");
 
     /**
-     * Log a specific value to the console.
+     * Logs a specific value to the console.
      *
      * @param key          The key of the logger.
      * @param message      The message to log.
@@ -35,7 +35,7 @@ public class DevUtils {
     }
 
     /**
-     * Enable a specific dev tool.
+     * Enables a specific dev tool.
      *
      * @param identifier The tool to enable.
      * @return If the tool was enabled.
@@ -51,7 +51,7 @@ public class DevUtils {
     }
 
     /**
-     * Disable a specific dev tool.
+     * Disables a specific dev tool.
      *
      * @param identifier The tool to disable.
      * @return If the tool was disabled.
@@ -67,26 +67,26 @@ public class DevUtils {
     }
 
     /**
-     * If a dev tool is enabled.
+     * Whether a dev tool is enabled.
      *
      * @param identifier The tool to check.
-     * @return If it is enabled.
+     * @return Whether it is enabled.
      */
     public static boolean isEnabled(Identifier identifier) {
         return enabledTools.contains(identifier);
     }
 
     /**
-     * Get a list of all enabled tools.
+     * Gets a list of all enabled tools.
      *
-     * @return A lost of tools.
+     * @return A list of tools.
      */
     public static Set<Identifier> getEnabledTools() {
         return Collections.unmodifiableSet(enabledTools);
     }
 
     /**
-     * Create a dev tool.
+     * Creates a dev tool.
      *
      * @param name The name of the tool.
      * @return The identifier.
@@ -99,9 +99,9 @@ public class DevUtils {
     }
 
     /**
-     * If the mod is running in a development environment.
+     * Whether the mod is running in a development environment.
      *
-     * @return If it is a development environment.
+     * @return Whether it is a development environment.
      */
     public static boolean isDevEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();

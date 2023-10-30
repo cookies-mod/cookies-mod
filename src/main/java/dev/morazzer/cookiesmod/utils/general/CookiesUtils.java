@@ -23,7 +23,7 @@ public class CookiesUtils {
     private static final Logger logger = LoggerFactory.getLogger("cookies-utils");
 
     /**
-     * Get the current player.
+     * Gets the current player.
      *
      * @return The current player.
      */
@@ -32,7 +32,7 @@ public class CookiesUtils {
     }
 
     /**
-     * Add a message to the chat.
+     * Adds a message to the chat.
      *
      * @param text  The message.
      * @param color The color the message should be in.
@@ -42,7 +42,7 @@ public class CookiesUtils {
     }
 
     /**
-     * Add a message to the chat.
+     * Adds a message to the chat.
      *
      * @param text The message.
      */
@@ -51,7 +51,7 @@ public class CookiesUtils {
     }
 
     /**
-     * Add a text message to the chat.
+     * Adds a text message to the chat.
      *
      * @param text The message.
      */
@@ -60,7 +60,7 @@ public class CookiesUtils {
     }
 
     /**
-     * Add a message to the chat.
+     * Adds a message to the chat.
      *
      * @param text    The message.
      * @param overlay If the message should be sent as overlay or not.
@@ -70,7 +70,7 @@ public class CookiesUtils {
     }
 
     /**
-     * Get the uuid of a username.
+     * Gets the uuid of a username.
      *
      * @param username The username.
      * @return The uuid.
@@ -132,7 +132,7 @@ public class CookiesUtils {
     }
 
     /**
-     * Get the username of an uuid.
+     * Gets the username of an uuid.
      *
      * @param uuid The uuid.
      * @return The username.

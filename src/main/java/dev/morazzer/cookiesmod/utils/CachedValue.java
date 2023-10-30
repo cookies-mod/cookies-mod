@@ -20,7 +20,7 @@ public class CachedValue<T> {
     private long lastTimeEvaluated;
 
     /**
-     * Create a cached value
+     * Creates a cached value
      *
      * @param valueProvider A functional interface to provide the value after a certain time has passed
      * @param time          The time to wait between invocations
@@ -31,7 +31,7 @@ public class CachedValue<T> {
     }
 
     /**
-     * Create a cached value
+     * Creates a cached value
      *
      * @param valueProvider A functional interface to provide the value after a certain time has passed
      * @param duration      The duration to wait between invocations
@@ -50,14 +50,14 @@ public class CachedValue<T> {
     }
 
     /**
-     * Always returns the current value even if the time has passed
+     * Always gets the current value even if the time has passed
      */
     public T getValueNoUpdate() {
         return this.value;
     }
 
     /**
-     * Get the cached value or compute a new one if the provided duration has elapsed
+     * Gets the cached value or compute a new one if the provided duration has elapsed
      *
      * @return The cached value
      */

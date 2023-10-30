@@ -25,7 +25,7 @@ public class PlotOutlines {
     private static final Vec3d plotMiddle = new Vec3d(48, 0, 48);
 
     /**
-     * Initialize/register the debug to be enabled.
+     * Initializes/registers the debug to be enabled.
      */
     public static void initializePlotOutlinesDebug() {
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
@@ -35,7 +35,7 @@ public class PlotOutlines {
     }
 
     /**
-     * Render the calculated plot walls on the garden.
+     * Renders the calculated plot walls on the garden.
      *
      * @param context The current draw context.
      */
@@ -78,7 +78,7 @@ public class PlotOutlines {
     }
 
     /**
-     * Render an overlay on all plots, with the color based on their position.
+     * Renders an overlay on all plots, with the color based on their position.
      *
      * @param context The current draw context.
      */

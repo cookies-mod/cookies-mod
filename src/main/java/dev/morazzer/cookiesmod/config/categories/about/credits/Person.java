@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * A person that is mentioned in the {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Credits}.
- * For a person to be listed, they must have a valid minecraft account.
+ * Each listed person must have a valid Minecraft account.
  */
 @Getter
 public class Person {
@@ -31,9 +31,9 @@ public class Person {
     private final int number;
 
     /**
-     * Create a new person.
+     * Creates a new person.
      *
-     * @param uuid        The uuid of the minecraft account.
+     * @param uuid        The UUID of the Minecraft account.
      * @param name        The name of the person.
      * @param description A small description of what they do/did.
      * @param prefix      A prefix that will be set before the name.
@@ -57,7 +57,10 @@ public class Person {
     }
 
     /**
-     * Creates a new instance of a person from a json object
+     * Creates a new instance of a person from a {@linkplain com.google.gson.JsonObject}.
+     *
+     * @param jsonObject The person to parse.
+     * @return The person.
      */
     @NotNull
     public static Person fromJson(@NotNull JsonObject jsonObject) {

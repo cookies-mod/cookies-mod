@@ -31,7 +31,7 @@ public class CompostUpgradeCost {
     private final List<CompostUpgrade> costReduction;
 
     /**
-     * Load the compost data from a json object.
+     * Loads the compost data from a json object.
      *
      * @param jsonObject The json object.
      */
@@ -44,9 +44,9 @@ public class CompostUpgradeCost {
     }
 
     /**
-     * If the data was loaded, if not, it tries to load it.
+     * Whether the data was loaded, if not try to load it.
      *
-     * @return If the data was successfully loaded.
+     * @return Whether the data was successfully loaded.
      */
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot()
@@ -63,7 +63,7 @@ public class CompostUpgradeCost {
     }
 
     /**
-     * Parse a json array to a list of {@linkplain dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost.CompostUpgrade}.
+     * Parse a {@linkplain com.google.gson.JsonArray} to a list of {@linkplain dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost.CompostUpgrade}.
      *
      * @param jsonElements The json array.
      * @return The list of compost upgrades.

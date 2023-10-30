@@ -17,9 +17,7 @@ public class SpeedsBuilder {
     private int mushroom;
 
     /**
-     * Set the speed for wheat.
-     *
-     * @param wheat The speed.
+     * @param wheat The speed for wheat.
      * @return The builder.
      */
     public SpeedsBuilder setWheat(int wheat) {
@@ -28,9 +26,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for carrot.
-     *
-     * @param carrot The speed.
+     * @param carrot The speed for carrot.
      * @return The builder.
      */
     public SpeedsBuilder setCarrot(int carrot) {
@@ -39,9 +35,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for potato.
-     *
-     * @param potato The speed.
+     * @param potato The speed for potato.
      * @return The builder.
      */
     public SpeedsBuilder setPotato(int potato) {
@@ -50,9 +44,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for nether wart.
-     *
-     * @param netherWart The speed.
+     * @param netherWart The speed for nether wart.
      * @return The builder.
      */
     public SpeedsBuilder setNetherWart(int netherWart) {
@@ -61,9 +53,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for pumpkin.
-     *
-     * @param pumpkin The speed.
+     * @param pumpkin The speed for pumpkin.
      * @return The builder.
      */
     public SpeedsBuilder setPumpkin(int pumpkin) {
@@ -72,9 +62,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for melon.
-     *
-     * @param melon The speed.
+     * @param melon The speed for melon.
      * @return The builder.
      */
     public SpeedsBuilder setMelon(int melon) {
@@ -83,9 +71,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for cocoa beans.
-     *
-     * @param cocoaBeans The speed.
+     * @param cocoaBeans The speed for cocoa beans.
      * @return The builder.
      */
     public SpeedsBuilder setCocoaBeans(int cocoaBeans) {
@@ -94,9 +80,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for sugar cane.
-     *
-     * @param sugarCane The speed.
+     * @param sugarCane The speed for sugar cane.
      * @return The builder.
      */
     public SpeedsBuilder setSugarCane(int sugarCane) {
@@ -105,9 +89,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for cactus.
-     *
-     * @param cactus The speed.
+     * @param cactus The speed for cactus.
      * @return The builder.
      */
     public SpeedsBuilder setCactus(int cactus) {
@@ -116,9 +98,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Set the speed for mushroom.
-     *
-     * @param mushroom The speed.
+     * @param mushroom The speed for mushroom.
      * @return The builder.
      */
     public SpeedsBuilder setMushroom(int mushroom) {
@@ -127,7 +107,7 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Create the {@linkplain dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds} instance with the values provided.
+     * Creates the {@linkplain dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds} instance with the values provided.
      *
      * @return The new instance.
      */

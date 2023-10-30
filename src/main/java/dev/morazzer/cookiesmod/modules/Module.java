@@ -11,26 +11,24 @@ public interface Module {
     Identifier MODULE_ROOT = CookiesMod.ROOT.withPath("modules/");
 
     /**
-     * Load a module.
+     * Loads a module.
      */
     void load();
 
     /**
-     * Unload a module-
+     * Unloads a module.
      */
     default void unload() {}
 
     /**
-     * If the module should be loaded.
-     *
-     * @return If it should load.
+     * @return Whether the module should be loaded.
      */
     default boolean shouldLoad() {
         return true;
     }
 
     /**
-     * Get the identifier of the module.
+     * Gets the identifier of the module.
      *
      * @return The identifier.
      */
@@ -39,14 +37,14 @@ public interface Module {
     }
 
     /**
-     * Get the identifier path.
+     * Gets the identifier path.
      *
      * @return The identifier path.
      */
     String getIdentifierPath();
 
     /**
-     * Reload a module.
+     * Reloads a module.
      */
     default void reload() {
         unload();

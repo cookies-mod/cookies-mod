@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 import java.util.List;
 
 /**
- * Highlight the unclaimed jacobs contest in the jacob contest gui.
+ * Highlights the unclaimed jacobs contest in the jacob contest gui.
  */
 @LoadModule("farming/unclaimed_contests")
 public class UnclaimedJacobsRewards implements Module {

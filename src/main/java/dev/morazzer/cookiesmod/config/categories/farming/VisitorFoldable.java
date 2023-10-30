@@ -16,7 +16,7 @@ public class VisitorFoldable extends Foldable {
     @Expose
     public final BooleanOption shouldAddItems = new BooleanOption(
             Text.literal("Show required items"),
-            Text.literal("Rather or not the items should be added to the description"),
+            Text.literal("Whether the items should be added to the description"),
             true
     );
 
@@ -25,7 +25,7 @@ public class VisitorFoldable extends Foldable {
             Text.literal("Use Item Rarity As Color"),
             Text.literal("Uses the item rarity for the color of the required items"),
             true
-    ).withHiddenKeys("tier", "visitors");
+    ).withTags("tier", "visitors");
 
     @Expose
     public final EnumDropdownOption<CountPosition> countPosition = new EnumDropdownOption<>(
@@ -39,14 +39,14 @@ public class VisitorFoldable extends Foldable {
             Text.literal("Show crop price"),
             Text.literal("Shows the price of the required items"),
             true
-    ).withHiddenKeys("coins", "bazaar", "cost");
+    ).withTags("coins", "bazaar", "cost");
 
     @Expose
     public final EnumDropdownOption<BazaarBuyType> buyType = new EnumDropdownOption<>(
             Text.literal("Bazaar buy type"),
             Text.literal("Change the behaviour to either show instant buy or buy order price"),
             BazaarBuyType.INSTANT
-    ).withSupplier(BazaarBuyType::getText).withHiddenKeys("coins", "cost");
+    ).withSupplier(BazaarBuyType::getText).withTags("coins", "cost");
 
     @Override
     public Text getName() {

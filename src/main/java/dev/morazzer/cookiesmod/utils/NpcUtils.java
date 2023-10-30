@@ -40,7 +40,7 @@ import java.util.UUID;
 public class NpcUtils {
 
     /**
-     * Print the textures of the targeted player.
+     * Prints the textures of the targeted player.
      */
     @TestEntrypoint("get_texture_from_player")
     public static void printTextureFromPlayer() {
@@ -89,7 +89,7 @@ public class NpcUtils {
     }
 
     /**
-     * Create a npc that can be rendered onto the hud.
+     * Creates a npc that can be rendered onto the hud.
      *
      * @param name          The name of the npc.
      * @param textureString The texture of the npc.

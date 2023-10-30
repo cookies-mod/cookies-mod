@@ -20,7 +20,7 @@ public class ProcessedOption<T, O extends Option<T, O>> {
     private int foldable = -1;
 
     /**
-     * Create a processed option.
+     * Creates a processed option.
      *
      * @param option The option to be processed.
      */

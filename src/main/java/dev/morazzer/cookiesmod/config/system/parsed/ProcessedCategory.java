@@ -17,7 +17,7 @@ public class ProcessedCategory {
     private final Category category;
 
     /**
-     * Create a new processed category.
+     * Creates a new processed category.
      *
      * @param category The category to be processed.
      */
@@ -26,7 +26,7 @@ public class ProcessedCategory {
     }
 
     /**
-     * Get the name of the category.
+     * Gets the name of the category.
      *
      * @return The name.
      */
@@ -35,7 +35,7 @@ public class ProcessedCategory {
     }
 
     /**
-     * Get the description of the category.
+     * Gets the description of the category.
      *
      * @return The description.
      */
@@ -44,7 +44,7 @@ public class ProcessedCategory {
     }
 
     /**
-     * Add a processed option to the category.
+     * Adds a processed option to the category.
      *
      * @param processedOption The option to add.
      */

@@ -36,7 +36,7 @@ public class JacobsContests implements Module {
     private LinkedList<Contest> contests = new LinkedList<>();
 
     /**
-     * Get the next n number of contests, including currently active ones.
+     * Gets the next n number of contests, including currently active ones.
      *
      * @param amount The amount to get.
      * @return The contests.
@@ -71,7 +71,7 @@ public class JacobsContests implements Module {
     }
 
     /**
-     * Update the contests to include newly added ones.
+     * Updates the contests to include newly added ones.
      */
     private void updateContests() {
         log.info("Refreshing jacob contests");

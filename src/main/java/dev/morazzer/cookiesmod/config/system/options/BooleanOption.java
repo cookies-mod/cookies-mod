@@ -26,7 +26,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
     }
 
     /**
-     * Add a hud element to the button, this element will only be visible if the button is toggled on.
+     * Adds a HUD element to the button. This element will only be visible when the button is toggled on.
      *
      * @param hudElement The hud element to attach.
      * @return The option.

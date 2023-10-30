@@ -3,7 +3,7 @@ package dev.morazzer.cookiesmod.utils;
 public class StringUtils {
 
     /**
-     * Escape all non ascii characters.
+     * Escapes all non ascii characters.
      *
      * @param original The text to escape.
      * @return The escaped text.
