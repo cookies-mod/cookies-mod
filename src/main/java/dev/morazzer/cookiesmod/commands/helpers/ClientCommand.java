@@ -10,6 +10,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -18,11 +20,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * A client command is a command that will always only be available to the client itself.
+ * This class helps with creating those, and therefore every client command has to extend it.
+ */
 @Slf4j
 public abstract class ClientCommand implements Helper {
-    private static final Identifier identifier = new Identifier("cookie", "commands");
 
-    public static void loadCommands(Reflections reflections, CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    private static final Identifier identifier = new Identifier("cookie", "commands");
+    private String originalCommandName;
+
+    /**
+     * Loads all classes that
+     * extend {@linkplain dev.morazzer.cookiesmod.commands.helpers.ClientCommand}
+     * and are annotated with {@linkplain dev.morazzer.cookiesmod.commands.helpers.LoadCommand} into the command registry.
+     *
+     * @param reflections A {@linkplain org.reflections.Reflections} instance with predefined path to narrow in the scan.
+     * @param dispatcher  The command dispatcher that is provided by the {@linkplain net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback}.
+     */
+    public static void loadCommands(
+            @NotNull Reflections reflections,
+            @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher
+    ) {
         reflections.getTypesAnnotatedWith(LoadCommand.class).forEach(aClass -> {
             log.debug("Found class annotated with @LoadCommand");
             if (!ClientCommand.class.isAssignableFrom(aClass)) {
@@ -47,18 +66,24 @@ public abstract class ClientCommand implements Helper {
         });
     }
 
+    @NotNull
     public abstract LiteralArgumentBuilder<FabricClientCommandSource> getCommand();
 
-    private String originalCommandName;
-
-    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    /**
+     * Registers an instance of a command with all the respective checks and aliases/namespaces.
+     *
+     * @param dispatcher The command dispatcher.
+     */
+    public void register(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher) {
         LiteralArgumentBuilder<FabricClientCommandSource> command = this.getCommand();
         if (!this.isAvailableOnServers()) {
             Predicate<FabricClientCommandSource> requirement = command.getRequirement();
             command.requires(fabricClientCommandSource -> {
                 ClientWorld world = MinecraftClient.getInstance().world;
-                return (this.isAvailableOnServers() || world != null && world.isClient()) && requirement.test(
-                        fabricClientCommandSource);
+                return (this.isAvailableOnServers()
+                        || world != null
+                        && world.isClient())
+                        && requirement.test(fabricClientCommandSource);
             });
         }
 
@@ -89,17 +114,36 @@ public abstract class ClientCommand implements Helper {
                 .redirect(register, getRedirectModifier(namespace)));
     }
 
-    public SingleRedirectModifier<FabricClientCommandSource> getRedirectModifier(String commandName) {
+    /**
+     * Helper method to create a redirect modifier for the aliases.
+     *
+     * @param commandName The name of the alias (only used for debug).
+     * @return A new redirect modifier.
+     */
+    @NotNull
+    public SingleRedirectModifier<FabricClientCommandSource> getRedirectModifier(@NotNull String commandName) {
         return context -> {
             DevUtils.log("command-redirected", "Redirected from command {} to {}", commandName, originalCommandName);
             return context.getSource();
         };
     }
 
+    /**
+     * Gets all the aliases of the current command instance.
+     *
+     * @return All aliases.
+     */
+    @NotNull
+    @Contract(pure = true)
     public List<String> getAliases() {
         return Collections.emptyList();
     }
 
+    /**
+     * Checks whether the current command is available on servers.
+     *
+     * @return Whether the command is available on servers.
+     */
     public boolean isAvailableOnServers() {
         return true;
     }

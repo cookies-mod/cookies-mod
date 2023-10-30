@@ -4,8 +4,13 @@ import dev.morazzer.cookiesmod.config.system.element.DropdownElement;
 import dev.morazzer.cookiesmod.config.system.options.StringDropdownOption;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Editor to select a single string from a predefined list.
+ */
 public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropdownOption> {
+
     private DropdownElement<String> dropdownElement;
 
     public StringDropdownEditor(StringDropdownOption option) {
@@ -21,12 +26,8 @@ public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropd
         this.dropdownElement.setSelected(this.option.getValue());
     }
 
-    public int getDropdownWidth(int optionWidth) {
-        return Math.min(optionWidth / 3 - 10, 80);
-    }
-
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
+    public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
         super.render(drawContext, mouseX, mouseY, tickDelta, optionWidth);
         int dropdownWidth = this.getDropdownWidth(optionWidth);
 
@@ -37,12 +38,11 @@ public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropd
     }
 
     @Override
-    public void renderOverlay(DrawContext drawContext, int mouseX, int mouseY, float delta, int optionWidth) {
-        int dropdownWidth = this.getDropdownWidth(optionWidth);
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().translate((float) optionWidth / 6 - (float) dropdownWidth / 2, getHeight() - 21, 0);
-        dropdownElement.render(drawContext, dropdownWidth);
-        drawContext.getMatrices().pop();
+    public boolean doesMatchSearch(@NotNull String search) {
+        return super.doesMatchSearch(search) || this.option
+                .getPossibleValues()
+                .stream()
+                .anyMatch(key -> key.contains(search));
     }
 
     @Override
@@ -64,8 +64,22 @@ public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropd
     }
 
     @Override
-    public boolean doesMatchSearch(String search) {
-        return super.doesMatchSearch(search) || this.option.getPossibleValues().stream()
-                .anyMatch(key -> key.contains(search));
+    public void renderOverlay(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
+        int dropdownWidth = this.getDropdownWidth(optionWidth);
+        drawContext.getMatrices().push();
+        drawContext.getMatrices().translate((float) optionWidth / 6 - (float) dropdownWidth / 2, getHeight() - 21, 0);
+        dropdownElement.render(drawContext, dropdownWidth);
+        drawContext.getMatrices().pop();
     }
+
+    /**
+     * Helper to get the width of the dropdown menu.
+     *
+     * @param optionWidth The width the option is rendered at.
+     * @return The width of the dropdown.
+     */
+    private int getDropdownWidth(int optionWidth) {
+        return Math.min(optionWidth / 3 - 10, 80);
+    }
+
 }

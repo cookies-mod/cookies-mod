@@ -8,15 +8,36 @@ import net.minecraft.text.Text;
 
 import java.util.function.Function;
 
+/**
+ * GUI element to render a dropdown menu everywhere.
+ *
+ * @param <T> The type of the elements.
+ */
 public class DropdownElement<T> {
 
     private final T[] elements;
     private final Function<T, Text> textSupplier;
+    public int selectedIndex;
     @Getter
     private boolean open = false;
     private T selected;
-    public int selectedIndex;
 
+    /**
+     * Creates a new dropdown element.
+     *
+     * @param elements     An array of elements that can be selected.
+     * @param textSupplier A function to map the values to a human-readable text.
+     */
+    public DropdownElement(T[] elements, Function<T, Text> textSupplier) {
+        this.elements = elements;
+        this.textSupplier = textSupplier;
+    }
+
+    /**
+     * Changes the currently selected element to a different one.
+     *
+     * @param selected The selected element.
+     */
     public void setSelected(T selected) {
         this.selected = selected;
         for (int i = 0; i < elements.length; i++) {
@@ -26,58 +47,41 @@ public class DropdownElement<T> {
         }
     }
 
-    public DropdownElement(T[] elements, Function<T, Text> textSupplier) {
-        this.elements = elements;
-        this.textSupplier = textSupplier;
-    }
-
+    /**
+     * Renders the dropdown onto the current draw context.
+     *
+     * @param drawContext   The current draw context.
+     * @param dropdownWidth The width the dropdown should be rendered at.
+     */
     public void render(DrawContext drawContext, int dropdownWidth) {
         if (!open) {
             Text displaySelected = this.textSupplier.apply(selected);
 
             RenderUtils.renderRectangle(drawContext, 0, 0, dropdownWidth, 14, false);
             //RenderUtils.renderTextScaled(drawContext, Text.literal("▼"), 2, dropdownWidth - 10, top, 0xffb0b0b0, false);
-            RenderUtils.renderTextWithMaxWidth(
-                    drawContext,
-                    displaySelected,
-                    dropdownWidth - 16,
-                    3,
-                    3,
-                    ~0,
-                    false
-            );
+            RenderUtils.renderTextWithMaxWidth(drawContext, displaySelected, dropdownWidth - 16, 3, 3, ~0, false);
         }
     }
 
+    /**
+     * Renders the overlay of the dropdown, also known as the list of items.
+     *
+     * @param context       The current draw context.
+     * @param dropdownWidth The width the dropdown should be rendered at.
+     */
     public void renderOverlay(DrawContext context, int dropdownWidth) {
         if (open) {
             Text displaySelected = this.textSupplier.apply(selected);
             T[] values = this.elements;
 
             int dropdownHeight = 12 * values.length;
-            context.fill(
-                    0,
-                    0,
-                    dropdownWidth,
-                    dropdownHeight,
-                    0xff202026
-            ); //Middle
+            context.fill(0, 0, dropdownWidth, dropdownHeight, 0xff202026); //Middle
 
             context.drawVerticalLine(0, 0, dropdownHeight, 0xff2355ad);
-            context.drawVerticalLine(
-                    dropdownWidth,
-                    0,
-                    dropdownHeight,
-                    0xff2355ad
-            );
+            context.drawVerticalLine(dropdownWidth, 0, dropdownHeight, 0xff2355ad);
 
             context.drawHorizontalLine(0, dropdownWidth, 0, 0xff2355ad);
-            context.drawHorizontalLine(
-                    0,
-                    dropdownWidth,
-                    dropdownHeight,
-                    0xff2355ad
-            );
+            context.drawHorizontalLine(0, dropdownWidth, dropdownHeight, 0xff2355ad);
 
             int dropdownY = 13;
             for (T value : values) {
@@ -109,6 +113,14 @@ public class DropdownElement<T> {
         }
     }
 
+    /**
+     * Checks if the mouse click occurred above the button and change the value if so.
+     *
+     * @param mouseX        The current x position of the mouse.
+     * @param mouseY        The current y position of the mouse.
+     * @param dropdownWidth The width the dropdown should be rendered at.
+     * @return The new value of the element, null if nothing has changed.
+     */
     public T mouseClicked(double mouseX, double mouseY, int dropdownWidth) {
         if (this.open) {
             T[] values = this.elements;

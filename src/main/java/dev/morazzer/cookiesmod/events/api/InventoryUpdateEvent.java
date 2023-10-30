@@ -7,20 +7,28 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-
+/**
+ * Event to check for updates in inventories.
+ */
 @FunctionalInterface
 public interface InventoryUpdateEvent {
 
-	Event<InventoryUpdateEvent> EVENT = EventFactory.createArrayBacked(
-			InventoryUpdateEvent.class,
-			inventoryUpdateEvents -> ExceptionHandler.wrap((slot, items) -> {
-						for (InventoryUpdateEvent inventoryUpdateEvent : inventoryUpdateEvents) {
-							inventoryUpdateEvent.update(slot, items);
-						}
-					}
-			)
-	);
+    Event<InventoryUpdateEvent> EVENT = EventFactory.createArrayBacked(
+            InventoryUpdateEvent.class,
+            inventoryUpdateEvents -> ExceptionHandler.wrap((slot, items) -> {
+                        for (InventoryUpdateEvent inventoryUpdateEvent : inventoryUpdateEvents) {
+                            inventoryUpdateEvent.update(slot, items);
+                        }
+                    }
+            )
+    );
 
-	void update(int syncId, List<ItemStack> items);
+    /**
+     * Called when the items in an inventory change.
+     *
+     * @param syncId The sync id of the inventory.
+     * @param items  The new item list.
+     */
+    void update(int syncId, List<ItemStack> items);
 
 }

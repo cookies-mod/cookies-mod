@@ -36,19 +36,32 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class CookiesMod implements ModInitializer {
 
+    private static final String prefix = "Cookies Mod > ";
+    public static final Identifier ROOT = new Identifier("cookiesmod", "root");
     @Getter
     private static CookiesMod instance;
-
     private static boolean firstStart = false;
     private final ModuleLoader moduleLoader = new ModuleLoader();
-
-    private static final String prefix = "Cookies mod > ";
 
     {
         instance = this;
     }
 
-    public static Identifier ROOT = new Identifier("cookiesmod", "root");
+    public static void setFirstStart() {
+        CookiesMod.firstStart = true;
+    }
+
+    public static MutableText createPrefix() {
+        return Text.literal(prefix).styled(style -> style.withColor(ColorUtils.mainColor));
+    }
+
+    public static MutableText createColor() {
+        return Text.empty().styled(style -> style.withColor(ColorUtils.mainColor));
+    }
+
+    public static MutableText createPrefix(int endColor) {
+        return ColorUtils.literalWithGradient(prefix, ColorUtils.mainColor, endColor);
+    }
 
     @Override
     public void onInitialize() {
@@ -82,6 +95,9 @@ public class CookiesMod implements ModInitializer {
         }
     }
 
+    /**
+     * Loads all modules and check if they are force disabled.
+     */
     private void loadModules() {
         AtomicReference<JsonArray> jsonArrayAtomicReference = new AtomicReference<>();
         try {
@@ -115,19 +131,4 @@ public class CookiesMod implements ModInitializer {
         moduleLoader.loadModules();
     }
 
-    public static void setFirstStart() {
-        CookiesMod.firstStart = true;
-    }
-
-    public static MutableText createPrefix() {
-        return Text.literal(prefix).styled(style -> style.withColor(ColorUtils.mainColor));
-    }
-
-    public static MutableText createColor() {
-        return Text.empty().styled(style -> style.withColor(ColorUtils.mainColor));
-    }
-
-    public static MutableText createPrefix(int endColor) {
-        return ColorUtils.literalWithGradient(prefix, ColorUtils.mainColor, endColor);
-    }
 }

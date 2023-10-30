@@ -3,8 +3,9 @@ package dev.morazzer.cookiesmod.screen.itemlist;
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
+import dev.morazzer.cookiesmod.features.repository.items.item.attributes.Tier;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.screen.widgets.EnumCycleWidget;
@@ -18,6 +19,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
@@ -32,9 +34,8 @@ import java.util.function.Predicate;
 @LoadModule("itemlist")
 public class ItemListScreen implements Module {
 
-
     private final int itemSize = 18;
-
+    CopyOnWriteArrayList<Identifier> items = new CopyOnWriteArrayList<>();
     private ButtonWidget leftButton;
     private ButtonWidget rightButton;
     private int itemListStartX;
@@ -48,18 +49,150 @@ public class ItemListScreen implements Module {
     private int pageCount;
     private int pageNumberX;
     private int pageNumberY;
-
     private EnumCycleWidget<AlphabeticalSort, Comparator<Identifier>> sortAlphabetical;
     private EnumCycleWidget<RaritySort, Comparator<Identifier>> sortRarity;
     private EnumCycleWidget<RarityFilter, Predicate<Identifier>> filterRarity;
     private EnumCycleWidget<CategoryFilter, Predicate<Identifier>> filterCategory;
     private EnumCycleWidget<MuseumFilter, Predicate<Identifier>> filterMuseum;
-
     private TextFieldWidget textFieldWidget;
 
-    CopyOnWriteArrayList<Identifier> items = new CopyOnWriteArrayList<>();
+    /**
+     * Filters and sort all items.
+     */
+    public void filterAndSort() {
+        if (this.textFieldWidget == null) {
+            return;
+        }
+        this.filter();
+        this.sort();
+    }
 
-    public ItemListScreen() {
+    /**
+     * Sorts all items.
+     */
+    public void sort() {
+        this.items.sort(this.sortRarity.getValue()
+                .thenComparing(this.sortAlphabetical.getValue())
+        );
+    }
+
+    /**
+     * Filters all items.
+     */
+    public void filter() {
+        this.items.clear();
+        this.items.addAll(RepositoryItemManager.getAllItems());
+        this.items.removeIf(Predicate.not(this.filterRarity.getValue())
+                .or(Predicate.not(this::search))
+                .or(Predicate.not(this.filterCategory.getValue()))
+                .or(Predicate.not(this.filterMuseum.getValue())));
+        this.pageCount = this.items.size() / Math.max(this.itemsOnPage, 1);
+    }
+
+    /**
+     * Ensures that the current page is a valid page.
+     */
+    public void ensurePageIsValid() {
+        this.page = MathHelper.clamp(this.page, 0, this.pageCount);
+    }
+
+    /**
+     * Draws the background of the item list
+     *
+     * @param context The current draw context.
+     * @param screen  The current screen.
+     */
+    public void drawBackground(DrawContext context, Screen screen) {
+        context.fill(this.itemListStartX, 0, screen.width, screen.height, 0x66404040);
+    }
+
+    /**
+     * Draws the page text.
+     *
+     * @param context The current draw context.
+     */
+    public void drawPageText(DrawContext context) {
+        context.drawCenteredTextWithShadow(
+                MinecraftClient.getInstance().textRenderer,
+                "Page %s of %s".formatted(this.page + 1, this.pageCount + 1),
+                this.pageNumberX,
+                this.pageNumberY,
+                ~0
+        );
+    }
+
+    /**
+     * Draws the item list onto the screen.
+     *
+     * @param screen  The current screen.
+     * @param context The current draw context.
+     * @param mouseX  The current x position of the mouse.
+     * @param mouseY  The current y position of the mouse.
+     */
+    public void drawItemList(Screen screen, DrawContext context, int mouseX, int mouseY) {
+        for (int x = 0; x < this.itemListWidth / this.itemSize; x++) {
+            for (int y = 0; y < this.itemListHeight / this.itemSize; y++) {
+
+                int itemX = this.itemListXOffset + this.itemListStartX + x * this.itemSize;
+                int itemY = this.itemListStartY + y * this.itemSize;
+
+                int itemIndex = this.itemsOnPage * this.page + this.itemsPerRow * y + x;
+
+                if (itemIndex > this.items.size() - 1) {
+                    //context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, 0xFFFF << 16);
+                    continue;
+                }
+
+                //context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, (x % 2 ^ y % 2) == 0 ? 0x55FFFFFF : 0x55 << 24);
+
+                ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack();
+                if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY && mouseY < itemY + this.itemSize) {
+                    this.drawItemTooltip(screen, context, value, mouseX, mouseY);
+                }
+
+                ((HandledScreen<?>) screen).drawItem(context, value, itemX + 1, itemY + 1, "");
+            }
+        }
+    }
+
+    /**
+     * Draws the item tooltip for the hovered item.
+     *
+     * @param screen    The current screen.
+     * @param context   The current draw context.
+     * @param itemStack The itemstack to draw the tooltip for.
+     * @param mouseX    The current x position of the mouse.
+     * @param mouseY    The current y position of the mouse.
+     */
+    public void drawItemTooltip(Screen screen, DrawContext context, ItemStack itemStack, int mouseX, int mouseY) {
+        context.getMatrices().push();
+        context.getMatrices().translate(0.0F, 0.0F, 234.0F);
+        context.drawTooltip(
+                screen.textRenderer,
+                Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemStack),
+                Optional.empty(),
+                mouseX,
+                mouseY
+        );
+        context.getMatrices().pop();
+    }
+
+    /**
+     * Draws the control bar.
+     *
+     * @param context   The current draw context.
+     * @param mouseX    The current x position of the mouse.
+     * @param mouseY    The current y position of the mouse.
+     * @param tickDelta The difference in time between the last tick and now.
+     */
+    public void drawControlBar(DrawContext context, int mouseX, int mouseY, float tickDelta) {
+        this.sortAlphabetical.render(context, mouseX, mouseY, tickDelta);
+        this.sortRarity.render(context, mouseX, mouseY, tickDelta);
+        this.filterRarity.render(context, mouseX, mouseY, tickDelta);
+        this.filterCategory.render(context, mouseX, mouseY, tickDelta);
+        this.filterMuseum.render(context, mouseX, mouseY, tickDelta);
+
+        this.textFieldWidget.render(context, mouseX, mouseY, tickDelta);
     }
 
     @Override
@@ -109,9 +242,9 @@ public class ItemListScreen implements Module {
                 EnumCycleWidget.OnClick.identity(this::sort),
                 alphabeticalSort -> switch (alphabeticalSort) {
                     case NORMAL -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
-                            .getItemNameAlphaNumerical());
+                            .getItemNameAlphanumerical());
                     case REVERSED -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
-                            .getItemNameAlphaNumerical()).reversed();
+                            .getItemNameAlphanumerical()).reversed();
                 }
         );
 
@@ -145,19 +278,17 @@ public class ItemListScreen implements Module {
                 RarityFilter::getText,
                 EnumCycleWidget.OnClick.identity(this::filterAndSort),
                 rarityFilter -> switch (rarityFilter) {
-                    case NO_FILTER ->
-                            i -> RepositoryItemManager.getItem(i).getTier() != RepositoryItem.Tier.UNOBTAINABLE;
-                    case COMMON -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.COMMON;
-                    case UNCOMMON -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.UNCOMMON;
-                    case RARE -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.RARE;
-                    case EPIC -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.EPIC;
-                    case LEGENDARY -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.LEGENDARY;
-                    case MYTHIC -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.MYTHIC;
-                    case SPECIAL -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.SPECIAL
-                            || RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.VERY_SPECIAL;
-                    case ADMIN -> i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.ADMIN;
-                    case UNOBTAINABLE ->
-                            i -> RepositoryItemManager.getItem(i).getTier() == RepositoryItem.Tier.UNOBTAINABLE;
+                    case NO_FILTER -> i -> RepositoryItemManager.getItem(i).getTier() != Tier.UNOBTAINABLE;
+                    case COMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.COMMON;
+                    case UNCOMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNCOMMON;
+                    case RARE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.RARE;
+                    case EPIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.EPIC;
+                    case LEGENDARY -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.LEGENDARY;
+                    case MYTHIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.MYTHIC;
+                    case SPECIAL -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.SPECIAL
+                            || RepositoryItemManager.getItem(i).getTier() == Tier.VERY_SPECIAL;
+                    case ADMIN -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.ADMIN;
+                    case UNOBTAINABLE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNOBTAINABLE;
                 }
         );
 
@@ -184,8 +315,8 @@ public class ItemListScreen implements Module {
                 EnumCycleWidget.OnClick.identity(this::filterAndSort),
                 museumFilter -> switch (museumFilter) {
                     case UNFILTERED -> identifier -> true;
-                    case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).isMuseum();
-                    case NON_MUSEUM -> identifier -> !RepositoryItemManager.getItem(identifier).isMuseum();
+                    case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).canBeInMuseum();
+                    case NON_MUSEUM -> identifier -> !RepositoryItemManager.getItem(identifier).canBeInMuseum();
                 }
         );
 
@@ -206,8 +337,14 @@ public class ItemListScreen implements Module {
         return "itemlist";
     }
 
+    /**
+     * Tests if the item matches the search.
+     *
+     * @param identifier The item id.
+     * @return If the item matcher.
+     */
     private boolean search(Identifier identifier) {
-        RepositoryItem item = RepositoryItemManager.getItem(identifier);
+        SkyblockItem item = RepositoryItemManager.getItem(identifier);
         String content = this.textFieldWidget.getText();
 
         if (content.isBlank()) {
@@ -229,19 +366,46 @@ public class ItemListScreen implements Module {
             return this.identifierMatches(item.getSkyblockId(), inputId);
         }
 
-        if (item.getItemNameAlphaNumerical().toLowerCase().contains(content.toLowerCase())) {
+        if (item.getItemNameAlphanumerical().toLowerCase().contains(content.toLowerCase())) {
             return true;
         }
 
         return item.getTooltipAsString(TooltipContext.BASIC).toLowerCase().contains(content.toLowerCase());
     }
 
+    /**
+     * Checks if the identifier matches the identifier part
+     *
+     * @param identifier     The identifier to test.
+     * @param identifierPart The part to match.
+     * @return If it matches.
+     */
     private boolean identifierMatches(Identifier identifier, String identifierPart) {
         return identifier.getPath().startsWith(identifierPart)
-                || identifier.toString().startsWith(identifierPart);
+                || identifier.toString().startsWith(identifierPart)
+                || identifier.toString().contains(identifierPart);
     }
 
+    /**
+     * Handles a key press.
+     *
+     * @param screen    The current screen.
+     * @param keyCode   The keycode.
+     * @param scanCode  The scancode.
+     * @param modifiers The modifiers.
+     * @return If the input was consumed.
+     */
     private boolean keyPress(Screen screen, int keyCode, int scanCode, int modifiers) {
+        if (keyCode == InputUtil.GLFW_KEY_ESCAPE
+                || (!this.textFieldWidget.isFocused() && MinecraftClient
+                .getInstance()
+                .options
+                .inventoryKey.matchesKey(
+                        keyCode,
+                        scanCode
+                ))) {
+            return true;
+        }
         boolean b = !this.textFieldWidget.keyPressed(keyCode, scanCode, modifiers);
         if (this.textFieldWidget.isFocused()) {
             return false;
@@ -250,6 +414,14 @@ public class ItemListScreen implements Module {
         return b;
     }
 
+    /**
+     * Handles a mouse click onto the screen.
+     *
+     * @param screen The current screen.
+     * @param mouseX The current x position of the mouse.
+     * @param mouseY The current y position of the mouse.
+     * @param button The button that was clicked.
+     */
     private void mouseClick(Screen screen, double mouseX, double mouseY, int button) {
         this.leftButton.mouseClicked(mouseX, mouseY, button);
         this.rightButton.mouseClicked(mouseX, mouseY, button);
@@ -263,6 +435,11 @@ public class ItemListScreen implements Module {
         this.textFieldWidget.setFocused(this.textFieldWidget.isMouseOver(mouseX, mouseY));
     }
 
+    /**
+     * Initializes the item list for a screen.
+     *
+     * @param screen The screen.
+     */
     private void init(Screen screen) {
         screen.addSelectableChild(this.textFieldWidget);
         //screen.setInitialFocus(this.textFieldWidget);
@@ -356,34 +533,15 @@ public class ItemListScreen implements Module {
         this.textFieldWidget.setPosition(screen.width / 2 - handledScreen.backgroundWidth / 2, screen.height - 22);
     }
 
-    public void filterAndSort() {
-        if (this.textFieldWidget == null) {
-            return;
-        }
-        this.filter();
-        this.sort();
-    }
-
-    public void sort() {
-        this.items.sort(this.sortRarity.getValue()
-                .thenComparing(this.sortAlphabetical.getValue())
-        );
-    }
-
-    public void filter() {
-        this.items.clear();
-        this.items.addAll(RepositoryItemManager.getAllItems());
-        this.items.removeIf(Predicate.not(this.filterRarity.getValue())
-                .or(Predicate.not(this::search))
-                .or(Predicate.not(this.filterCategory.getValue()))
-                .or(Predicate.not(this.filterMuseum.getValue())));
-        this.pageCount = this.items.size() / Math.max(this.itemsOnPage, 1);
-    }
-
-    public void ensurePageIsValid() {
-        this.page = MathHelper.clamp(this.page, 0, this.pageCount);
-    }
-
+    /**
+     * Renders the modifications onto the screen.
+     *
+     * @param screen    The current screen.
+     * @param context   The current draw context.
+     * @param mouseX    The current x position of the mouse.
+     * @param mouseY    The current y position of the mouse.
+     * @param tickDelta The difference in time between the last call and now.
+     */
     private void render(Screen screen, DrawContext context, int mouseX, int mouseY, float tickDelta) {
         this.drawBackground(context, screen);
 
@@ -398,66 +556,4 @@ public class ItemListScreen implements Module {
         this.drawControlBar(context, mouseX, mouseY, tickDelta);
     }
 
-    public void drawBackground(DrawContext context, Screen screen) {
-        context.fill(this.itemListStartX, 0, screen.width, screen.height, 0x66404040);
-    }
-
-    public void drawPageText(DrawContext context) {
-        context.drawCenteredTextWithShadow(
-                MinecraftClient.getInstance().textRenderer,
-                "Page %s of %s".formatted(this.page + 1, this.pageCount + 1),
-                this.pageNumberX,
-                this.pageNumberY,
-                ~0
-        );
-    }
-
-    public void drawItemList(Screen screen, DrawContext context, int mouseX, int mouseY) {
-        for (int x = 0; x < this.itemListWidth / this.itemSize; x++) {
-            for (int y = 0; y < this.itemListHeight / this.itemSize; y++) {
-
-                int itemX = this.itemListXOffset + this.itemListStartX + x * this.itemSize;
-                int itemY = this.itemListStartY + y * this.itemSize;
-
-                int itemIndex = this.itemsOnPage * this.page + this.itemsPerRow * y + x;
-
-                if (itemIndex > this.items.size() - 1) {
-                    //context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, 0xFFFF << 16);
-                    continue;
-                }
-
-                //context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, (x % 2 ^ y % 2) == 0 ? 0x55FFFFFF : 0x55 << 24);
-
-                ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack();
-                if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY && mouseY < itemY + this.itemSize) {
-                    this.drawItemTooltip(screen, context, value, mouseX, mouseY);
-                }
-
-                ((HandledScreen<?>) screen).drawItem(context, value, itemX + 1, itemY + 1, "");
-            }
-        }
-    }
-
-    public void drawItemTooltip(Screen screen, DrawContext context, ItemStack itemStack, int mouseX, int mouseY) {
-        context.getMatrices().push();
-        context.getMatrices().translate(0.0F, 0.0F, 234.0F);
-        context.drawTooltip(
-                screen.textRenderer,
-                Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemStack),
-                Optional.empty(),
-                mouseX,
-                mouseY
-        );
-        context.getMatrices().pop();
-    }
-
-    public void drawControlBar(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.sortAlphabetical.render(context, mouseX, mouseY, delta);
-        this.sortRarity.render(context, mouseX, mouseY, delta);
-        this.filterRarity.render(context, mouseX, mouseY, delta);
-        this.filterCategory.render(context, mouseX, mouseY, delta);
-        this.filterMuseum.render(context, mouseX, mouseY, delta);
-
-        this.textFieldWidget.render(context, mouseX, mouseY, delta);
-    }
 }

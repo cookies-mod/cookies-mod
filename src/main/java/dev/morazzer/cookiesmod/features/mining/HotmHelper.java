@@ -32,10 +32,39 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Helper to display the powder required in the heart of the mountain menu.
+ */
 @LoadModule("mining/hotm_helper")
 public class HotmHelper implements Module {
-    Map<String, List<Integer>> perks = new LinkedHashMap<>();
-    List<String> gemstonePowder = new LinkedList<>();
+
+    final Map<String, List<Integer>> perks = new LinkedHashMap<>();
+    final List<String> gemstonePowder = new LinkedList<>();
+
+    /**
+     * Updates the constants from the repository.
+     */
+    public void update() {
+        Optional<byte[]> resource = RepositoryManager.getResource("constants/hotm_perks.json");
+        if (resource.isEmpty()) return;
+        String content = new String(resource.get(), StandardCharsets.UTF_8);
+        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(content, JsonObject.class);
+        this.gemstonePowder.clear();
+        this.perks.clear();
+        for (String key : jsonObject.keySet()) {
+            if (key.equals("gemstone")) {
+                JsonArray gemstone = jsonObject.getAsJsonArray(key);
+                for (JsonElement jsonElement : gemstone) {
+                    this.gemstonePowder.add(jsonElement.getAsString());
+                }
+                continue;
+            }
+
+            JsonElement jsonElement = jsonObject.get(key);
+            if (!jsonElement.isJsonArray()) return;
+            this.perks.put(key, GsonUtils.gsonClean.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
+        }
+    }
 
     @Override
     public void load() {
@@ -103,6 +132,17 @@ public class HotmHelper implements Module {
         });
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "mining/hotm_helper";
+    }
+
+    /**
+     * Updates the data in the heart of the mountain for a specific item/slot.
+     *
+     * @param slot      The slot the item is in.
+     * @param itemStack The item stack to update.
+     */
     private void updateSlot(int slot, ItemStack itemStack) {
         if (slot > 53) return;
         if (!itemStack.hasCustomName()) return;
@@ -136,30 +176,4 @@ public class HotmHelper implements Module {
         cookies.putBoolean("gemstone", gemstonePowder.contains(searchName));
     }
 
-    public void update() {
-        Optional<byte[]> resource = RepositoryManager.getResource("constants/hotm_perks.json");
-        if (resource.isEmpty()) return;
-        String content = new String(resource.get(), StandardCharsets.UTF_8);
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(content, JsonObject.class);
-        this.gemstonePowder.clear();
-        this.perks.clear();
-        for (String key : jsonObject.keySet()) {
-            if (key.equals("gemstone")) {
-                JsonArray gemstone = jsonObject.getAsJsonArray(key);
-                for (JsonElement jsonElement : gemstone) {
-                    this.gemstonePowder.add(jsonElement.getAsString());
-                }
-                continue;
-            }
-
-            JsonElement jsonElement = jsonObject.get(key);
-            if (!jsonElement.isJsonArray()) return;
-            this.perks.put(key, GsonUtils.gsonClean.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
-        }
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "mining/hotm_helper";
-    }
 }

@@ -18,6 +18,7 @@ import java.util.List;
 public class ScreenHandlerUpdateEventMixin implements ScreenHandlerUpdateEventAccessor {
 
     @Unique
+    final
     Event<InventoryContentUpdateEvent> cookies$inventoryUpdateEvent = EventFactory.createArrayBacked(
             InventoryContentUpdateEvent.class,
             inventoryUpdateEvents -> (slot, item) -> {
@@ -27,6 +28,14 @@ public class ScreenHandlerUpdateEventMixin implements ScreenHandlerUpdateEventAc
             }
     );
 
+    /**
+     * Called when the slots in a screen handler get updated.
+     *
+     * @param revision    The revision id.
+     * @param stacks      The list of new stacks.
+     * @param cursorStack The stack that is on the cursor.
+     * @param ci          The callback information.
+     */
     @Inject(method = "updateSlotStacks", at = @At("RETURN"))
     public void updateSlotStacks(int revision, List<ItemStack> stacks, ItemStack cursorStack, CallbackInfo ci) {
         for (int i = 0; i < stacks.size(); ++i) {
@@ -34,14 +43,27 @@ public class ScreenHandlerUpdateEventMixin implements ScreenHandlerUpdateEventAc
         }
     }
 
+    /**
+     * Called when the screen handler sets an item in a specific slot.
+     *
+     * @param slot     The slot the item is in.
+     * @param revision The revision id.
+     * @param stack    The stack that was put there.
+     * @param ci       The callback information.
+     */
     @Inject(method = "setStackInSlot", at = @At("RETURN"))
     public void setStackInSlot(int slot, int revision, ItemStack stack, CallbackInfo ci) {
         cookies$inventoryUpdateEvent.invoker().updateInventory(slot, stack);
     }
 
-
+    /**
+     * Gets the event instance for ths screen handler instance.
+     *
+     * @return The event instance.
+     */
     @Override
     public Event<InventoryContentUpdateEvent> cookies$inventoryUpdateEvent() {
         return cookies$inventoryUpdateEvent;
     }
+
 }

@@ -8,6 +8,7 @@ import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
@@ -15,10 +16,16 @@ import org.reflections.util.ConfigurationBuilder;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
+/**
+ * Subcommand to add various methods to the command tree.
+ * These methods must be annotated with the {@linkplain dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint} annotation.
+ */
 @DevSubcommand
 @Slf4j
 public class TestSubcommand extends ClientCommand {
+
     @Override
+    @NotNull
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         LiteralArgumentBuilder<FabricClientCommandSource> subcommand = literal("test");
 
@@ -45,9 +52,17 @@ public class TestSubcommand extends ClientCommand {
                 try {
                     entrypoint.invoke(null);
                 } catch (IllegalAccessException e) {
-                    context.getSource().sendFeedback(CookiesMod.createPrefix(ColorUtils.failColor).append("Failed to access the test method!"));
+                    context
+                            .getSource()
+                            .sendFeedback(CookiesMod
+                                    .createPrefix(ColorUtils.failColor)
+                                    .append("Failed to access the test method!"));
                 } catch (InvocationTargetException e) {
-                    context.getSource().sendFeedback(CookiesMod.createPrefix(ColorUtils.failColor).append("Failed to invoke the target method!"));
+                    context
+                            .getSource()
+                            .sendFeedback(CookiesMod
+                                    .createPrefix(ColorUtils.failColor)
+                                    .append("Failed to invoke the target method!"));
                 } catch (Exception e) {
                     ExceptionHandler.handleException(e);
                 }
@@ -57,4 +72,5 @@ public class TestSubcommand extends ClientCommand {
 
         return subcommand;
     }
+
 }

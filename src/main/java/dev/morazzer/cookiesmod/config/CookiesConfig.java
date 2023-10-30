@@ -2,20 +2,23 @@ package dev.morazzer.cookiesmod.config;
 
 import com.google.gson.annotations.Expose;
 import dev.morazzer.cookiesmod.config.categories.DevCategory;
-import dev.morazzer.cookiesmod.config.categories.dungeons.DungeonCategory;
-import dev.morazzer.cookiesmod.config.categories.farming.GardenCategory;
 import dev.morazzer.cookiesmod.config.categories.GuiCategory;
 import dev.morazzer.cookiesmod.config.categories.ItemListConfig;
-import dev.morazzer.cookiesmod.config.categories.about.AboutCategory;
 import dev.morazzer.cookiesmod.config.categories.ProfileViewerConfig;
+import dev.morazzer.cookiesmod.config.categories.about.AboutCategory;
+import dev.morazzer.cookiesmod.config.categories.dungeons.DungeonCategory;
+import dev.morazzer.cookiesmod.config.categories.farming.GardenCategory;
 import dev.morazzer.cookiesmod.config.categories.mining.MiningCategory;
-import dev.morazzer.cookiesmod.config.categories.waypoints.WaypointCategory;
 import dev.morazzer.cookiesmod.config.system.Config;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import net.minecraft.text.Text;
 
+/**
+ * The config for {@linkplain dev.morazzer.cookiesmod.CookiesMod}.
+ */
 @SuppressWarnings("unused")
 public class CookiesConfig extends Config<CookiesConfig> {
+
     @Expose
     public AboutCategory aboutCategory = new AboutCategory();
 
@@ -52,4 +55,5 @@ public class CookiesConfig extends Config<CookiesConfig> {
                 .append(Text.literal("nea89").styled(style -> style.withColor(ColorUtils.successColor)))
                 .styled(style -> style.withColor(0xababab));
     }
+
 }

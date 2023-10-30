@@ -32,6 +32,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
+/**
+ * The feature to render all waypoints into the world.
+ */
 @LoadModule("waypoints")
 public class WaypointManager implements Module {
 
@@ -42,14 +45,74 @@ public class WaypointManager implements Module {
 
     private static WaypointManager waypointManager;
 
-    public static Optional<WaypointManager> getWaypointManager() {
-        return Optional.ofNullable(waypointManager);
-    }
-
+    /**
+     * Initialize waypoint rendering manager.
+     */
     public WaypointManager() {
         waypointManager = this;
     }
 
+    /**
+     * Get the manager instance.
+     *
+     * @return The instance.
+     */
+    public static Optional<WaypointManager> getWaypointManager() {
+        return Optional.ofNullable(waypointManager);
+    }
+
+    /**
+     * Load all waypoints from a string json object.
+     *
+     * @param waypointsString The json object.
+     */
+    public void loadWaypoints(String waypointsString) {
+        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(waypointsString, JsonObject.class);
+        if (jsonObject.isEmpty()) return;
+
+        JsonArray categories = jsonObject.getAsJsonArray("categories");
+        if (categories == null) return;
+        for (JsonElement categoryElement : categories) {
+            JsonObject category = categoryElement.getAsJsonObject();
+            WaypointGroup group = new WaypointGroup();
+            group.category = UUID.fromString(category.get("uuid").getAsString());
+            group.enabled = category.has("enabled") && category.get("enabled").getAsBoolean();
+            group.area = StreamSupport.stream(category.get("areas").getAsJsonArray().spliterator(), false)
+                    .map(JsonElement::getAsString).map(Area::valueOf).toArray(Area[]::new);
+            group.color = category.has("color") ? new Color(category.get("color")
+                    .getAsInt()) : new Color(ColorUtils.mainColor);
+            group.name = Text.Serializer.fromJson(category.get("name"));
+            group.island = LocationUtils.Islands.valueOfOrUnknown(category.get("island").getAsString());
+            waypointGroupHashMap.put(group.category, group);
+        }
+
+        JsonArray waypoints = jsonObject.getAsJsonArray("waypoints");
+        if (waypoints == null) return;
+        for (JsonElement jsonElement : waypoints) {
+            JsonObject waypointElement = jsonElement.getAsJsonObject();
+            Waypoint waypoint = new Waypoint();
+            waypoint.position = GsonUtils.gsonClean.fromJson(waypointElement.get("position"), Vec3d.class);
+            waypoint.area = waypointElement.has("areas") ? StreamSupport.stream(waypointElement.get("areas")
+                            .getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).map(Area::valueOf)
+                    .toArray(Area[]::new) : new Area[] {};
+            waypoint.enabled = waypointElement.has("enabled") && waypointElement.get("enabled").getAsBoolean();
+            waypoint.category = waypointElement.has("group") ? UUID.fromString(waypointElement.get("group")
+                    .getAsString()) : null;
+            waypoint.name = waypointElement.has("name") ? Text.Serializer.fromJson(waypointElement.get("name")) : null;
+            waypoint.color = waypointElement.has("color") ? new Color(waypointElement.get("color")
+                    .getAsInt()) : new Color(ColorUtils.mainColor);
+
+            if (waypoint.category == null) {
+                groupLess.waypoints.add(waypoint);
+            } else {
+                waypointGroupHashMap.get(waypoint.category).waypoints.add(waypoint);
+            }
+        }
+    }
+
+    /**
+     * Register all waypoint renderers and load the waypoints from the file.
+     */
     @Override
     public void load() {
         try {
@@ -82,11 +145,22 @@ public class WaypointManager implements Module {
         });
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "";
+    }
+
+    /**
+     * Render one waypoint group into the world.
+     *
+     * @param context The world render context.
+     * @param value   The group to render.
+     */
     private void renderGroup(WorldRenderContext context, WaypointGroup value) {
         for (Waypoint waypoint : value.waypoints) {
             Color color = Objects.requireNonNullElse(waypoint.color, value.color);
             double v = waypoint.position.distanceTo(MinecraftClient.getInstance().player != null ? MinecraftClient.getInstance().player.getPos() : Vec3d.ZERO);
-            if (v < 100) {
+            if (v < 0) {
                 Renderer3d.renderFilled(
                         context.matrixStack(),
                         new Color((color.getRGB() & 0xFFFFFF) | 0x99 << 24, true),
@@ -120,52 +194,4 @@ public class WaypointManager implements Module {
         }
     }
 
-    public void loadWaypoints(String waypointsString) {
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(waypointsString, JsonObject.class);
-        if (jsonObject.isEmpty()) return;
-
-        JsonArray categories = jsonObject.getAsJsonArray("categories");
-        if (categories == null) return;
-        for (JsonElement categoryElement : categories) {
-            JsonObject category = categoryElement.getAsJsonObject();
-            WaypointGroup group = new WaypointGroup();
-            group.category = UUID.fromString(category.get("uuid").getAsString());
-            group.enabled = category.has("enabled") && category.get("enabled").getAsBoolean();
-            group.area = StreamSupport.stream(category.get("areas").getAsJsonArray().spliterator(), false)
-                    .map(JsonElement::getAsString).map(Area::valueOf).toArray(Area[]::new);
-            group.color = category.has("color") ? new Color(category.get("color")
-                    .getAsInt()) : new Color(ColorUtils.mainColor);
-            group.name = Text.Serializer.fromJson(category.get("name"));
-            group.island = LocationUtils.Islands.valueOfOrUnknown(category.get("island").getAsString());
-            waypointGroupHashMap.put(group.category, group);
-        }
-
-        JsonArray waypoints = jsonObject.getAsJsonArray("waypoints");
-        if (waypoints == null) return;
-        for (JsonElement jsonElement : waypoints) {
-            JsonObject waypointElement = jsonElement.getAsJsonObject();
-            Waypoint waypoint = new Waypoint();
-            waypoint.position = GsonUtils.gsonClean.fromJson(waypointElement.get("position"), Vec3d.class);
-            waypoint.area = waypointElement.has("areas") ? StreamSupport.stream(waypointElement.get("areas")
-                            .getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).map(Area::valueOf)
-                    .toArray(Area[]::new) : new Area[]{};
-            waypoint.enabled = waypointElement.has("enabled") && waypointElement.get("enabled").getAsBoolean();
-            waypoint.category = waypointElement.has("group") ? UUID.fromString(waypointElement.get("group")
-                    .getAsString()) : null;
-            waypoint.name = waypointElement.has("name") ? Text.Serializer.fromJson(waypointElement.get("name")) : null;
-            waypoint.color = waypointElement.has("color") ? new Color(waypointElement.get("color")
-                    .getAsInt()) : new Color(ColorUtils.mainColor);
-
-            if (waypoint.category == null) {
-                groupLess.waypoints.add(waypoint);
-            } else {
-                waypointGroupHashMap.get(waypoint.category).waypoints.add(waypoint);
-            }
-        }
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "";
-    }
 }

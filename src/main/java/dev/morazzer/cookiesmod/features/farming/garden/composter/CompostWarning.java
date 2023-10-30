@@ -14,6 +14,9 @@ import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import lombok.Getter;
 import net.minecraft.client.network.PlayerListEntry;
 
+/**
+ * Composter warning to warn the player before it runs empty.
+ */
 @LoadModule("farming/garden/compost_warning")
 public class CompostWarning implements Module {
 
@@ -38,6 +41,16 @@ public class CompostWarning implements Module {
         PlayerListUpdateEvent.UPDATE_NAME.register(this::updateNames);
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "farming/garden/compost_warning";
+    }
+
+    /**
+     * Checks whether the current player list entry is related to the composter.
+     *
+     * @param entry The entry to check.
+     */
     private void updateNames(PlayerListEntry entry) {
         if (!Garden.isOnGarden()) return;
         if (!TabUtils.isInRange(2, 7, 11, entry)) return;
@@ -78,8 +91,4 @@ public class CompostWarning implements Module {
         }
     }
 
-    @Override
-    public String getIdentifierPath() {
-        return "farming/garden/compost_warning";
-    }
 }

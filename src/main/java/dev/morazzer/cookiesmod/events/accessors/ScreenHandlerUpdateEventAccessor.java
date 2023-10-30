@@ -4,6 +4,9 @@ import dev.morazzer.cookiesmod.events.api.InventoryContentUpdateEvent;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.screen.ScreenHandler;
 
+/**
+ * Accessor to get the inventory content update event for a screen.
+ */
 public interface ScreenHandlerUpdateEventAccessor {
 
     static ScreenHandlerUpdateEventAccessor getInventoryUpdateEventAccessor(ScreenHandler screen) {

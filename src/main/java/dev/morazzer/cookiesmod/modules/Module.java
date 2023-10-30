@@ -3,26 +3,52 @@ package dev.morazzer.cookiesmod.modules;
 import dev.morazzer.cookiesmod.CookiesMod;
 import net.minecraft.util.Identifier;
 
+/**
+ * A generic module to allow easy enabling.
+ */
 public interface Module {
-	Identifier MODULE_ROOT = CookiesMod.ROOT.withPath("modules/");
 
-	void load() ;
+    Identifier MODULE_ROOT = CookiesMod.ROOT.withPath("modules/");
 
-	default void unload() {
-	}
+    /**
+     * Loads a module.
+     */
+    void load();
 
-	default boolean shouldLoad() {
-		return true;
-	}
+    /**
+     * Unloads a module.
+     */
+    default void unload() {}
 
-	default Identifier getIdentifier() {
-		return MODULE_ROOT.withSuffixedPath(getIdentifierPath());
-	}
+    /**
+     * @return Whether the module should be loaded.
+     */
+    default boolean shouldLoad() {
+        return true;
+    }
 
-	String getIdentifierPath();
+    /**
+     * Gets the identifier of the module.
+     *
+     * @return The identifier.
+     */
+    default Identifier getIdentifier() {
+        return MODULE_ROOT.withSuffixedPath(getIdentifierPath());
+    }
 
-	default void reload() {
-		unload();
-		load();
-	}
+    /**
+     * Gets the identifier path.
+     *
+     * @return The identifier path.
+     */
+    String getIdentifierPath();
+
+    /**
+     * Reloads a module.
+     */
+    default void reload() {
+        unload();
+        load();
+    }
+
 }

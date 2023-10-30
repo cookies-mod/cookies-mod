@@ -17,9 +17,18 @@ import java.util.Optional;
 @Slf4j
 public class RenderUtils {
 
-
     private static final int ALPHA = 0xff000000;
 
+    /**
+     * Renders a filled rectangle.
+     *
+     * @param drawContext The current draw context.
+     * @param x           The x coordinate.
+     * @param y           The y coordinate.
+     * @param width       The width.
+     * @param height      The height.
+     * @param shadow      If the rectangle has a shadow.
+     */
     public static void renderRectangle(DrawContext drawContext, int x, int y, int width, int height, boolean shadow) {
         int main = ALPHA | 0x202026;
 
@@ -37,13 +46,35 @@ public class RenderUtils {
         }
     }
 
+    /**
+     * Gets the text renderer or null.
+     *
+     * @return The text renderer.
+     */
     private static TextRenderer getTextRendererOrNull() {
         return Optional.of(MinecraftClient.getInstance()).map(client -> client.textRenderer).orElse(null);
     }
 
+    /**
+     * Draws a centered text with a max width.
+     *
+     * @param drawContext The current draw context.
+     * @param text        The text to render.
+     * @param width       The width of the text.
+     * @param centerX     The center x coordinate.
+     * @param y           The y coordinate.
+     * @param color       The color of the text.
+     * @param shadow      If the text has shadow.
+     */
     public static void renderCenteredTextWithMaxWidth(
-            @NotNull DrawContext drawContext, @NotNull Text text, int width, int centerX, int y, int color,
-            boolean shadow) {
+            @NotNull DrawContext drawContext,
+            @NotNull Text text,
+            int width,
+            int centerX,
+            int y,
+            int color,
+            boolean shadow
+    ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
             return;
@@ -58,8 +89,26 @@ public class RenderUtils {
         renderTextScaled(drawContext, text, scale, centerX - newLength / 2, y - fontHeight / 2, color, shadow);
     }
 
+    /**
+     * Draws a text with a max width.
+     *
+     * @param drawContext The current draw context.
+     * @param text        The text to render.
+     * @param width       The width of the text.
+     * @param x           The x coordinate.
+     * @param y           The y coordinate.
+     * @param color       The color of the text.
+     * @param shadow      If the text has shadow.
+     */
     public static void renderTextWithMaxWidth(
-            @NotNull DrawContext drawContext, @NotNull Text text, int width, int x, int y, int color, boolean shadow) {
+            @NotNull DrawContext drawContext,
+            @NotNull Text text,
+            int width,
+            int x,
+            int y,
+            int color,
+            boolean shadow
+    ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
             return;
@@ -72,9 +121,26 @@ public class RenderUtils {
         renderTextScaled(drawContext, text, scale, x, y, color, shadow);
     }
 
+    /**
+     * Draws a text at a scale.
+     *
+     * @param drawContext The current draw context.
+     * @param text        The text to render.
+     * @param scaleFactor The scale to render the text at.
+     * @param x           The x coordinate.
+     * @param y           The y coordinate.
+     * @param color       The color of the text.
+     * @param shadow      If the text has shadow.
+     */
     public static void renderTextScaled(
-            @NotNull DrawContext drawContext, @NotNull Text text, float scaleFactor, int x, int y, int color,
-            boolean shadow) {
+            @NotNull DrawContext drawContext,
+            @NotNull Text text,
+            float scaleFactor,
+            int x,
+            int y,
+            int color,
+            boolean shadow
+    ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
             return;
@@ -85,8 +151,24 @@ public class RenderUtils {
         drawContext.getMatrices().pop();
     }
 
+    /**
+     * Renders a centered text at a scale.
+     *
+     * @param drawContext The current draw context.
+     * @param text        The text to render.
+     * @param scaleFactor The scale to render the text at.
+     * @param x           The center x coordinate.
+     * @param y           The y coordinate.
+     * @param color       The color of the text.
+     */
     public static void renderTextCenteredScaled(
-            @NotNull DrawContext drawContext, @NotNull Text text, float scaleFactor, int x, int y, int color) {
+            @NotNull DrawContext drawContext,
+            @NotNull Text text,
+            float scaleFactor,
+            int x,
+            int y,
+            int color
+    ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
             return;
@@ -103,9 +185,28 @@ public class RenderUtils {
         drawContext.getMatrices().pop();
     }
 
+    /**
+     * Renders a text into the world as a billboard.
+     *
+     * @param matrixStack            The current matrix stack.
+     * @param position               The position.
+     * @param text                   The text.
+     * @param vertexConsumerProvider The vertex consumer.
+     * @param size                   The size of the text.
+     * @param center                 If the text should be centered.
+     * @param throughWalls           If the text should be visible through walls.
+     * @param color                  The color of the text.
+     */
     public static void renderTextInWorld(
-            MatrixStack matrixStack, Vec3d position, Text text, VertexConsumerProvider vertexConsumerProvider,
-            float size, boolean center, boolean throughWalls, int color) {
+            MatrixStack matrixStack,
+            Vec3d position,
+            Text text,
+            VertexConsumerProvider vertexConsumerProvider,
+            float size,
+            boolean center,
+            boolean throughWalls,
+            int color
+    ) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         Camera camera = minecraftClient.gameRenderer.getCamera();
         if (!camera.isReady() || minecraftClient.getEntityRenderDispatcher().gameOptions == null) {
@@ -123,7 +224,7 @@ public class RenderUtils {
 
 
         float backgroundOpacity = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25f);
-        int background = (int)(backgroundOpacity * 255.0f) << 24;
+        int background = (int) (backgroundOpacity * 255.0f) << 24;
 
         textRenderer.draw(
                 text,
@@ -133,10 +234,11 @@ public class RenderUtils {
                 false,
                 matrixStack.peek().getPositionMatrix(),
                 vertexConsumerProvider,
-                throughWalls ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL,
+                TextRenderer.TextLayerType.SEE_THROUGH,
                 background,
                 0xF000F0
         );
         matrixStack.pop();
     }
+
 }

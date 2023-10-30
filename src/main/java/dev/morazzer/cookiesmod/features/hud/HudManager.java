@@ -10,17 +10,25 @@ import net.minecraft.util.Identifier;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The hud manager to render all hud elements.
+ */
 @LoadModule("hud/manager")
 public class HudManager implements Module {
 
+    private static final ConcurrentHashMap<Identifier, HudElement> elementMap = new ConcurrentHashMap<>();
     @Getter
     private static HudManager instance;
-    private static final ConcurrentHashMap<Identifier, HudElement> elementMap = new ConcurrentHashMap<>();
 
-    public Iterable<HudElement> getElements() {
-        return elementMap.values();
+    public HudManager() {
+        instance = this;
     }
 
+    /**
+     * Registers an hud element to be rendered.
+     *
+     * @param hudElement The hud element to add.
+     */
     public static void registerHudElement(HudElement hudElement) {
         HudElement put = elementMap.put(hudElement.getIdentifier(), hudElement);
         if (put != null) {
@@ -28,8 +36,20 @@ public class HudManager implements Module {
         }
     }
 
-    public HudManager() {
-        instance = this;
+    /**
+     * Runs the {@linkplain HudElement#init()} method for all registered elements.
+     */
+    public static void init() {
+        getInstance().getElements().forEach(HudElement::init);
+    }
+
+    /**
+     * Gets all currently registered elements.
+     *
+     * @return An iterable list of all hud elements.
+     */
+    public Iterable<HudElement> getElements() {
+        return elementMap.values();
     }
 
     @Override
@@ -37,6 +57,18 @@ public class HudManager implements Module {
         HudRenderCallback.EVENT.register(this::renderElements);
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "hud/manager";
+    }
+
+    /**
+     * Renders all hud elements onto the screen,
+     * if the {@linkplain dev.morazzer.cookiesmod.features.hud.HudEditor} is not open.
+     *
+     * @param drawContext The current draw context.
+     * @param tickDelta   The difference in time between the last tick and now.
+     */
     private void renderElements(DrawContext drawContext, double tickDelta) {
         if (MinecraftClient.getInstance().currentScreen instanceof HudEditor) {
             return;
@@ -44,12 +76,4 @@ public class HudManager implements Module {
         getElements().forEach(hudElement -> hudElement.renderWithTests(drawContext, (float) tickDelta));
     }
 
-    public static void init() {
-        getInstance().getElements().forEach(HudElement::init);
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "hud/manager";
-    }
 }

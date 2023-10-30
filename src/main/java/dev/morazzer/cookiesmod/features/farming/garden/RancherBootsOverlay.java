@@ -2,8 +2,8 @@ package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds;
-import dev.morazzer.cookiesmod.features.repository.items.RepositoryItem;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.DevUtils;
@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Feature to render a list of speeds in the rancher boots overlay.
+ */
 @LoadModule("garden/optimal_speed")
 public class RancherBootsOverlay implements Module {
 
@@ -53,6 +56,31 @@ public class RancherBootsOverlay implements Module {
         ScreenEvents.BEFORE_INIT.register(this::openScreen);
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "garden/optimal_speed";
+    }
+
+    /**
+     * Checks whether the current sign is a valid rancher boots sign.
+     *
+     * @param screen The sign.
+     * @return Whether the sign is a rancher boots sign.
+     */
+    private boolean isRancherBootsScreen(SignEditScreen screen) {
+        return screen.messages[1].trim().equals("^^^^^^")
+                && screen.messages[2].trim().equals("Set your")
+                && screen.messages[3].trim().equals("speed cap!");
+    }
+
+    /**
+     * Checks whether the newly opened screen is a sign and initialize the rendering if so.
+     *
+     * @param minecraftClient The minecraft client.
+     * @param screen          The screen.
+     * @param width           The width of the window.
+     * @param height          The height of the window.
+     */
     private void openScreen(MinecraftClient minecraftClient, Screen screen, int width, int height) {
         if (!(screen instanceof SignEditScreen)) {
             return;
@@ -83,7 +111,7 @@ public class RancherBootsOverlay implements Module {
             ).add(integerIdentifierSimpleEntry.getValue()));
             tempMap.forEach((integer, identifiers) -> {
                 Text text = createText(
-                        identifiers.stream().map(RepositoryItemManager::getItem).map(RepositoryItem::getName)
+                        identifiers.stream().map(RepositoryItemManager::getItem).map(SkyblockItem::getName)
                                 .map(MutableText::getString).collect(Collectors.joining(", ")),
                         integer
                 );
@@ -101,10 +129,17 @@ public class RancherBootsOverlay implements Module {
             }
         }
 
-        ScreenEvents.afterRender(screen).register(this::render);
+        ScreenEvents.afterRender(screen).register(this::renderOverlay);
         ScreenMouseEvents.afterMouseClick(screen).register(this::mouseClick);
     }
 
+    /**
+     * Creates a text for the crop and speed.
+     *
+     * @param crop  The crop.
+     * @param speed The speed.
+     * @return The text.
+     */
     private Text createText(String crop, int speed) {
         MutableText text = Text.empty();
 
@@ -116,7 +151,16 @@ public class RancherBootsOverlay implements Module {
         return text;
     }
 
-    private void render(Screen screen, DrawContext context, int mouseX, int mouseY, float tickDelta) {
+    /**
+     * Renders the speed list onto the sign.
+     *
+     * @param screen    The screen.
+     * @param context   The current draw context.
+     * @param mouseX    The current x position of the mouse.
+     * @param mouseY    The current y position of the mouse.
+     * @param tickDelta The difference in time between the last tick and now.
+     */
+    private void renderOverlay(Screen screen, DrawContext context, int mouseX, int mouseY, float tickDelta) {
         if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
         if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds.getValue()) {
             return;
@@ -154,9 +198,6 @@ public class RancherBootsOverlay implements Module {
                 formatting = Formatting.WHITE;
             }
 
-            //context.fill(translatedMouseX, translatedMouseY, translatedMouseX + 10, translatedMouseY + 10, ~0);
-
-
             context.drawText(
                     screen.textRenderer,
                     entry.text.copy().formatted(formatting),
@@ -179,6 +220,14 @@ public class RancherBootsOverlay implements Module {
         context.getMatrices().pop();
     }
 
+    /**
+     * Checks whether the mouse was clicked on a text and change the speed to it if so.
+     *
+     * @param screen The screen.
+     * @param mouseX The current x position of the mouse.
+     * @param mouseY The current y position of the mouse.
+     * @param button The button that was clicked.
+     */
     private void mouseClick(Screen screen, double mouseX, double mouseY, int button) {
         if (button != 0) {
             return;
@@ -209,18 +258,11 @@ public class RancherBootsOverlay implements Module {
         signEditScreen.messages[0] = String.valueOf(speedEntry.speed);
     }
 
-    public boolean isRancherBootsScreen(SignEditScreen screen) {
-        return screen.messages[1].trim().equals("^^^^^^")
-                && screen.messages[2].trim().equals("Set your")
-                && screen.messages[3].trim().equals("speed cap!");
+    private record SpeedEntry(
+            List<Identifier> identifiers,
+            Text text,
+            int speed
+    ) {
     }
 
-
-    @Override
-    public String getIdentifierPath() {
-        return "garden/optimal_speed";
-    }
-
-    private record SpeedEntry(List<Identifier> identifiers, Text text, int speed) {
-    }
 }

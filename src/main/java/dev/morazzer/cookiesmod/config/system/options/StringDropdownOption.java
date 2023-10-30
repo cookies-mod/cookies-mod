@@ -9,43 +9,58 @@ import joptsimple.internal.Strings;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+/**
+ * A dropdown menu in the config which gets its values from an enum instance.
+ */
 @Getter
 @Slf4j
 public class StringDropdownOption extends Option<String, StringDropdownOption> {
-	private final Set<String> possibleValues;
 
-	public StringDropdownOption(Text name, Text description, String value, String... possibleValues) {
-		super(name, description, value);
-		this.possibleValues = Set.of(possibleValues);
-	}
+    private final Set<String> possibleValues;
 
-	@Override
-	public void load(JsonElement jsonElement) {
-		if (!jsonElement.isJsonPrimitive()) {
-			log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(possibleValues, ", "), jsonElement.isJsonObject() ? "json-object" : "json-array"));
-			return;
-		}
-		if (!jsonElement.getAsJsonPrimitive().isString()) {
-			log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(possibleValues, ", "), jsonElement.getAsString()));
-			return;
-		}
-		if (!possibleValues.contains(jsonElement.getAsString())) {
-			log.warn("Error while loading config value, expected any of [%s] found %s".formatted(Strings.join(possibleValues, ", "), jsonElement.getAsString()));
-			return;
-		}
-		this.value = jsonElement.getAsString();
-	}
+    public StringDropdownOption(Text name, Text description, String value, String... possibleValues) {
+        super(name, description, value);
+        this.possibleValues = Set.of(possibleValues);
+    }
 
-	@Override
-	public JsonElement save() {
-		return new JsonPrimitive(this.value);
-	}
+    @Override
+    public void load(@NotNull JsonElement jsonElement) {
+        if (!jsonElement.isJsonPrimitive()) {
+            log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(
+                    possibleValues,
+                    ", "
+            ), jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            return;
+        }
+        if (!jsonElement.getAsJsonPrimitive().isString()) {
+            log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(
+                    possibleValues,
+                    ", "
+            ), jsonElement.getAsString()));
+            return;
+        }
+        if (!possibleValues.contains(jsonElement.getAsString())) {
+            log.warn("Error while loading config value, expected any of [%s] found %s".formatted(Strings.join(
+                    possibleValues,
+                    ", "
+            ), jsonElement.getAsString()));
+            return;
+        }
+        this.value = jsonElement.getAsString();
+    }
 
-	@Override
-	public ConfigOptionEditor<String, StringDropdownOption> getEditor() {
-		return new StringDropdownEditor(this);
-	}
+    @Override
+    public @NotNull JsonElement save() {
+        return new JsonPrimitive(this.value);
+    }
+
+    @Override
+    public @NotNull ConfigOptionEditor<String, StringDropdownOption> getEditor() {
+        return new StringDropdownEditor(this);
+    }
+
 }

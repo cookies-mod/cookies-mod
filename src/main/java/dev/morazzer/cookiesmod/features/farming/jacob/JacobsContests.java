@@ -22,14 +22,29 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.StreamSupport;
 
+/**
+ * The manager for jacobs contests to provide information about what crop is in what contest.
+ */
 @LoadModule("farming/contests")
 @Slf4j
 public class JacobsContests implements Module {
+
     @Getter
     private static JacobsContests instance;
 
     @Getter
     private LinkedList<Contest> contests = new LinkedList<>();
+
+    /**
+     * Gets the next n number of contests, including currently active ones.
+     *
+     * @param amount The amount to get.
+     * @return The contests.
+     */
+    public List<Contest> getNextNContestsActiveOrFuture(int amount) {
+        return this.contests.stream().filter(contest -> contest.time().isCurrentDay() || contest.time().isInFuture())
+                .limit(amount).toList();
+    }
 
     @Override
     public void load() {
@@ -50,6 +65,14 @@ public class JacobsContests implements Module {
         this.updateContests();
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "farming/contests";
+    }
+
+    /**
+     * Updates the contests to include newly added ones.
+     */
     private void updateContests() {
         log.info("Refreshing jacob contests");
         if (!contests.isEmpty()) {
@@ -67,7 +90,6 @@ public class JacobsContests implements Module {
 
         JsonObject contests = responseObject.getAsJsonObject("contests");
         for (String key : contests.keySet()) {
-            //noinspection SuspiciousToArrayCall
             Crop[] crops = StreamSupport.stream(contests.getAsJsonArray(key).spliterator(), false)
                     .filter(JsonElement::isJsonPrimitive)
                     .map(JsonElement::getAsJsonPrimitive)
@@ -85,13 +107,4 @@ public class JacobsContests implements Module {
 
     }
 
-    public List<Contest> getNextNContestsActiveOrFuture(int amount) {
-        return this.contests.stream().filter(contest -> contest.time().isCurrentDay() || contest.time().isInFuture())
-                .limit(amount).toList();
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "farming/contests";
-    }
 }

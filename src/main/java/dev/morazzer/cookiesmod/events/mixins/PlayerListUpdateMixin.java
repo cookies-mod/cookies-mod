@@ -10,29 +10,38 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Yes this accesses direct packet processing, but it doesn't modify or send anything to the server.
+ * Yes, this accesses direct packet processing, but it doesn't modify or send anything to the server.
  */
 @Mixin(ClientPlayNetworkHandler.class)
 public class PlayerListUpdateMixin {
 
-	@Inject(method = "handlePlayerListAction", at = @At("RETURN"))
-	public void addEntry(
-			PlayerListS2CPacket.Action action, PlayerListS2CPacket.Entry receivedEntry, PlayerListEntry currentEntry,
-			CallbackInfo ci) {
-		if (action == PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME) {
-			PlayerListUpdateEvent.UPDATE_NAME.invoker().update(currentEntry);
-			return;
-		}
+    /**
+     * Called when the client receives a player list update packet.
+     *
+     * @param action        The action that happens.
+     * @param receivedEntry The entry the game received.
+     * @param currentEntry  The old entry the game had.
+     * @param ci            The callback information.
+     */
+    @Inject(method = "handlePlayerListAction", at = @At("RETURN"))
+    public void addEntry(
+            PlayerListS2CPacket.Action action, PlayerListS2CPacket.Entry receivedEntry, PlayerListEntry currentEntry,
+            CallbackInfo ci
+    ) {
+        if (action == PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME) {
+            PlayerListUpdateEvent.UPDATE_NAME.invoker().update(currentEntry);
+            return;
+        }
 
-		if (action != PlayerListS2CPacket.Action.UPDATE_LISTED) {
-			return;
-		}
+        if (action != PlayerListS2CPacket.Action.UPDATE_LISTED) {
+            return;
+        }
 
-		if (receivedEntry.listed()) {
-			PlayerListUpdateEvent.ADD_PLAYERS.invoker().update(currentEntry);
-			return;
-		}
-		PlayerListUpdateEvent.REMOVE_PLAYERS.invoker().update(currentEntry);
-	}
+        if (receivedEntry.listed()) {
+            PlayerListUpdateEvent.ADD_PLAYERS.invoker().update(currentEntry);
+            return;
+        }
+        PlayerListUpdateEvent.REMOVE_PLAYERS.invoker().update(currentEntry);
+    }
 
 }

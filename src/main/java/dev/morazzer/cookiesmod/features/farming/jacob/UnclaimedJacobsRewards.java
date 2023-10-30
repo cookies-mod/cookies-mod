@@ -13,8 +13,12 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
+/**
+ * Highlights the unclaimed jacobs contest in the jacob contest gui.
+ */
 @LoadModule("farming/unclaimed_contests")
 public class UnclaimedJacobsRewards implements Module {
+
     @Override
     public void load() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
@@ -50,4 +54,5 @@ public class UnclaimedJacobsRewards implements Module {
     public String getIdentifierPath() {
         return "farming/unclaimed_contests";
     }
+
 }

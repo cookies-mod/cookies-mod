@@ -6,8 +6,13 @@ import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * An editor to manage waypoints in the config.
+ */
 public class WaypointEditor extends ConfigOptionEditor<Object, WaypointOption> {
+
     LocationUtils.Islands islands = LocationUtils.Islands.HUB;
 
     public WaypointEditor(WaypointOption option) {
@@ -29,11 +34,10 @@ public class WaypointEditor extends ConfigOptionEditor<Object, WaypointOption> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
+    public void render(@NotNull DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
         RenderUtils.renderRectangle(drawContext, 0, 0, optionWidth - 2, getHeight(optionWidth) - 2, true);
 
         RenderUtils.renderTextCenteredScaled(drawContext, Text.literal("Waypoints"), 2, optionWidth / 2, 10, -1);
-
-
     }
+
 }
