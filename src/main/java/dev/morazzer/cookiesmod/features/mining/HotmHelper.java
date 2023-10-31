@@ -52,7 +52,7 @@ public class HotmHelper implements Module {
         Optional<byte[]> resource = RepositoryManager.getResource("constants/hotm_perks.json");
         if (resource.isEmpty()) return;
         String content = new String(resource.get(), StandardCharsets.UTF_8);
-        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(content, JsonObject.class);
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(content, JsonObject.class);
         this.gemstonePowder.clear();
         this.perks.clear();
         for (String key : jsonObject.keySet()) {
@@ -66,7 +66,7 @@ public class HotmHelper implements Module {
 
             JsonElement jsonElement = jsonObject.get(key);
             if (!jsonElement.isJsonArray()) return;
-            this.perks.put(key, JsonUtils.gsonClean.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
+            this.perks.put(key, JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
         }
     }
 

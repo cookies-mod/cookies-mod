@@ -126,7 +126,7 @@ public class FetchurHud extends HudElement {
             return;
         }
         String path = new String(resource.get());
-        JsonArray jsonElements = JsonUtils.gsonClean.fromJson(path, JsonArray.class);
+        JsonArray jsonElements = JsonUtils.CLEAN_GSON.fromJson(path, JsonArray.class);
         for (JsonElement jsonElement : jsonElements) {
             if (!jsonElement.isJsonPrimitive()) {
                 continue;

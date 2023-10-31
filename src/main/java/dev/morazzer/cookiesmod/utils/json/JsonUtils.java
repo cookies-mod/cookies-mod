@@ -9,18 +9,16 @@ import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import java.lang.reflect.Field;
 
 /**
- * Static gson instances.
+ * Various constants and methods related to json/gson.
  */
 public class JsonUtils {
 
-    public static final Gson gson = new GsonBuilder()
+    public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
 
-    public static final Gson gsonClean = new Gson();
-
-    public static final JsonObject emptyObject = new JsonObject();
+    public static final Gson CLEAN_GSON = new Gson();
 
     /**
      * Writes an object to a {@linkplain com.google.gson.JsonObject}.
@@ -37,7 +35,7 @@ public class JsonUtils {
             } else {
                 jsonObject.add(
                         field.getName(),
-                        ExceptionHandler.removeThrows(() -> gsonClean.toJsonTree(field.get(object)))
+                        ExceptionHandler.removeThrows(() -> CLEAN_GSON.toJsonTree(field.get(object)))
                 );
             }
         }
@@ -64,7 +62,7 @@ public class JsonUtils {
             } else {
                 if (!jsonObject.has(field.getName())) continue;
                 try {
-                    field.set(instance, gsonClean.fromJson(jsonObject.get(field.getName()), field.getType()));
+                    field.set(instance, CLEAN_GSON.fromJson(jsonObject.get(field.getName()), field.getType()));
                 } catch (IllegalAccessException e) {
                     ExceptionHandler.handleException(new RuntimeException(field
                             .getDeclaringClass()

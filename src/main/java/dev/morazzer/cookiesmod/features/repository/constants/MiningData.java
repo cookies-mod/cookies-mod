@@ -38,7 +38,7 @@ public class MiningData {
      * @param bytes The json object as a byte array.
      */
     private void parseDrillsAndParts(byte[] bytes) {
-        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
                 new String(bytes, StandardCharsets.UTF_8),
                 JsonObject.class
         );

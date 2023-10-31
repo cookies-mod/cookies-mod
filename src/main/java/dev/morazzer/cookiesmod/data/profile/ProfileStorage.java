@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 public class ProfileStorage {
 
-    static final Path profileDataFolder = Path.of("config/cookiesmod/profiles");
+    private static final Path PROFILE_DATA_FOLDER = Path.of("config/cookiesmod/profiles");
     private static final Identifier SHOW_LOADING_SAVING_MESSAGES = DevUtils.createIdentifier(
             "storage/profiles/show_load_save");
     private static ProfileData profileData;
@@ -50,7 +50,7 @@ public class ProfileStorage {
             CookiesUtils.sendMessage("Saving " + profileData.getProfileUuid());
         }
 
-        Path playerDirectory = profileDataFolder.resolve(profileData.getPlayerUuid().toString());
+        Path playerDirectory = PROFILE_DATA_FOLDER.resolve(profileData.getPlayerUuid().toString());
         Path profileFile = playerDirectory.resolve(profileData.getProfileUuid() + ".json");
 
         ExceptionHandler.removeThrows(() -> Files.createDirectories(profileFile.getParent()));
@@ -58,7 +58,7 @@ public class ProfileStorage {
         ProfileDataMigrations.writeLatest(jsonObject);
         ExceptionHandler.removeThrows(() -> Files.writeString(
                 profileFile,
-                JsonUtils.gson.toJson(jsonObject),
+                JsonUtils.CLEAN_GSON.toJson(jsonObject),
                 StandardCharsets.UTF_8,
                 StandardOpenOption.TRUNCATE_EXISTING,
                 StandardOpenOption.CREATE
@@ -77,7 +77,7 @@ public class ProfileStorage {
             CookiesUtils.sendMessage("Loading " + SkyblockUtils.getLastProfileId().get());
         }
 
-        Path playerDirectory = profileDataFolder.resolve(PlayerStorage.getCurrentPlayer().get().toString());
+        Path playerDirectory = PROFILE_DATA_FOLDER.resolve(PlayerStorage.getCurrentPlayer().get().toString());
         Path profileFile = playerDirectory.resolve(SkyblockUtils.getLastProfileId().get() + ".json");
 
         if (!Files.exists(profileFile)) {
@@ -89,7 +89,7 @@ public class ProfileStorage {
             return;
         }
 
-        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
                 profileFile,
                 StandardCharsets.UTF_8
         )), JsonObject.class);

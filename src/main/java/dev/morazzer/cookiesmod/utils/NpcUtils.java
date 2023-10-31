@@ -63,7 +63,7 @@ public class NpcUtils {
         Collection<Property> textures = playerEntity.getGameProfile().getProperties().get("textures");
         for (Property texture : textures) {
             String value = new String(Base64.getDecoder().decode(texture.value()));
-            JsonObject jsonObject = JsonUtils.gsonClean.fromJson(value, JsonObject.class);
+            JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(value, JsonObject.class);
             CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
             CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append("Base64 encoded profile: ")
                     .append(Text.literal("[COPY]")

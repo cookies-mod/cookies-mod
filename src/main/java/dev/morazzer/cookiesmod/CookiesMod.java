@@ -106,7 +106,7 @@ public class CookiesMod implements ModInitializer {
                     ExceptionHandler.wrap(closeableHttpResponse -> {
                         try {
                             String body = new String(closeableHttpResponse.getEntity().getContent().readAllBytes());
-                            jsonArrayAtomicReference.set(JsonUtils.gsonClean.fromJson(body, JsonArray.class));
+                            jsonArrayAtomicReference.set(JsonUtils.CLEAN_GSON.fromJson(body, JsonArray.class));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

@@ -36,7 +36,7 @@ public class RepositoryRecipeManager {
         try (Stream<Path> list = Files.list(recipes)) {
             list.forEach(path -> {
                 try {
-                    JsonObject jsonObject = JsonUtils.gson.fromJson(
+                    JsonObject jsonObject = JsonUtils.GSON.fromJson(
                             Files.readString(path, StandardCharsets.UTF_8),
                             JsonObject.class
                     );

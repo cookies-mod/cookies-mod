@@ -11,12 +11,12 @@ import java.util.List;
 public class ProfileDataMigrations {
 
     private static final String KEY = "migration";
-    private static final List<Migration<JsonObject>> migrations = new LinkedList<>();
-    private static final long latest;
+    private static final List<Migration<JsonObject>> MIGRATIONS = new LinkedList<>();
+    private static final long LATEST;
 
     static {
-        migrations.add(new ProfileDataMigration_0001());
-        latest = migrations
+        MIGRATIONS.add(new ProfileDataMigration_0001());
+        LATEST = MIGRATIONS
                 .stream()
                 .min(Comparator.comparingLong(Migration::getNumber))
                 .map(Migration::getNumber)
@@ -24,7 +24,7 @@ public class ProfileDataMigrations {
     }
 
     /**
-     * Applies all missing migrations to the {@linkplain com.google.gson.JsonObject}
+     * Applies all missing migrations to the {@linkplain com.google.gson.JsonObject}.
      *
      * @param jsonObject The config object.
      */
@@ -34,7 +34,7 @@ public class ProfileDataMigrations {
         }
 
         long lastApplied = jsonObject.get(KEY).getAsLong();
-        for (Migration<JsonObject> migration : migrations
+        for (Migration<JsonObject> migration : MIGRATIONS
                 .stream()
                 .sorted(Comparator.comparingLong(Migration::getNumber))
                 .toList()) {
@@ -45,12 +45,12 @@ public class ProfileDataMigrations {
     }
 
     /**
-     * Write the latest migration number to the {@linkplain com.google.gson.JsonObject}
+     * Writes the latest migration number to the {@linkplain com.google.gson.JsonObject}.
      *
      * @param jsonObject The config object.
      */
     public static void writeLatest(JsonObject jsonObject) {
-        jsonObject.addProperty(KEY, latest);
+        jsonObject.addProperty(KEY, LATEST);
     }
 
 }

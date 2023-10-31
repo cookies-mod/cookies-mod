@@ -51,7 +51,7 @@ public class PlayerStorage {
 
         ExceptionHandler.removeThrows(() -> Files.writeString(
                 playerDataFile,
-                JsonUtils.gson.toJson(playerData),
+                JsonUtils.GSON.toJson(playerData),
                 StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING
@@ -77,7 +77,7 @@ public class PlayerStorage {
             savePlayerData();
         }
 
-        playerData = JsonUtils.gson.fromJson(
+        playerData = JsonUtils.GSON.fromJson(
                 ExceptionHandler.removeThrows(() -> Files.readString(playerDataFile)),
                 PlayerData.class
         );

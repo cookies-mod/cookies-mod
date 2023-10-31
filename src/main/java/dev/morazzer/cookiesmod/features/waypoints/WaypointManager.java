@@ -43,11 +43,11 @@ import java.util.stream.StreamSupport;
 public class WaypointManager implements Module {
     private static final Identifier SHOW_DEBUG_INFO = DevUtils.createIdentifier("waypoints/show_debug_info");
 
-    private static final HashMap<UUID, WaypointGroup> waypointGroupHashMap = new LinkedHashMap<>();
-    private static final HashMap<UUID, WaypointGroup> codingGroups = new LinkedHashMap<>();
-    private static final WaypointGroup groupLess = new WaypointGroup();
+    private static final HashMap<UUID, WaypointGroup> WAYPOINT_GROUP_HASH_MAP = new LinkedHashMap<>();
+    private static final HashMap<UUID, WaypointGroup> CODING_GROUPS = new LinkedHashMap<>();
+    private static final WaypointGroup GROUP_LESS = new WaypointGroup();
 
-    private static final Path waypointsFile = ConfigManager.getConfigFolder().resolve("waypoints.json");
+    private static final Path WAYPOINTS_FILE = ConfigManager.getConfigFolder().resolve("waypoints.json");
 
     private static WaypointManager waypointManager;
 
@@ -73,7 +73,7 @@ public class WaypointManager implements Module {
      * @param waypointsString The json object.
      */
     public void loadWaypoints(String waypointsString) {
-        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(waypointsString, JsonObject.class);
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(waypointsString, JsonObject.class);
         if (jsonObject.isEmpty()) return;
 
         JsonArray categories = jsonObject.getAsJsonArray("categories");
@@ -89,7 +89,7 @@ public class WaypointManager implements Module {
                     .getAsInt()) : new Color(ColorUtils.mainColor);
             group.name = Text.Serializer.fromJson(category.get("name"));
             group.island = LocationUtils.Islands.valueOfOrUnknown(category.get("island").getAsString());
-            waypointGroupHashMap.put(group.category, group);
+            WAYPOINT_GROUP_HASH_MAP.put(group.category, group);
         }
 
         JsonArray waypoints = jsonObject.getAsJsonArray("waypoints");
@@ -97,7 +97,7 @@ public class WaypointManager implements Module {
         for (JsonElement jsonElement : waypoints) {
             JsonObject waypointElement = jsonElement.getAsJsonObject();
             Waypoint waypoint = new Waypoint();
-            waypoint.position = JsonUtils.gsonClean.fromJson(waypointElement.get("position"), Vec3d.class);
+            waypoint.position = JsonUtils.CLEAN_GSON.fromJson(waypointElement.get("position"), Vec3d.class);
             waypoint.area = waypointElement.has("areas") ? StreamSupport.stream(waypointElement.get("areas")
                             .getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).map(Area::valueOf)
                     .toArray(Area[]::new) : new Area[] {};
@@ -109,9 +109,9 @@ public class WaypointManager implements Module {
                     .getAsInt()) : new Color(ColorUtils.mainColor);
 
             if (waypoint.category == null) {
-                groupLess.waypoints.add(waypoint);
+                GROUP_LESS.waypoints.add(waypoint);
             } else {
-                waypointGroupHashMap.get(waypoint.category).waypoints.add(waypoint);
+                WAYPOINT_GROUP_HASH_MAP.get(waypoint.category).waypoints.add(waypoint);
             }
         }
     }
@@ -122,11 +122,11 @@ public class WaypointManager implements Module {
     @Override
     public void load() {
         try {
-            if (Files.notExists(waypointsFile)) {
-                Files.writeString(waypointsFile, "{}", StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+            if (Files.notExists(WAYPOINTS_FILE)) {
+                Files.writeString(WAYPOINTS_FILE, "{}", StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
             }
 
-            String content = Files.readString(waypointsFile, StandardCharsets.UTF_8);
+            String content = Files.readString(WAYPOINTS_FILE, StandardCharsets.UTF_8);
             loadWaypoints(content);
         } catch (Exception exception) {
             ExceptionHandler.handleException(exception);
@@ -135,7 +135,7 @@ public class WaypointManager implements Module {
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
             MinecraftClient.getInstance().getProfiler().swap("cookiesmod");
             MinecraftClient.getInstance().getProfiler().push("waypoints");
-            for (WaypointGroup value : waypointGroupHashMap.values()) {
+            for (WaypointGroup value : WAYPOINT_GROUP_HASH_MAP.values()) {
                 if (!value.enabled) continue;
                 if (LocationUtils.getCurrentIsland() != value.island) continue;
                 if (value.area.length > 0) {
@@ -149,7 +149,7 @@ public class WaypointManager implements Module {
                 }
                 renderGroup(context, value);
             }
-            for (WaypointGroup value : codingGroups.values()) {
+            for (WaypointGroup value : CODING_GROUPS.values()) {
                 if (!value.enabled) continue;
                 if (LocationUtils.getCurrentIsland() != value.island) continue;
                 if (value.area.length > 0) {
@@ -163,7 +163,7 @@ public class WaypointManager implements Module {
                 }
                 renderGroup(context, value);
             }
-            renderGroup(context, groupLess);
+            renderGroup(context, GROUP_LESS);
             MinecraftClient.getInstance().getProfiler().pop();
         });
     }
@@ -181,7 +181,7 @@ public class WaypointManager implements Module {
      */
     private void renderGroup(WorldRenderContext context, WaypointGroup value) {
         MinecraftClient.getInstance().getProfiler()
-                .push(groupLess == value ? "groupLess" : String.valueOf(value.category));
+                .push(GROUP_LESS == value ? "groupLess" : String.valueOf(value.category));
         for (Waypoint waypoint : value.waypoints) {
 
             Text text = Objects.requireNonNullElse(waypoint.name, value.name);
@@ -275,22 +275,22 @@ public class WaypointManager implements Module {
         waypoint.name = name;
         waypoint.position = vec3d;
         waypoint.color = Color.RED;
-        groupLess.waypoints.add(waypoint);
+        GROUP_LESS.waypoints.add(waypoint);
     }
 
     public static void addCodingWaypoint(UUID uuid, Waypoint waypoint) {
-        codingGroups.get(uuid).waypoints.add(waypoint);
+        CODING_GROUPS.get(uuid).waypoints.add(waypoint);
     }
 
     public static void addCodingGroup(WaypointGroup waypointGroup) {
-        codingGroups.put(waypointGroup.category, waypointGroup);
+        CODING_GROUPS.put(waypointGroup.category, waypointGroup);
     }
 
     public static boolean hasCodingGroup(UUID uuid) {
-        return codingGroups.containsKey(uuid);
+        return CODING_GROUPS.containsKey(uuid);
     }
 
     public static void clearCodingGroup(UUID uuid) {
-        codingGroups.get(uuid).waypoints.clear();
+        CODING_GROUPS.get(uuid).waypoints.clear();
     }
 }

@@ -82,7 +82,7 @@ public class JacobsContests implements Module {
 
         byte[] responseBody = HttpUtils.getResponseBody(URI.create("https://api.elitebot.dev/Contests/at/now"));
         String response = new String(responseBody, StandardCharsets.UTF_8);
-        JsonObject responseObject = JsonUtils.gson.fromJson(response, JsonObject.class);
+        JsonObject responseObject = JsonUtils.CLEAN_GSON.fromJson(response, JsonObject.class);
 
         if (!responseObject.has("contests")) {
             return;

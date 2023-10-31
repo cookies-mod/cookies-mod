@@ -41,7 +41,7 @@ import java.util.function.Predicate;
 public class DwarvenMinesOverlay extends HudElement {
 
     private final List<Text> currentCommissions = new LinkedList<>();
-    long nextFetchur = 0;
+    private long nextFetchur = 0;
     private volatile Text powderAmount = Text.empty();
     private int index = 0;
     private SkyblockDateTime nextStarCult = null;
@@ -62,10 +62,14 @@ public class DwarvenMinesOverlay extends HudElement {
             switch (message.getString()) {
                 case "\u00A7e[NPC] Fetchur\u00A7f: thanks thats probably what i needed", "\u00A7e[NPC] Fetchur\u00A7f: take some gifts!" ->
                         ProfileStorage.getCurrentProfile()
-                                .ifPresent(profileData -> profileData.getDwarvenMinesData().lastFetchurTime = System.currentTimeMillis());
+                                .ifPresent(profileData -> profileData
+                                        .getDwarvenMinesData()
+                                        .setLastFetchurTime(System.currentTimeMillis()));
                 case "\u00A7e[NPC] \u00A7dPuzzler\u00A7f: \u00A7a\u270C\u2713", "\u00A7e[NPC] \u00A7dPuzzler\u00A7f: \u25B6\u25B6Nice!  \u25B2Here, \u25C0have \u25BCsome\u25C0 \u25B6Mithril Powder!\u25B2" ->
                         ProfileStorage.getCurrentProfile()
-                                .ifPresent(profileData -> profileData.getDwarvenMinesData().lastPuzzlerTime = System.currentTimeMillis());
+                                .ifPresent(profileData -> profileData
+                                        .getDwarvenMinesData()
+                                        .setLastPuzzlerTime(System.currentTimeMillis()));
                 default -> handled = false;
             }
             if (handled) return;
@@ -294,11 +298,23 @@ public class DwarvenMinesOverlay extends HudElement {
         }
     }
 
+    /**
+     * Gets a color between red and green based on the time. The default timespan is one day.
+     *
+     * @param seconds The missing seconds.
+     * @return The color as rgb int.
+     */
     private int getColor(long seconds) {
-        float DAY = 60 * 60 * 24;
-        return getColor(seconds, DAY);
+        return getColor(seconds, ChronoUnit.DAYS.getDuration().getSeconds());
     }
 
+    /**
+     * Gets a color between red and green based on the time.
+     *
+     * @param seconds   The missing seconds.
+     * @param maxAmount The total time.
+     * @return The color as rgb int.
+     */
     private int getColor(long seconds, float maxAmount) {
         float percentage = seconds / maxAmount;
         int g = 0x8DF3B1;
@@ -318,11 +334,14 @@ public class DwarvenMinesOverlay extends HudElement {
     private void renderPuzzlerTimers(DrawContext drawContext) {
         Profiler profiler = MinecraftClient.getInstance().getProfiler();
         profiler.push("data");
-        long lastPuzzlerTime = ProfileStorage.getCurrentProfile().map(ProfileData::getDwarvenMinesData)
-                .map(dwarvenMinesData -> dwarvenMinesData.lastPuzzlerTime).orElse(-1L);
+        long lastPuzzlerTime = ProfileStorage
+                .getCurrentProfile()
+                .map(ProfileData::getDwarvenMinesData)
+                .map(DwarvenMinesData::getLastPuzzlerTime)
+                .orElse(-1L);
         profiler.swap("math");
         MutableText puzzler = Text.literal("Puzzler: ").formatted(Formatting.DARK_PURPLE);
-        long timeDelta = ((24 * 60 * 60 * 1000) - System.currentTimeMillis() + lastPuzzlerTime) / 1000;
+        long timeDelta = (ChronoUnit.DAYS.getDuration().get(ChronoUnit.MILLIS) - System.currentTimeMillis() + lastPuzzlerTime) / 1000;
 
         profiler.swap("string");
         if (lastPuzzlerTime == -1) {

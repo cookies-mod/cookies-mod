@@ -29,7 +29,7 @@ public class PlotCostData {
      */
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json"))) {
-            instance = JsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager
+            instance = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager
                     .getRepoRoot()
                     .resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), PlotCostData.class);
         }

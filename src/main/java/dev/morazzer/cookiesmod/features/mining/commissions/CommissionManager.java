@@ -10,8 +10,8 @@ import dev.morazzer.cookiesmod.features.waypoints.WaypointManager;
 import dev.morazzer.cookiesmod.generated.Area;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
@@ -23,16 +23,36 @@ import java.util.UUID;
 
 @LoadModule("mining/commissions")
 public class CommissionManager implements Module {
+
     public static CommissionManager instance;
+    private final Map<Area, Vec3d> locations = new LinkedHashMap<>();
+    private final Map<String, Integer> commissions = new LinkedHashMap<>();
+    private final Map<String, String> namesToValue = new LinkedHashMap<>();
+    private final UUID waypointGroup = UUID.randomUUID();
 
     {
         instance = this;
     }
 
-    private final Map<Area, Vec3d> locations = new LinkedHashMap<>();
-    private final Map<String, Integer> commissions = new LinkedHashMap<>();
-    private final Map<String, String> namesToValue = new LinkedHashMap<>();
-    private final UUID waypointGroup = UUID.randomUUID();
+    /**
+     * Gets the internal key from the display name.
+     *
+     * @param commissionName The display name.
+     * @return The internal key.
+     */
+    public String getCommissionKey(String commissionName) {
+        return this.namesToValue.get(commissionName);
+    }
+
+    /**
+     * Gets the amount required to complete the commission or 1 if not specified.
+     *
+     * @param key The internal key.
+     * @return The amount required.
+     */
+    public int getCommissionAmount(String key) {
+        return this.commissions.getOrDefault(key, 1);
+    }
 
     @Override
     public void load() {
@@ -47,6 +67,11 @@ public class CommissionManager implements Module {
         if (RepositoryManager.isFinishedLoading()) this.loadRepo();
     }
 
+    @Override
+    public String getIdentifierPath() {
+        return "mining/commissions";
+    }
+
     private void loadRepo() {
         RepositoryManager.getResource("constants/dwarven_locations_to_coordinates.json").ifPresent(this::loadLocations);
         RepositoryManager.getResource("constants/commissions.json").ifPresent(this::loadCommissions);
@@ -54,18 +79,18 @@ public class CommissionManager implements Module {
 
     private void loadCommissions(byte[] bytes) {
         this.commissions.clear();
-        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
                 new String(bytes, StandardCharsets.UTF_8),
                 JsonObject.class
         );
 
-        this.commissions.putAll(JsonUtils.gsonClean.fromJson(jsonObject.get("values"), new TypeToken<>() {}));
-        this.namesToValue.putAll(JsonUtils.gsonClean.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {}));
+        this.commissions.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("values"), new TypeToken<>() {}));
+        this.namesToValue.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {}));
     }
 
     private void loadLocations(byte[] bytes) {
         this.locations.clear();
-        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
                 new String(bytes, StandardCharsets.UTF_8),
                 JsonObject.class
         );
@@ -86,16 +111,4 @@ public class CommissionManager implements Module {
         }
     }
 
-    public String getCommissionKey(String commissionName) {
-        return this.namesToValue.get(commissionName);
-    }
-
-    public int getCommissionAmount(String key) {
-        return this.commissions.getOrDefault(key, 1);
-    }
-
-    @Override
-    public String getIdentifierPath() {
-        return "mining/commissions";
-    }
 }

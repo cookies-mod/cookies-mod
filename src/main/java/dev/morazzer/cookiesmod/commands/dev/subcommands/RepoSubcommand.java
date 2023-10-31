@@ -123,7 +123,7 @@ public class RepoSubcommand extends ClientCommand {
                     SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
                     if (item.getSkin().isPresent()) {
                         String s = new String(Base64.getDecoder().decode(item.getSkin().get()));
-                        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
                         context.getSource().sendFeedback(TextUtils.prettyPrintJson(jsonObject));
                     } else {
                         context

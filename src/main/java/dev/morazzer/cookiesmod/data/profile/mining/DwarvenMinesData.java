@@ -1,11 +1,22 @@
 package dev.morazzer.cookiesmod.data.profile.mining;
 
 import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * Various data related to the dwarven mines.
+ */
 @Getter
+@Setter
 public class DwarvenMinesData {
 
-    public long lastPuzzlerTime = -1;
-    public long lastFetchurTime = -1;
+    /**
+     * The last recorded time the user has finished the puzzler quest.
+     */
+    private long lastPuzzlerTime = -1;
+    /**
+     * The last recorded time the user has finished the fetchur quest.
+     */
+    private long lastFetchurTime = -1;
 
 }

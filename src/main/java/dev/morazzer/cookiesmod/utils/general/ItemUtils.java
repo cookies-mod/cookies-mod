@@ -131,7 +131,7 @@ public class ItemUtils {
                 NbtCompound textureValue = (NbtCompound) texture;
 
                 String s = new String(Base64.getDecoder().decode(textureValue.getString("Value")));
-                JsonObject jsonObject = JsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
                 CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
             }
         }

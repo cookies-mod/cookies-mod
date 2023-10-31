@@ -51,7 +51,7 @@ public class CompostUpgradeCost {
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot()
                 .resolve("constants/compost_upgrades.json"))) {
-            JsonObject jsonObject = JsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
+            JsonObject jsonObject = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
                     RepositoryManager.getRepoRoot()
                             .resolve("constants/compost_upgrades.json"),
                     StandardCharsets.UTF_8

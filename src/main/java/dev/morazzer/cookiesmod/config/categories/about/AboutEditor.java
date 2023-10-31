@@ -80,7 +80,7 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
                             return;
                         }
 
-                        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
+                        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
                                 new String(bytes, StandardCharsets.UTF_8),
                                 JsonObject.class
                         );

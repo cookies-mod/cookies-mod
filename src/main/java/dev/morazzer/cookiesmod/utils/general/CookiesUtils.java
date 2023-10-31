@@ -104,7 +104,7 @@ public class CookiesUtils {
             }
 
             JsonObject fromJson = ExceptionHandler.removeThrows(
-                    () -> JsonUtils.gson.fromJson(
+                    () -> JsonUtils.GSON.fromJson(
                             new String(
                                     response.getEntity()
                                             .getContent()
@@ -112,10 +112,10 @@ public class CookiesUtils {
                             ),
                             JsonObject.class
                     ),
-                    JsonUtils.emptyObject
+                    new JsonObject()
             );
 
-            if (fromJson == JsonUtils.emptyObject) return;
+            if (fromJson.isEmpty()) return;
             JsonElement jsonElement = fromJson.get("id");
             String uuidAsString = jsonElement.getAsString();
             if (uuidAsString.length() == 32) {
@@ -166,7 +166,7 @@ public class CookiesUtils {
             }
 
             try {
-                JsonObject fromJson = JsonUtils.gson.fromJson(new String(response
+                JsonObject fromJson = JsonUtils.GSON.fromJson(new String(response
                         .getEntity()
                         .getContent()
                         .readAllBytes()), JsonObject.class);
