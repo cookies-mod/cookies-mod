@@ -2,7 +2,7 @@ package dev.morazzer.cookiesmod.utils.general;
 
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.TextUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +18,7 @@ import java.util.Optional;
 public class ItemUtils {
 
     private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
+    public static final String NBT_KEY = "ExtraAttributes";
 
     /**
      * Gets the skyblock attribute tag of an item.
@@ -26,7 +27,7 @@ public class ItemUtils {
      * @return The tag.
      */
     public static Optional<NbtCompound> getSkyblockAttributes(ItemStack itemStack) {
-        return Optional.ofNullable(itemStack.getSubNbt("ExtraAttributes"));
+        return Optional.ofNullable(itemStack.getSubNbt(NBT_KEY));
     }
 
     /**
@@ -130,7 +131,7 @@ public class ItemUtils {
                 NbtCompound textureValue = (NbtCompound) texture;
 
                 String s = new String(Base64.getDecoder().decode(textureValue.getString("Value")));
-                JsonObject jsonObject = GsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
                 CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
             }
         }

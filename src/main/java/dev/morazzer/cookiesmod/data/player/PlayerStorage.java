@@ -1,7 +1,7 @@
 package dev.morazzer.cookiesmod.data.player;
 
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +51,7 @@ public class PlayerStorage {
 
         ExceptionHandler.removeThrows(() -> Files.writeString(
                 playerDataFile,
-                GsonUtils.gson.toJson(playerData),
+                JsonUtils.GSON.toJson(playerData),
                 StandardCharsets.UTF_8,
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING
@@ -77,7 +77,7 @@ public class PlayerStorage {
             savePlayerData();
         }
 
-        playerData = GsonUtils.gson.fromJson(
+        playerData = JsonUtils.GSON.fromJson(
                 ExceptionHandler.removeThrows(() -> Files.readString(playerDataFile)),
                 PlayerData.class
         );

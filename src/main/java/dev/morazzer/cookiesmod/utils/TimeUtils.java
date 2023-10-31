@@ -1,5 +1,8 @@
 package dev.morazzer.cookiesmod.utils;
 
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+
 @SuppressWarnings("unused")
 public class TimeUtils {
 
@@ -15,7 +18,7 @@ public class TimeUtils {
         long hours = minutes / 60;
         minutes = minutes % 60;
         long days = hours / 24;
-        hours = hours % 60;
+        hours = hours % 24;
 
         StringBuilder stringBuilder = new StringBuilder();
         boolean didWritePrevious = false;
@@ -44,6 +47,10 @@ public class TimeUtils {
      */
     public static long getTime() {
         return System.currentTimeMillis() / 1000L;
+    }
+
+    public static MutableText toFormattedTimeText(long seconds) {
+        return Text.literal(toFormattedTime(seconds));
     }
 
     /**
@@ -91,6 +98,13 @@ public class TimeUtils {
         }
         timer.stop();
         return new TimeResult<>(timer, result, null);
+    }
+
+    public static TimeResult<Void> time(Runnable runnable) {
+        return time(() -> {
+            runnable.run();
+            return null;
+        });
     }
 
     @FunctionalInterface

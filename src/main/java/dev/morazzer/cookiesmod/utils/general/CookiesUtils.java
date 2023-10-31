@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -104,7 +104,7 @@ public class CookiesUtils {
             }
 
             JsonObject fromJson = ExceptionHandler.removeThrows(
-                    () -> GsonUtils.gson.fromJson(
+                    () -> JsonUtils.GSON.fromJson(
                             new String(
                                     response.getEntity()
                                             .getContent()
@@ -112,10 +112,10 @@ public class CookiesUtils {
                             ),
                             JsonObject.class
                     ),
-                    GsonUtils.emptyObject
+                    new JsonObject()
             );
 
-            if (fromJson == GsonUtils.emptyObject) return;
+            if (fromJson.isEmpty()) return;
             JsonElement jsonElement = fromJson.get("id");
             String uuidAsString = jsonElement.getAsString();
             if (uuidAsString.length() == 32) {
@@ -166,7 +166,7 @@ public class CookiesUtils {
             }
 
             try {
-                JsonObject fromJson = GsonUtils.gson.fromJson(new String(response
+                JsonObject fromJson = JsonUtils.GSON.fromJson(new String(response
                         .getEntity()
                         .getContent()
                         .readAllBytes()), JsonObject.class);

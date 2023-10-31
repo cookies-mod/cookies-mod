@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import lombok.Getter;
@@ -58,7 +58,7 @@ public class Bazaar implements Module {
     private void updateProducts() {
         byte[] responseBody = HttpUtils.getResponseBody(URI.create(bazaarApiEndpoint));
         String body = new String(responseBody, StandardCharsets.UTF_8);
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(body, JsonObject.class);
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(body, JsonObject.class);
         if (!jsonObject.has("success") || !jsonObject.get("success").getAsBoolean()) {
             return;
         }
@@ -76,15 +76,15 @@ public class Bazaar implements Module {
             if (identifier == null) {
                 continue;
             }
-            ProductSummary[] buySummary = GsonUtils.gsonClean.fromJson(
+            ProductSummary[] buySummary = JsonUtils.CLEAN_GSON.fromJson(
                     product.getAsJsonArray("buy_summary"),
                     ProductSummary[].class
             );
-            ProductSummary[] sellSummary = GsonUtils.gsonClean.fromJson(
+            ProductSummary[] sellSummary = JsonUtils.CLEAN_GSON.fromJson(
                     product.getAsJsonArray("sell_summary"),
                     ProductSummary[].class
             );
-            QuickStatus quickStatus = GsonUtils.gsonClean.fromJson(
+            QuickStatus quickStatus = JsonUtils.CLEAN_GSON.fromJson(
                     product.getAsJsonObject("quick_status"),
                     QuickStatus.class
             );

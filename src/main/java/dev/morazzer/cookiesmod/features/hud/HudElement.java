@@ -1,5 +1,7 @@
 package dev.morazzer.cookiesmod.features.hud;
 
+import dev.morazzer.cookiesmod.utils.DevUtils;
+import dev.morazzer.cookiesmod.utils.TimeUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +14,9 @@ import net.minecraft.util.Identifier;
  */
 @Getter
 public abstract class HudElement {
+
+    private static final Identifier SHOW_RENDER_TIMINGS = DevUtils.createIdentifier("hud/show_timings");
+    private static final Identifier SHOW_AVERAGED_TIMINGS = DevUtils.createIdentifier("hud/show_averaged_timings");
 
     private static final Identifier HUD_NAMESPACE = new Identifier("cookiesmod", "hud/");
     private Position position;
@@ -87,11 +92,17 @@ public abstract class HudElement {
      * @param tickDelta   The difference in time between the last tick and now.
      */
     public void renderWithTests(DrawContext drawContext, float tickDelta) {
+        MinecraftClient.getInstance().getProfiler().push(this.getIdentifier().toString());
         if (!(this.enabled && shouldRender())) {
+            MinecraftClient.getInstance().getProfiler().pop();
             return;
         }
         render(drawContext, tickDelta);
+        MinecraftClient.getInstance().getProfiler().pop();
     }
+
+    private final long[] lastTimings = new long[10];
+    private TimeUtils.Timer timer = null;
 
     /**
      * Renders the element without extra checks.
@@ -100,9 +111,32 @@ public abstract class HudElement {
      * @param tickDelta   The difference in time between the last tick and now.
      */
     public void render(DrawContext drawContext, float tickDelta) {
+        boolean showTimings = DevUtils.isEnabled(SHOW_RENDER_TIMINGS) || DevUtils.isEnabled(SHOW_AVERAGED_TIMINGS);
+        if (showTimings && timer == null) {
+            timer = new TimeUtils.Timer();
+        }
+        if (showTimings) {
+            timer.start();
+        }
+
         drawContext.getMatrices().push();
         drawContext.getMatrices().translate(position.getFixedX(getWidth()), position.getFixedY(getHeight()), 1);
         renderOverlay(drawContext, tickDelta);
+
+        if (showTimings) {
+            timer.stop();
+            if (DevUtils.isEnabled(SHOW_RENDER_TIMINGS)) {
+                drawContext.drawText(
+                        MinecraftClient.getInstance().textRenderer,
+                        timer.elapsed(),
+                        0,
+                        getHeight() + 10,
+                        -1,
+                        true
+                );
+            }
+        }
+
         drawContext.getMatrices().pop();
     }
 

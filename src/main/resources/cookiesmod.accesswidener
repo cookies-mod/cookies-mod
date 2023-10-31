@@ -5,9 +5,6 @@ accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecr
 accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawItem (Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V
 accessible method net/minecraft/client/gui/screen/Screen addSelectableChild (Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;
 
-# ingame debugging
-accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setText (Lnet/minecraft/text/Text;)V
-
 # dev.morazzer.cookiesmod.features.garden.RancherBootsOverlay
 accessible field net/minecraft/client/gui/screen/ingame/AbstractSignEditScreen messages [Ljava/lang/String;
 

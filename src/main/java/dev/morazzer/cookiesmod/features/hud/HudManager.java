@@ -73,7 +73,11 @@ public class HudManager implements Module {
         if (MinecraftClient.getInstance().currentScreen instanceof HudEditor) {
             return;
         }
+        MinecraftClient.getInstance().getProfiler().push("cookiesmod");
+        MinecraftClient.getInstance().getProfiler().push("hud");
         getElements().forEach(hudElement -> hudElement.renderWithTests(drawContext, (float) tickDelta));
+        MinecraftClient.getInstance().getProfiler().pop();
+        MinecraftClient.getInstance().getProfiler().pop();
     }
 
 }

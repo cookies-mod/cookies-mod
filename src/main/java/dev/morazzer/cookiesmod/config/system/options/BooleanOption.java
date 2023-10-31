@@ -66,6 +66,7 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
             }
             this.hudElement.setPosition(new Position(x, y, centeredX, centeredY));
             this.hudElement.toggle(this.value);
+            return;
         }
         if (!jsonElement.isJsonPrimitive()) {
             log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));

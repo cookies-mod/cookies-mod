@@ -6,6 +6,7 @@ import com.mojang.authlib.properties.Property;
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientConnectionState;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -62,7 +63,7 @@ public class NpcUtils {
         Collection<Property> textures = playerEntity.getGameProfile().getProperties().get("textures");
         for (Property texture : textures) {
             String value = new String(Base64.getDecoder().decode(texture.value()));
-            JsonObject jsonObject = GsonUtils.gsonClean.fromJson(value, JsonObject.class);
+            JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(value, JsonObject.class);
             CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
             CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append("Base64 encoded profile: ")
                     .append(Text.literal("[COPY]")

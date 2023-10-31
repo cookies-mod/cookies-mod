@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.util.Identifier;
@@ -40,7 +40,7 @@ public class RepositoryItemManager {
      * @return If the items where loaded successfully.
      */
     public static boolean loadOfficialItemList() {
-        JsonObject jsonObject = GsonUtils.gson.fromJson(new String(HttpUtils.getResponseBody(URI.create(
+        JsonObject jsonObject = JsonUtils.GSON.fromJson(new String(HttpUtils.getResponseBody(URI.create(
                 "https://api.hypixel.net/resources/skyblock/items"))), JsonObject.class);
 
         if (!jsonObject.get("success").getAsBoolean()) {
@@ -59,7 +59,7 @@ public class RepositoryItemManager {
             if (!ExceptionHandler.tryCatch(() -> Files.createDirectories(itemPath.getParent()))) continue;
             boolean result = ExceptionHandler.tryCatch(() -> Files.write(
                     itemPath,
-                    GsonUtils.gson.toJson(itemObject).getBytes(),
+                    JsonUtils.GSON.toJson(itemObject).getBytes(),
                     StandardOpenOption.CREATE_NEW
             ));
             if (!result) {
@@ -112,7 +112,7 @@ public class RepositoryItemManager {
     public static boolean loadItem(Path path, Consumer<Identifier> consumer) {
         try {
             log.debug("loading {}", path);
-            JsonObject jsonObject = GsonUtils.gson.fromJson(Files.readString(path), JsonObject.class);
+            JsonObject jsonObject = JsonUtils.GSON.fromJson(Files.readString(path), JsonObject.class);
             SkyblockItem repositoryItem = new SkyblockItem(jsonObject);
             itemMap.put(repositoryItem.getSkyblockId(), repositoryItem);
             consumer.accept(repositoryItem.getSkyblockId());

@@ -2,7 +2,7 @@ package dev.morazzer.cookiesmod.features.repository.constants;
 
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import lombok.Getter;
 
 import java.nio.charset.StandardCharsets;
@@ -29,7 +29,7 @@ public class PlotCostData {
      */
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json"))) {
-            instance = GsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager
+            instance = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager
                     .getRepoRoot()
                     .resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), PlotCostData.class);
         }

@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Subcommand to enable disabled "devtools" in the {@linkplain dev.morazzer.cookiesmod.utils.DevUtils} class.
+ * Subcommand to enable "devtools" in the {@linkplain dev.morazzer.cookiesmod.utils.DevUtils} class.
  */
 @DevSubcommand
 public class EnableToolsSubcommand extends ClientCommand {

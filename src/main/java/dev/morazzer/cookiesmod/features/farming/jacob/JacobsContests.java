@@ -7,7 +7,7 @@ import dev.morazzer.cookiesmod.features.farming.Crop;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockDateTime;
 import lombok.Getter;
@@ -82,7 +82,7 @@ public class JacobsContests implements Module {
 
         byte[] responseBody = HttpUtils.getResponseBody(URI.create("https://api.elitebot.dev/Contests/at/now"));
         String response = new String(responseBody, StandardCharsets.UTF_8);
-        JsonObject responseObject = GsonUtils.gson.fromJson(response, JsonObject.class);
+        JsonObject responseObject = JsonUtils.CLEAN_GSON.fromJson(response, JsonObject.class);
 
         if (!responseObject.has("contests")) {
             return;

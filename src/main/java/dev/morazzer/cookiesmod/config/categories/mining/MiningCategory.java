@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.config.categories.mining;
 
 import dev.morazzer.cookiesmod.config.system.Category;
 import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
+import dev.morazzer.cookiesmod.features.mining.DwarvenMinesOverlay;
 import dev.morazzer.cookiesmod.features.mining.FetchurHud;
 import dev.morazzer.cookiesmod.features.mining.FuelBarHud;
 import net.minecraft.text.Text;
@@ -10,6 +11,12 @@ import net.minecraft.text.Text;
  * Category that describes all settings related to mining.
  */
 public class MiningCategory extends Category {
+
+    public BooleanOption showDwarvenOverlay = new BooleanOption(
+            Text.literal("Dwarven Overlay"),
+            Text.literal("Enables the dwarven mines overlay"),
+            false
+    ).withHudElement(new DwarvenMinesOverlay());
 
     public final BooleanOption showPuzzlerSolution = new BooleanOption(
             Text.literal("Puzzler solver"),

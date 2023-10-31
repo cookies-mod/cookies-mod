@@ -5,12 +5,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import dev.morazzer.cookiesmod.config.ConfigManager;
+import dev.morazzer.cookiesmod.data.profile.ProfileStorage;
 import dev.morazzer.cookiesmod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import dev.morazzer.cookiesmod.mixin.ItemNbtAttachment;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.NumberFormat;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -30,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -39,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HotmHelper implements Module {
 
     final Map<String, List<Integer>> perks = new LinkedHashMap<>();
+    final Map<ItemStack, NbtCompound> items = new ConcurrentHashMap<>() {};
     final List<String> gemstonePowder = new LinkedList<>();
 
     /**
@@ -48,7 +52,7 @@ public class HotmHelper implements Module {
         Optional<byte[]> resource = RepositoryManager.getResource("constants/hotm_perks.json");
         if (resource.isEmpty()) return;
         String content = new String(resource.get(), StandardCharsets.UTF_8);
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(content, JsonObject.class);
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(content, JsonObject.class);
         this.gemstonePowder.clear();
         this.perks.clear();
         for (String key : jsonObject.keySet()) {
@@ -62,7 +66,7 @@ public class HotmHelper implements Module {
 
             JsonElement jsonElement = jsonObject.get(key);
             if (!jsonElement.isJsonArray()) return;
-            this.perks.put(key, GsonUtils.gsonClean.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
+            this.perks.put(key, JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
         }
     }
 
@@ -76,12 +80,8 @@ public class HotmHelper implements Module {
         AtomicInteger lastSyncId = new AtomicInteger(-1);
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            this.items.clear();
             if (!(screen instanceof HandledScreen<?> handledScreen)) return;
-            if (!ConfigManager.getConfig().miningCategory.heartOfTheMountain.showTotalPowder.getValue()
-                    && !ConfigManager.getConfig().miningCategory.heartOfTheMountain.showNextTenPowder.getValue()
-                    && !ConfigManager.getConfig().miningCategory.heartOfTheMountain.showLevelInCount.getValue()) {
-                return;
-            }
 
             ScreenHandler screenHandler = handledScreen.getScreenHandler();
             if (lastSyncId.get() == screenHandler.syncId) {
@@ -93,11 +93,14 @@ public class HotmHelper implements Module {
 
         });
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
+            if (!ConfigManager.getConfig().miningCategory.heartOfTheMountain.showTotalPowder.getValue()
+                    && !ConfigManager.getConfig().miningCategory.heartOfTheMountain.showNextTenPowder.getValue()) {
+                return;
+            }
             if (!stack.hasNbt()) return;
-            if (!stack.getOrCreateNbt().contains("cookies")) return;
-            if (!stack.getOrCreateSubNbt("cookies").contains("type")) return;
-            if (!stack.getOrCreateSubNbt("cookies").getString("type").equals("hotm")) return;
-            NbtCompound cookies = stack.getOrCreateSubNbt("cookies");
+            if (!ItemNbtAttachment.getOrCreateCookiesNbt(stack).contains("type")) return;
+            if (!ItemNbtAttachment.getCookiesNbt(stack).getString("type").equals("hotm")) return;
+            NbtCompound cookies = ItemNbtAttachment.getOrCreateCookiesNbt(stack);
             boolean gemstone = cookies.getBoolean("gemstone");
             String powder = gemstone ? " Gemstone " : " Mithril ";
             Formatting formatting = gemstone ? Formatting.LIGHT_PURPLE : Formatting.DARK_GREEN;
@@ -147,6 +150,15 @@ public class HotmHelper implements Module {
         if (slot > 53) return;
         if (!itemStack.hasCustomName()) return;
         String name = itemStack.getName().getString();
+
+        if (name.equals("Peak of the Mountain")) {
+            boolean unlocked = itemStack.getTooltip(null, TooltipContext.BASIC).stream().noneMatch(text -> text.getString().equals("Requires Tier 5"));
+
+            ProfileStorage.getCurrentProfile().ifPresent(profileData -> profileData.getHeartOfTheMountainData().setPotm(unlocked));
+            itemStack.setCustomName(Text.literal(String.valueOf(unlocked)));
+            return;
+        }
+
         String searchName = name.trim().replaceAll(" +", "_").toLowerCase();
         List<Integer> integers = this.perks.getOrDefault(searchName, Collections.emptyList());
         if (integers.isEmpty()) {
@@ -157,7 +169,7 @@ public class HotmHelper implements Module {
         String levelLine = lore.get(1).getString();
         int level = Integer.parseInt(levelLine.replaceAll("[^\\d/]", "").split("/")[0]);
 
-        NbtCompound cookies = itemStack.getOrCreateSubNbt("cookies");
+        NbtCompound cookies = ItemNbtAttachment.getOrCreateCookiesNbt(itemStack);
         cookies.putString("type", "hotm");
         cookies.putInt("level", level);
         if (ConfigManager.getConfig().miningCategory.heartOfTheMountain.showLevelInCount.getValue()) {

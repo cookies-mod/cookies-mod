@@ -8,16 +8,19 @@ import dev.morazzer.cookiesmod.generated.Area;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
+import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
-import me.x150.renderer.render.Renderer3d;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.Color;
@@ -25,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Objects;
@@ -37,11 +41,13 @@ import java.util.stream.StreamSupport;
  */
 @LoadModule("waypoints")
 public class WaypointManager implements Module {
+    private static final Identifier SHOW_DEBUG_INFO = DevUtils.createIdentifier("waypoints/show_debug_info");
 
-    private static final HashMap<UUID, WaypointGroup> waypointGroupHashMap = new LinkedHashMap<>();
-    private static final WaypointGroup groupLess = new WaypointGroup();
+    private static final HashMap<UUID, WaypointGroup> WAYPOINT_GROUP_HASH_MAP = new LinkedHashMap<>();
+    private static final HashMap<UUID, WaypointGroup> CODING_GROUPS = new LinkedHashMap<>();
+    private static final WaypointGroup GROUP_LESS = new WaypointGroup();
 
-    private static final Path waypointsFile = ConfigManager.getConfigFolder().resolve("waypoints.json");
+    private static final Path WAYPOINTS_FILE = ConfigManager.getConfigFolder().resolve("waypoints.json");
 
     private static WaypointManager waypointManager;
 
@@ -67,7 +73,7 @@ public class WaypointManager implements Module {
      * @param waypointsString The json object.
      */
     public void loadWaypoints(String waypointsString) {
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(waypointsString, JsonObject.class);
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(waypointsString, JsonObject.class);
         if (jsonObject.isEmpty()) return;
 
         JsonArray categories = jsonObject.getAsJsonArray("categories");
@@ -83,7 +89,7 @@ public class WaypointManager implements Module {
                     .getAsInt()) : new Color(ColorUtils.mainColor);
             group.name = Text.Serializer.fromJson(category.get("name"));
             group.island = LocationUtils.Islands.valueOfOrUnknown(category.get("island").getAsString());
-            waypointGroupHashMap.put(group.category, group);
+            WAYPOINT_GROUP_HASH_MAP.put(group.category, group);
         }
 
         JsonArray waypoints = jsonObject.getAsJsonArray("waypoints");
@@ -91,7 +97,7 @@ public class WaypointManager implements Module {
         for (JsonElement jsonElement : waypoints) {
             JsonObject waypointElement = jsonElement.getAsJsonObject();
             Waypoint waypoint = new Waypoint();
-            waypoint.position = GsonUtils.gsonClean.fromJson(waypointElement.get("position"), Vec3d.class);
+            waypoint.position = JsonUtils.CLEAN_GSON.fromJson(waypointElement.get("position"), Vec3d.class);
             waypoint.area = waypointElement.has("areas") ? StreamSupport.stream(waypointElement.get("areas")
                             .getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).map(Area::valueOf)
                     .toArray(Area[]::new) : new Area[] {};
@@ -103,9 +109,9 @@ public class WaypointManager implements Module {
                     .getAsInt()) : new Color(ColorUtils.mainColor);
 
             if (waypoint.category == null) {
-                groupLess.waypoints.add(waypoint);
+                GROUP_LESS.waypoints.add(waypoint);
             } else {
-                waypointGroupHashMap.get(waypoint.category).waypoints.add(waypoint);
+                WAYPOINT_GROUP_HASH_MAP.get(waypoint.category).waypoints.add(waypoint);
             }
         }
     }
@@ -116,18 +122,20 @@ public class WaypointManager implements Module {
     @Override
     public void load() {
         try {
-            if (Files.notExists(waypointsFile)) {
-                Files.writeString(waypointsFile, "{}", StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+            if (Files.notExists(WAYPOINTS_FILE)) {
+                Files.writeString(WAYPOINTS_FILE, "{}", StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
             }
 
-            String content = Files.readString(waypointsFile, StandardCharsets.UTF_8);
+            String content = Files.readString(WAYPOINTS_FILE, StandardCharsets.UTF_8);
             loadWaypoints(content);
         } catch (Exception exception) {
             ExceptionHandler.handleException(exception);
         }
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
-            for (WaypointGroup value : waypointGroupHashMap.values()) {
+            MinecraftClient.getInstance().getProfiler().swap("cookiesmod");
+            MinecraftClient.getInstance().getProfiler().push("waypoints");
+            for (WaypointGroup value : WAYPOINT_GROUP_HASH_MAP.values()) {
                 if (!value.enabled) continue;
                 if (LocationUtils.getCurrentIsland() != value.island) continue;
                 if (value.area.length > 0) {
@@ -141,7 +149,22 @@ public class WaypointManager implements Module {
                 }
                 renderGroup(context, value);
             }
-            renderGroup(context, groupLess);
+            for (WaypointGroup value : CODING_GROUPS.values()) {
+                if (!value.enabled) continue;
+                if (LocationUtils.getCurrentIsland() != value.island) continue;
+                if (value.area.length > 0) {
+                    boolean match = false;
+                    for (Area area : value.area) {
+                        match = match || area == LocationUtils.getCurrentArea();
+                    }
+                    if (!match) {
+                        continue;
+                    }
+                }
+                renderGroup(context, value);
+            }
+            renderGroup(context, GROUP_LESS);
+            MinecraftClient.getInstance().getProfiler().pop();
         });
     }
 
@@ -157,22 +180,72 @@ public class WaypointManager implements Module {
      * @param value   The group to render.
      */
     private void renderGroup(WorldRenderContext context, WaypointGroup value) {
+        MinecraftClient.getInstance().getProfiler()
+                .push(GROUP_LESS == value ? "groupLess" : String.valueOf(value.category));
         for (Waypoint waypoint : value.waypoints) {
+
+            Text text = Objects.requireNonNullElse(waypoint.name, value.name);
+            MinecraftClient.getInstance().getProfiler().push(text.getString());
             Color color = Objects.requireNonNullElse(waypoint.color, value.color);
             double v = waypoint.position.distanceTo(MinecraftClient.getInstance().player != null ? MinecraftClient.getInstance().player.getPos() : Vec3d.ZERO);
-            if (v < 0) {
-                Renderer3d.renderFilled(
+
+            if (v < 10) {
+                DebugRenderer.drawBox(
                         context.matrixStack(),
-                        new Color((color.getRGB() & 0xFFFFFF) | 0x99 << 24, true),
-                        waypoint.position.add(0.001, 0.001, 0.001),
-                        new Vec3d(0.998, 0.998, 0.998)
+                        context.consumers(),
+                        new BlockPos((int) waypoint.position.x, (int) waypoint.position.y, (int) waypoint.position.z),
+                        0,
+                        255,
+                        255,
+                        255,
+                        0x99
                 );
+            }
+
+            Vec3d position = waypoint.position;
+
+            if (DevUtils.isEnabled(SHOW_DEBUG_INFO)) {
+                Vec3d debugLocation = position.add(0.5, 3, 0.5);
+                DebugRenderer.drawString(
+                        context.matrixStack(),
+                        context.consumers(),
+                        "Category: " + waypoint.category,
+                        debugLocation.x,
+                        debugLocation.y,
+                        debugLocation.z,
+                        -1
+                );
+                debugLocation = debugLocation.subtract(0, 0.2, 0);
+                DebugRenderer.drawString(
+                        context.matrixStack(),
+                        context.consumers(),
+                        "Group name: " + value.name,
+                        debugLocation.x,
+                        debugLocation.y,
+                        debugLocation.z,
+                        -1
+                );
+                debugLocation = debugLocation.subtract(0, 0.2, 0);
+                DebugRenderer.drawString(
+                        context.matrixStack(),
+                        context.consumers(),
+                        "Group island: " + value.island,
+                        debugLocation.x,
+                        debugLocation.y,
+                        debugLocation.z,
+                        -1
+                );
+                debugLocation = debugLocation.subtract(0, 0.2, 0);
+                DebugRenderer.drawString(context.matrixStack(), context.consumers(), "Areas: " + Arrays.toString(
+                        waypoint.area), debugLocation.x, debugLocation.y, debugLocation.z, -1);
+
+
             }
 
             RenderUtils.renderTextInWorld(
                     context.matrixStack(),
-                    waypoint.position.add(0.5, 0.5, 0.5),
-                    Objects.requireNonNullElse(waypoint.name, value.name),
+                    position.add(0.5, 0.5, 0.5),
+                    text,
                     context.consumers(),
                     Math.max(0.02f, (float) (0.02f * (v / 10f))),
                     true,
@@ -182,7 +255,7 @@ public class WaypointManager implements Module {
 
             RenderUtils.renderTextInWorld(
                     context.matrixStack(),
-                    waypoint.position.add(0.5, 0.25 - (0.11 * (v / 10f)), 0.5),
+                    position.add(0.5, 0.25 - (0.11 * (v / 10f)), 0.5),
                     Text.literal("%.2f".formatted(v))
                             .append("m").formatted(Formatting.YELLOW),
                     context.consumers(),
@@ -191,7 +264,33 @@ public class WaypointManager implements Module {
                     true,
                     -1
             );
+
+            MinecraftClient.getInstance().getProfiler().pop();
         }
+        MinecraftClient.getInstance().getProfiler().pop();
     }
 
+    public static void addAnonymousWaypoints(Text name, Vec3d vec3d) {
+        Waypoint waypoint = new Waypoint();
+        waypoint.name = name;
+        waypoint.position = vec3d;
+        waypoint.color = Color.RED;
+        GROUP_LESS.waypoints.add(waypoint);
+    }
+
+    public static void addCodingWaypoint(UUID uuid, Waypoint waypoint) {
+        CODING_GROUPS.get(uuid).waypoints.add(waypoint);
+    }
+
+    public static void addCodingGroup(WaypointGroup waypointGroup) {
+        CODING_GROUPS.put(waypointGroup.category, waypointGroup);
+    }
+
+    public static boolean hasCodingGroup(UUID uuid) {
+        return CODING_GROUPS.containsKey(uuid);
+    }
+
+    public static void clearCodingGroup(UUID uuid) {
+        CODING_GROUPS.get(uuid).waypoints.clear();
+    }
 }

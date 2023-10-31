@@ -1,8 +1,11 @@
 package dev.morazzer.cookiesmod.data.profile;
 
 import dev.morazzer.cookiesmod.data.player.PlayerStorage;
+import dev.morazzer.cookiesmod.data.profile.mining.DwarvenMinesData;
+import dev.morazzer.cookiesmod.data.profile.mining.HeartOfTheMountainData;
 import dev.morazzer.cookiesmod.utils.general.ScoreboardUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
+import dev.morazzer.cookiesmod.utils.json.Save;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +26,10 @@ public class ProfileData {
     private UUID profileUuid;
     @Setter(AccessLevel.PRIVATE)
     private GameMode gameMode = GameMode.UNKNOWN;
+    @Save
+    private DwarvenMinesData dwarvenMinesData = new DwarvenMinesData();
+    @Save
+    private HeartOfTheMountainData heartOfTheMountainData = new HeartOfTheMountainData();
 
     /**
      * Create a profile.
@@ -54,9 +61,9 @@ public class ProfileData {
      * @return If the profile is active.
      */
     public boolean isActive() {
-        return PlayerStorage.getCurrentPlayer().map(uuid -> uuid == this.playerUuid).orElse(false) && SkyblockUtils
+        return PlayerStorage.getCurrentPlayer().map(uuid -> uuid.equals(this.playerUuid)).orElse(false) && SkyblockUtils
                 .getLastProfileId()
-                .map(uuid -> uuid == this.profileUuid)
+                .map(uuid -> uuid.equals(this.profileUuid))
                 .orElse(false);
     }
 

@@ -3,7 +3,7 @@ package dev.morazzer.cookiesmod.features.repository.items.recipe;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class RepositoryRecipeManager {
         try (Stream<Path> list = Files.list(recipes)) {
             list.forEach(path -> {
                 try {
-                    JsonObject jsonObject = GsonUtils.gson.fromJson(
+                    JsonObject jsonObject = JsonUtils.GSON.fromJson(
                             Files.readString(path, StandardCharsets.UTF_8),
                             JsonObject.class
                     );
