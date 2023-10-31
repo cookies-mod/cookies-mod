@@ -1,12 +1,16 @@
 package dev.morazzer.cookiesmod.mixin.repo;
 
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
+import dev.morazzer.cookiesmod.mixin.ItemNbtAttachment;
 import dev.morazzer.cookiesmod.mixin.ItemStackTooltip;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,10 +21,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements ItemStackTooltip {
+public abstract class ItemStackMixin implements ItemStackTooltip, ItemNbtAttachment {
 
     @Unique
     public SkyblockItem cookies$skyblockItem;
+    @Unique
+    private NbtCompound cookies$nbt;
 
     @Shadow
     public abstract Item getItem();
@@ -48,6 +54,22 @@ public abstract class ItemStackMixin implements ItemStackTooltip {
     @Override
     public SkyblockItem cookies$getSkyblockItem() {
         return this.cookies$skyblockItem;
+    }
+
+    @Nullable
+    @Override
+    public NbtCompound cookies$getCookiesNbt() {
+        return this.cookies$nbt;
+    }
+
+    @Override
+    public @NotNull NbtCompound cookies$getOrCreateCookiesNbt() {
+        return this.cookies$nbt != null ? this.cookies$nbt : (this.cookies$nbt = new NbtCompound());
+    }
+
+    @Override
+    public void cookies$setCookiesNbt(@NotNull NbtCompound nbt) {
+        this.cookies$nbt = nbt;
     }
 
 }

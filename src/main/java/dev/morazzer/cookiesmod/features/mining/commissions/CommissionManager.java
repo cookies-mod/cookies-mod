@@ -10,7 +10,7 @@ import dev.morazzer.cookiesmod.features.waypoints.WaypointManager;
 import dev.morazzer.cookiesmod.generated.Area;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
@@ -54,18 +54,18 @@ public class CommissionManager implements Module {
 
     private void loadCommissions(byte[] bytes) {
         this.commissions.clear();
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(
+        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
                 new String(bytes, StandardCharsets.UTF_8),
                 JsonObject.class
         );
 
-        this.commissions.putAll(GsonUtils.gsonClean.fromJson(jsonObject.get("values"), new TypeToken<>() {}));
-        this.namesToValue.putAll(GsonUtils.gsonClean.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {}));
+        this.commissions.putAll(JsonUtils.gsonClean.fromJson(jsonObject.get("values"), new TypeToken<>() {}));
+        this.namesToValue.putAll(JsonUtils.gsonClean.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {}));
     }
 
     private void loadLocations(byte[] bytes) {
         this.locations.clear();
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(
+        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
                 new String(bytes, StandardCharsets.UTF_8),
                 JsonObject.class
         );

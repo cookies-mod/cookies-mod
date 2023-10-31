@@ -92,7 +92,7 @@ public abstract class HudElement {
      * @param tickDelta   The difference in time between the last tick and now.
      */
     public void renderWithTests(DrawContext drawContext, float tickDelta) {
-        MinecraftClient.getInstance().getProfiler().push(this.identifier.toString());
+        MinecraftClient.getInstance().getProfiler().push(this.getIdentifier().toString());
         if (!(this.enabled && shouldRender())) {
             MinecraftClient.getInstance().getProfiler().pop();
             return;

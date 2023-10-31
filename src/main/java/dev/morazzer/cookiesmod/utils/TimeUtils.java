@@ -18,7 +18,7 @@ public class TimeUtils {
         long hours = minutes / 60;
         minutes = minutes % 60;
         long days = hours / 24;
-        hours = hours % 60;
+        hours = hours % 24;
 
         StringBuilder stringBuilder = new StringBuilder();
         boolean didWritePrevious = false;

@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.features.repository;
 
+import dev.morazzer.cookiesmod.features.repository.constants.Constants;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.RepositoryRecipeManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
@@ -68,6 +69,7 @@ public class RepositoryManager {
 
 		RepositoryItemManager.loadItems();
 		RepositoryRecipeManager.loadRecipes();
+        Constants.load();
 		reloadCallbacks.forEach(Runnable::run);
 		finishedLoading = true;
 	}

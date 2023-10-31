@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import lombok.Getter;
 
@@ -51,7 +51,7 @@ public class CompostUpgradeCost {
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot()
                 .resolve("constants/compost_upgrades.json"))) {
-            JsonObject jsonObject = GsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
+            JsonObject jsonObject = JsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
                     RepositoryManager.getRepoRoot()
                             .resolve("constants/compost_upgrades.json"),
                     StandardCharsets.UTF_8

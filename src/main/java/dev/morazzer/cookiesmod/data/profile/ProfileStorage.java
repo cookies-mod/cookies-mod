@@ -1,14 +1,15 @@
 package dev.morazzer.cookiesmod.data.profile;
 
+import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.data.player.PlayerStorage;
 import dev.morazzer.cookiesmod.events.api.ProfileSwapEvent;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
-import org.jetbrains.annotations.NotNull;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,8 +22,10 @@ import java.util.Optional;
  */
 public class ProfileStorage {
 
+    static final Path profileDataFolder = Path.of("config/cookiesmod/profiles");
     private static final Identifier SHOW_LOADING_SAVING_MESSAGES = DevUtils.createIdentifier(
             "storage/profiles/show_load_save");
+    private static ProfileData profileData;
 
     static {
         ProfileSwapEvent.AFTER_SET_NO_UUID.register(() -> {
@@ -30,13 +33,6 @@ public class ProfileStorage {
             loadCurrentProfile();
         });
     }
-
-
-    static Path profileDataFolder = Path.of("config/cookiesmod/profiles");
-
-    static final Path profileDataFolder = Path.of("config/cookiesmod/profiles");
-
-    private static ProfileData profileData;
 
     /**
      * Save the current profile data instance to the file.
@@ -50,7 +46,7 @@ public class ProfileStorage {
             return;
         }
 
-       if (DevUtils.isEnabled(SHOW_LOADING_SAVING_MESSAGES)) {
+        if (DevUtils.isEnabled(SHOW_LOADING_SAVING_MESSAGES)) {
             CookiesUtils.sendMessage("Saving " + profileData.getProfileUuid());
         }
 
@@ -58,9 +54,11 @@ public class ProfileStorage {
         Path profileFile = playerDirectory.resolve(profileData.getProfileUuid() + ".json");
 
         ExceptionHandler.removeThrows(() -> Files.createDirectories(profileFile.getParent()));
+        JsonObject jsonObject = JsonUtils.toJsonObject(profileData);
+        ProfileDataMigrations.writeLatest(jsonObject);
         ExceptionHandler.removeThrows(() -> Files.writeString(
                 profileFile,
-                GsonUtils.gson.toJson(profileData),
+                JsonUtils.gson.toJson(jsonObject),
                 StandardCharsets.UTF_8,
                 StandardOpenOption.TRUNCATE_EXISTING,
                 StandardOpenOption.CREATE
@@ -91,10 +89,16 @@ public class ProfileStorage {
             return;
         }
 
-        profileData = GsonUtils.gson.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
+        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
                 profileFile,
                 StandardCharsets.UTF_8
-        )), ProfileData.class);
+        )), JsonObject.class);
+        ProfileDataMigrations.migrate(jsonObject);
+
+        profileData = JsonUtils.fromJson(new ProfileData(
+                PlayerStorage.getCurrentPlayer().get(),
+                SkyblockUtils.getLastProfileId().get()
+        ), jsonObject);
     }
 
     /**

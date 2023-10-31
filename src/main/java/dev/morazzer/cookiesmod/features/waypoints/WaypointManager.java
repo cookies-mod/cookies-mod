@@ -10,7 +10,7 @@ import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -73,7 +73,7 @@ public class WaypointManager implements Module {
      * @param waypointsString The json object.
      */
     public void loadWaypoints(String waypointsString) {
-        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(waypointsString, JsonObject.class);
+        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(waypointsString, JsonObject.class);
         if (jsonObject.isEmpty()) return;
 
         JsonArray categories = jsonObject.getAsJsonArray("categories");
@@ -97,7 +97,7 @@ public class WaypointManager implements Module {
         for (JsonElement jsonElement : waypoints) {
             JsonObject waypointElement = jsonElement.getAsJsonObject();
             Waypoint waypoint = new Waypoint();
-            waypoint.position = GsonUtils.gsonClean.fromJson(waypointElement.get("position"), Vec3d.class);
+            waypoint.position = JsonUtils.gsonClean.fromJson(waypointElement.get("position"), Vec3d.class);
             waypoint.area = waypointElement.has("areas") ? StreamSupport.stream(waypointElement.get("areas")
                             .getAsJsonArray().spliterator(), false).map(JsonElement::getAsString).map(Area::valueOf)
                     .toArray(Area[]::new) : new Area[] {};

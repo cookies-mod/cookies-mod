@@ -7,7 +7,7 @@ import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.NpcUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
@@ -126,7 +126,7 @@ public class FetchurHud extends HudElement {
             return;
         }
         String path = new String(resource.get());
-        JsonArray jsonElements = GsonUtils.gsonClean.fromJson(path, JsonArray.class);
+        JsonArray jsonElements = JsonUtils.gsonClean.fromJson(path, JsonArray.class);
         for (JsonElement jsonElement : jsonElements) {
             if (!jsonElement.isJsonPrimitive()) {
                 continue;

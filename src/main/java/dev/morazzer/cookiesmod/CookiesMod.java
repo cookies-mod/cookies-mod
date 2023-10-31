@@ -11,7 +11,7 @@ import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +106,7 @@ public class CookiesMod implements ModInitializer {
                     ExceptionHandler.wrap(closeableHttpResponse -> {
                         try {
                             String body = new String(closeableHttpResponse.getEntity().getContent().readAllBytes());
-                            jsonArrayAtomicReference.set(GsonUtils.gsonClean.fromJson(body, JsonArray.class));
+                            jsonArrayAtomicReference.set(JsonUtils.gsonClean.fromJson(body, JsonArray.class));
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

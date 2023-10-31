@@ -12,7 +12,7 @@ import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.TextUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -123,7 +123,7 @@ public class RepoSubcommand extends ClientCommand {
                     SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
                     if (item.getSkin().isPresent()) {
                         String s = new String(Base64.getDecoder().decode(item.getSkin().get()));
-                        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(s, JsonObject.class);
                         context.getSource().sendFeedback(TextUtils.prettyPrintJson(jsonObject));
                     } else {
                         context

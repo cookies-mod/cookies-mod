@@ -2,7 +2,7 @@ package dev.morazzer.cookiesmod.utils.general;
 
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.TextUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -131,7 +131,7 @@ public class ItemUtils {
                 NbtCompound textureValue = (NbtCompound) texture;
 
                 String s = new String(Base64.getDecoder().decode(textureValue.getString("Value")));
-                JsonObject jsonObject = GsonUtils.gsonClean.fromJson(s, JsonObject.class);
+                JsonObject jsonObject = JsonUtils.gsonClean.fromJson(s, JsonObject.class);
                 CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
             }
         }

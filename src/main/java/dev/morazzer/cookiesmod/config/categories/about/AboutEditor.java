@@ -13,7 +13,7 @@ import dev.morazzer.cookiesmod.config.categories.about.credits.Person;
 import dev.morazzer.cookiesmod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.GsonUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -80,7 +80,7 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
                             return;
                         }
 
-                        JsonObject jsonObject = GsonUtils.gsonClean.fromJson(
+                        JsonObject jsonObject = JsonUtils.gsonClean.fromJson(
                                 new String(bytes, StandardCharsets.UTF_8),
                                 JsonObject.class
                         );
