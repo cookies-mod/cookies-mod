@@ -1,4 +1,4 @@
-![newbanner](https://github.com/Morazzer/cookies-mod/assets/58326890/02ec9bf1-dc29-4693-ba5e-5615c2cb8626)
+![Pixelart Banner](https://github.com/Morazzer/cookies-mod/assets/58326890/49929a21-e44f-48f2-bcd1-2b9a4994f1aa)
 
 # Cookies Mod - A Minecraft Mod for Hypixel Skyblock
 
