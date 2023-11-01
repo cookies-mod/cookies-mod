@@ -61,7 +61,7 @@ public class RepositoryManager {
     public static void load() {
         try {
             GitHub gitHub = new GitHubBuilder().build();
-            GHRepository repository = gitHub.getRepository("morazzer/cookies-mod-repo");
+            GHRepository repository = gitHub.getRepository("cookies-mod/cookies-mod-repo");
             if (!Files.exists(repoRoot)) {
                 Files.createDirectory(repoRoot);
                 List<GHAsset> list = repository.getLatestRelease().listAssets().toList();
