@@ -1,14 +1,11 @@
 package dev.morazzer.cookiesmod.features.repository.items.recipe;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import net.minecraft.util.Identifier;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,40 +16,30 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Manger to handle all recipes in the repository.
  */
 public class RepositoryRecipeManager {
 
-    private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
     static final Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
+    private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
 
     /**
      * Loads all recipes from the repository.
      */
     public static void loadRecipes() {
-        try (Stream<Path> list = Files.list(recipes)) {
-            list.forEach(path -> {
-                try {
-                    JsonObject jsonObject = JsonUtils.GSON.fromJson(
-                            Files.readString(path, StandardCharsets.UTF_8),
-                            JsonObject.class
-                    );
-                    RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
-                    RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
+        for (JsonElement element : RepositoryFileAccessor.getInstance().getDirectory(recipes)) {
+            if (!element.isJsonObject()) {
+                return;
+            }
+            JsonObject jsonObject = element.getAsJsonObject();
+            RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
+            RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
 
-                    map
-                            .computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>())
-                            .add(repositoryRecipe);
-                } catch (IOException e) {
-                    ExceptionHandler.handleException(e);
-                }
-            });
-        } catch (IOException e) {
-            ExceptionHandler.handleException(e);
+            map.computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>()).add(repositoryRecipe);
         }
+        System.out.printf("Loaded %s recipes%n", map.size());
     }
 
     /**

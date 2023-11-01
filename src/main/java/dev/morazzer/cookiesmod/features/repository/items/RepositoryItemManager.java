@@ -4,14 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.util.Identifier;
 
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * Manager to handle all repository items.
@@ -82,11 +81,14 @@ public class RepositoryItemManager {
      * Loads all items from the local repository copy.
      */
     public static void loadItems() {
-        try (Stream<Path> list = Files.list(items)) {
-            list.filter(Predicate.not(RepositoryItemManager::loadItem)).forEach(value -> log.warn("Failed to load item {}", value));
-        } catch (IOException e) {
-            ExceptionHandler.handleException(e);
-        }
+        RepositoryFileAccessor.getInstance()
+                .getDirectory(items)
+                .stream()
+                .filter(JsonElement::isJsonObject)
+                .map(JsonElement::getAsJsonObject)
+                .filter(Predicate.not(RepositoryItemManager::loadItem))
+                .forEach(value -> log.warn("Failed to load item {}", value.get("")));
+
         log.info("Loaded {} items", itemMap.size());
         updateItemList();
     }
@@ -94,31 +96,28 @@ public class RepositoryItemManager {
     /**
      * Loads one item from the local repository copy.
      *
-     * @param path The path to load the item from.
+     * @param jsonObject The object to load as item.
      * @return If the item was loaded successfully.
      */
     @SuppressWarnings("UnusedReturnValue")
-    public static boolean loadItem(Path path) {
-        return loadItem(path, (o) -> {});
+    public static boolean loadItem(JsonObject jsonObject) {
+        return loadItem(jsonObject, (o) -> {});
     }
 
     /**
      * Load one item from the local repository copy.
      *
-     * @param path     The path to load the item from.
-     * @param consumer The callback to run after the item was loaded.
+     * @param jsonObject The object to load as item.
+     * @param consumer   The callback to run after the item was loaded.
      * @return If the item was loaded successfully.
      */
-    public static boolean loadItem(Path path, Consumer<Identifier> consumer) {
+    public static boolean loadItem(JsonObject jsonObject, Consumer<Identifier> consumer) {
         try {
-            log.debug("loading {}", path);
-            JsonObject jsonObject = JsonUtils.GSON.fromJson(Files.readString(path), JsonObject.class);
             SkyblockItem repositoryItem = new SkyblockItem(jsonObject);
             itemMap.put(repositoryItem.getSkyblockId(), repositoryItem);
             consumer.accept(repositoryItem.getSkyblockId());
             return true;
         } catch (Exception exception) {
-            System.err.println(path);
             ExceptionHandler.handleException(exception);
             return false;
         }

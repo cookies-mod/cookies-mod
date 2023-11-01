@@ -341,7 +341,7 @@ public class DwarvenMinesOverlay extends HudElement {
                 .orElse(-1L);
         profiler.swap("math");
         MutableText puzzler = Text.literal("Puzzler: ").formatted(Formatting.DARK_PURPLE);
-        long timeDelta = (ChronoUnit.DAYS.getDuration().get(ChronoUnit.MILLIS) - System.currentTimeMillis() + lastPuzzlerTime) / 1000;
+        long timeDelta = ChronoUnit.DAYS.getDuration().getSeconds() - ((System.currentTimeMillis() - lastPuzzlerTime) / 1000);
 
         profiler.swap("string");
         if (lastPuzzlerTime == -1) {

@@ -8,12 +8,13 @@ import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.data.profile.ProfileStorage;
 import dev.morazzer.cookiesmod.events.api.InventoryContentUpdateEvent;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.mixin.ItemNbtAttachment;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.NumberFormat;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
@@ -25,13 +26,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -49,10 +48,9 @@ public class HotmHelper implements Module {
      * Updates the constants from the repository.
      */
     public void update() {
-        Optional<byte[]> resource = RepositoryManager.getResource("constants/hotm_perks.json");
-        if (resource.isEmpty()) return;
-        String content = new String(resource.get(), StandardCharsets.UTF_8);
-        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(content, JsonObject.class);
+        JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/hotm_perks");
+        if (file == null || !file.isJsonObject()) return;
+        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(file.getAsJsonObject(), JsonObject.class);
         this.gemstonePowder.clear();
         this.perks.clear();
         for (String key : jsonObject.keySet()) {
@@ -66,7 +64,10 @@ public class HotmHelper implements Module {
 
             JsonElement jsonElement = jsonObject.get(key);
             if (!jsonElement.isJsonArray()) return;
-            this.perks.put(key, JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType()));
+            this.perks.put(
+                    key,
+                    JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType())
+            );
         }
     }
 
@@ -152,9 +153,14 @@ public class HotmHelper implements Module {
         String name = itemStack.getName().getString();
 
         if (name.equals("Peak of the Mountain")) {
-            boolean unlocked = itemStack.getTooltip(null, TooltipContext.BASIC).stream().noneMatch(text -> text.getString().equals("Requires Tier 5"));
+            boolean unlocked = itemStack
+                    .getTooltip(null, TooltipContext.BASIC)
+                    .stream()
+                    .noneMatch(text -> text.getString().equals("Requires Tier 5"));
 
-            ProfileStorage.getCurrentProfile().ifPresent(profileData -> profileData.getHeartOfTheMountainData().setPotm(unlocked));
+            ProfileStorage
+                    .getCurrentProfile()
+                    .ifPresent(profileData -> profileData.getHeartOfTheMountainData().setPotm(unlocked));
             itemStack.setCustomName(Text.literal(String.valueOf(unlocked)));
             return;
         }
