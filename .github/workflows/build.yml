@@ -4,6 +4,7 @@ on:
 jobs:
   build:
     name: Build
+    if: ${{ !startsWith(github.event.pull_request.title, '[CI SKIP]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,8 +18,8 @@ jobs:
           cache: gradle
       - name: Make Gradlew Executable
         run: chmod +x ./gradlew
-      - name: Build Mod
-        run: ./gradlew remapJar
+      - name: Build & Checkstyle
+        run: ./gradlew check remapJar
       - name: Hash Jars
         run: ./gradlew hashLibraries
       - name: Create Artifact

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <suppress
+            checks="LineLength|CustomImportOrder|OverloadMethodsDeclarationOrder|Indentation|AbbreviationAsWordInName|MissingJavadocType|MissingJavadocMethod"
+            files="[/\\]generated[/\\]"/>
+    <suppress checks="TypeName" files=".*Migration_[0-9]+"/>
+    <suppress checks="MissingJavadocType" files=".*Mixin"/>
+</suppressions>
