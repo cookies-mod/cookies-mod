@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,7 +24,8 @@ import java.util.stream.Collectors;
  */
 public class RepositoryRecipeManager {
 
-    static final Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
+    private static final Logger LOGGER = LoggerFactory.getLogger("cookies-mod-repository-recipes");
+    private static final Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
     private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
 
     /**
@@ -39,7 +42,7 @@ public class RepositoryRecipeManager {
 
             map.computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>()).add(repositoryRecipe);
         }
-        System.out.printf("Loaded %s recipes%n", map.size());
+        LOGGER.info("Loaded {} recipes", map.size());
     }
 
     /**
@@ -94,8 +97,7 @@ public class RepositoryRecipeManager {
     public static List<Ingredient> getIngredientListSorted(Identifier identifier) {
         Optional<RepositoryRecipe> recipe = getRecipe(identifier, RecipeType.CRAFTING);
 
-        return recipe
-                .map(repositoryRecipe -> Ingredient
+        return recipe.map(repositoryRecipe -> Ingredient
                         .mergeIngredients(Arrays.asList(repositoryRecipe.getIngredients()), Collectors.toList())
                         .stream()
                         .filter(Predicate.not(Ingredient::isAir))
@@ -113,8 +115,7 @@ public class RepositoryRecipeManager {
      */
     @SuppressWarnings("unused")
     public static Optional<RepositoryRecipe> getRecipe(Identifier identifier) {
-        return map
-                .getOrDefault(identifier, Collections.emptyList())
+        return map.getOrDefault(identifier, Collections.emptyList())
                 .stream()
                 .findFirst();
     }
@@ -127,8 +128,7 @@ public class RepositoryRecipeManager {
      * @return The recipe.
      */
     public static Optional<RepositoryRecipe> getRecipe(Identifier identifier, RecipeType type) {
-        return map
-                .getOrDefault(identifier, Collections.emptyList())
+        return map.getOrDefault(identifier, Collections.emptyList())
                 .stream()
                 .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
                 .findFirst();

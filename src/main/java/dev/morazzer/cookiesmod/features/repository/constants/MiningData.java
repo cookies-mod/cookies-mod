@@ -21,8 +21,7 @@ public class MiningData {
     private final Map<Identifier, Integer> parts = new HashMap<>();
 
     public MiningData() {
-        Optional
-                .ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/drills"))
+        Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/drills"))
                 .ifPresent(this::parseDrillsAndParts);
     }
 
