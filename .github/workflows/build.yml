@@ -15,9 +15,8 @@ jobs:
           check-latest: true
           distribution: 'temurin'
           cache: gradle
-      - name: Make gradlew executable
+      - name: Make Gradlew Executable
         run: chmod +x ./gradlew
-      - uses: gradle/gradle-build-action@v2
       - name: Build Mod
         run: ./gradlew remapJar
       - name: Hash jars
