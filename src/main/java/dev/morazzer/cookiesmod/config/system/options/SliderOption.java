@@ -148,9 +148,8 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     }
 
     /**
-     * Sets the value of the option.
-     * This method does not have minimum/maximum checks
-     * and setting the value to high or to low might cause displaying issues.
+     * Sets the value of the option. This method does not have minimum/maximum checks and setting the value to high or
+     * to low might cause displaying issues.
      *
      * @param number The number to set it to.
      * @param <N>    The type of the number.
@@ -162,7 +161,8 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     @Override
     public void load(@NotNull JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
-            log.warn("Error while loading config value, expected number got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            log.warn("Error while loading config value, expected number got %s".formatted(
+                jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isNumber()) {
@@ -182,7 +182,7 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     public @NotNull ConfigOptionEditor<T, SliderOption<T>> getEditor() {
         if (this.max == null || this.min == null || this.step == null || this.value == null) {
             throw new UnsupportedOperationException("Cannot create editor for slider option with name \"%s\"".formatted(
-                    this.getName().getString()));
+                this.getName().getString()));
         }
         return new SliderEditor<>(this);
     }
@@ -190,11 +190,16 @@ public class SliderOption<T extends Number> extends Option<T, SliderOption<T>> {
     @Override
     protected void updateCallbacks(T oldValue) {
         super.callbacks.forEach(callbacks -> callbacks.valueChanged(
-                this.numberTransformer.parseNumber(oldValue),
-                this.numberTransformer.parseNumber(this.value)
+            this.numberTransformer.parseNumber(oldValue),
+            this.numberTransformer.parseNumber(this.value)
         ));
     }
 
+    /**
+     * Transformer to get the type from the number.
+     *
+     * @param <T> The type of the number.
+     */
     @FunctionalInterface
     public interface NumberTransformer<T extends Number> {
 

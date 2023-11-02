@@ -5,12 +5,11 @@ import dev.morazzer.cookiesmod.config.system.Config;
 import dev.morazzer.cookiesmod.config.system.Foldable;
 import dev.morazzer.cookiesmod.config.system.Option;
 import dev.morazzer.cookiesmod.config.system.options.FoldableOption;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Config reader to correctly parse a config from its source.
@@ -27,6 +26,8 @@ public class ConfigReader {
     private ProcessedCategory currentCategory;
 
     /**
+     * Begins a category.
+     *
      * @param category The category that begins.
      */
     public void beginCategory(Category category) {
@@ -34,6 +35,9 @@ public class ConfigReader {
         this.categories.add(this.currentCategory);
     }
 
+    /**
+     * Ends a category.
+     */
     public void endCategory() {
         this.foldableId.set(0);
         if (!this.foldableStack.isEmpty()) {
@@ -43,14 +47,16 @@ public class ConfigReader {
     }
 
     /**
+     * Creates a foldable.
+     *
      * @param foldable The foldable to open.
      */
     public void beginFoldable(Foldable foldable) {
         //noinspection rawtypes
 
         ProcessedOption processedOption = new ProcessedOption<>(new FoldableOption(
-                foldable,
-                foldableId.incrementAndGet()
+            foldable,
+            foldableId.incrementAndGet()
         ));
         if (!this.foldableStack.isEmpty()) {
             processedOption.setFoldable(this.foldableStack.peek());
@@ -64,14 +70,18 @@ public class ConfigReader {
     }
 
     /**
-     * @param config The config.
+     * Begins the config.
      */
     public void beginConfig(Config<?> config) {
         this.config = config;
     }
 
+    /**
+     * Ends the config.
+     */
     @SuppressWarnings("EmptyMethod")
-    public void endConfig() {}
+    public void endConfig() {
+    }
 
     /**
      * Marks an option as processed and add it to the finished list.

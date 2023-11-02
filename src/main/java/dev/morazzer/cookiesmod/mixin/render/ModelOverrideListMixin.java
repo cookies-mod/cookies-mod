@@ -23,21 +23,29 @@ public class ModelOverrideListMixin {
     @Final
     private Identifier[] conditionTypes;
 
-    @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/json/ModelOverrideList$BakedOverride;test([F)Z"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    public void inject(
-            BakedModel model,
-            ItemStack stack,
-            ClientWorld world,
-            LivingEntity entity,
-            int seed,
-            CallbackInfoReturnable<BakedModel> cir,
-            Item item,
-            int i,
-            float[] fs,
-            ModelOverrideList.BakedOverride[] var9,
-            int var10,
-            int var11,
-            ModelOverrideList.BakedOverride bakedOverride
+    @Inject(
+        method = "apply",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/render/model/json/ModelOverrideList$BakedOverride;test([F)Z"
+        ),
+        locals = LocalCapture.CAPTURE_FAILHARD,
+        cancellable = true
+    )
+    private void inject(
+        BakedModel model,
+        ItemStack stack,
+        ClientWorld world,
+        LivingEntity entity,
+        int seed,
+        CallbackInfoReturnable<BakedModel> cir,
+        Item item,
+        int i,
+        float[] fs,
+        ModelOverrideList.BakedOverride[] var9,
+        int var10,
+        int var11,
+        ModelOverrideList.BakedOverride bakedOverride
     ) {
         boolean respectOthers = true;
         for (Identifier conditionType : conditionTypes) {

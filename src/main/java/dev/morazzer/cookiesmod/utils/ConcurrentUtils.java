@@ -1,18 +1,21 @@
 package dev.morazzer.cookiesmod.utils;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Various methods related to concurrent code execution.
+ */
 @Slf4j
 public class ConcurrentUtils {
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor(Executors.defaultThreadFactory());
+    private static final ExecutorService executorService =
+        Executors.newSingleThreadExecutor(Executors.defaultThreadFactory());
     private static final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
-            Executors.defaultThreadFactory());
+        Executors.defaultThreadFactory());
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(ConcurrentUtils::shutdown));

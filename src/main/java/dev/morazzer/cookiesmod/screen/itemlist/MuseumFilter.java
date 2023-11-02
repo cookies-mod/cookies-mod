@@ -13,16 +13,16 @@ import net.minecraft.util.Identifier;
 public enum MuseumFilter {
 
     UNFILTERED(
-            Identifier.of("cookiesmod", "gui/itemlist/museum/default.png"),
-            Text.literal("> All Items").formatted(Formatting.WHITE)
+        Identifier.of("cookiesmod", "gui/itemlist/museum/default.png"),
+        Text.literal("> All Items").formatted(Formatting.WHITE)
     ),
     MUSEUM(
-            Identifier.of("cookiesmod", "gui/itemlist/museum/enabled.png"),
-            Text.literal("> Museum Items").formatted(Formatting.GREEN)
+        Identifier.of("cookiesmod", "gui/itemlist/museum/enabled.png"),
+        Text.literal("> Museum Items").formatted(Formatting.GREEN)
     ),
     NON_MUSEUM(
-            Identifier.of("cookiesmod", "gui/itemlist/museum/disabled.png"),
-            Text.literal("> Non Museum Items").formatted(Formatting.RED)
+        Identifier.of("cookiesmod", "gui/itemlist/museum/disabled.png"),
+        Text.literal("> Non Museum Items").formatted(Formatting.RED)
     );
 
     private final Identifier identifier;

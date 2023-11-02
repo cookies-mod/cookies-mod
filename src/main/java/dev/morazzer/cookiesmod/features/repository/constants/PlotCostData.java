@@ -3,12 +3,11 @@ package dev.morazzer.cookiesmod.features.repository.constants;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import lombok.Getter;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * The plot cost data for the repository.
@@ -30,8 +29,8 @@ public class PlotCostData {
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json"))) {
             instance = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager
-                    .getRepoRoot()
-                    .resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), PlotCostData.class);
+                .getRepoRoot()
+                .resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), PlotCostData.class);
         }
         return instance != null;
     }
@@ -53,14 +52,15 @@ public class PlotCostData {
     }
 
     /**
-     * Record to save the cost for one plot
+     * Record to save the cost for one plot.
      *
      * @param amount The number of items.
      * @param bundle If the item is a bundle or a normal compost.
      */
     public record Cost(
-            int amount,
-            boolean bundle
-    ) {}
+        int amount,
+        boolean bundle
+    ) {
+    }
 
 }

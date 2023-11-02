@@ -16,11 +16,11 @@ public class MelodyHairRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return Text
-                .literal("*hidden* ")
-                .append(super.getRequirementString())
-                .append(Text.literal("Melodies Harp ").formatted(Formatting.DARK_PURPLE))
-                .append(" *hidden*")
-                .formatted(Formatting.DARK_RED);
+            .literal("*hidden* ")
+            .append(super.getRequirementString())
+            .append(Text.literal("Melodies Harp ").formatted(Formatting.DARK_PURPLE))
+            .append(" *hidden*")
+            .formatted(Formatting.DARK_RED);
     }
 
 }

@@ -8,9 +8,8 @@ package dev.morazzer.cookiesmod.data.migrations;
 public interface Migration<T> {
 
     /**
-     * Gets the unique number of the migration.
-     * This number incrementally counts up with each migration
-     * and is used to track whether a migration is already applied or not.
+     * Gets the unique number of the migration. This number incrementally counts up with each migration and is used to
+     * track whether a migration is already applied or not.
      *
      * @return The number.
      */

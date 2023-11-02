@@ -6,14 +6,13 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
-import lombok.Getter;
-
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * Repository item for compost upgrades.
@@ -50,11 +49,11 @@ public class CompostUpgradeCost {
      */
     public static boolean loaded() {
         if (instance == null && Files.exists(RepositoryManager.getRepoRoot()
-                .resolve("constants/compost_upgrades.json"))) {
+            .resolve("constants/compost_upgrades.json"))) {
             JsonObject jsonObject = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
-                    RepositoryManager.getRepoRoot()
-                            .resolve("constants/compost_upgrades.json"),
-                    StandardCharsets.UTF_8
+                RepositoryManager.getRepoRoot()
+                    .resolve("constants/compost_upgrades.json"),
+                StandardCharsets.UTF_8
             ), "{}"), JsonObject.class);
 
             instance = new CompostUpgradeCost(jsonObject);
@@ -63,7 +62,8 @@ public class CompostUpgradeCost {
     }
 
     /**
-     * Parse a {@linkplain com.google.gson.JsonArray} to a list of {@linkplain dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost.CompostUpgrade}.
+     * Parse a {@linkplain com.google.gson.JsonArray} to a list of
+     * {@linkplain dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost.CompostUpgrade}.
      *
      * @param jsonElements The json array.
      * @return The list of compost upgrades.
@@ -81,8 +81,8 @@ public class CompostUpgradeCost {
             JsonObject costObject = jsonObject.getAsJsonObject("cost");
             for (String key : costObject.keySet()) {
                 upgradeList.add(new Ingredient("%s:%s".formatted(
-                        ItemUtils.withNamespace(key),
-                        costObject.get(key).getAsInt()
+                    ItemUtils.withNamespace(key),
+                    costObject.get(key).getAsInt()
                 )));
             }
             list.add(new CompostUpgrade(copper, upgradeList));
@@ -97,8 +97,9 @@ public class CompostUpgradeCost {
      * @param cost   The items required.
      */
     public record CompostUpgrade(
-            int copper,
-            List<Ingredient> cost
-    ) {}
+        int copper,
+        List<Ingredient> cost
+    ) {
+    }
 
 }

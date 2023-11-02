@@ -20,9 +20,9 @@ public class GardenLevelRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(Text.empty().append("Garden Level").append(" " + level).formatted(Formatting.GREEN))
-                .append(".");
+            .getRequirementString()
+            .append(Text.empty().append("Garden Level").append(" " + level).formatted(Formatting.GREEN))
+            .append(".");
     }
 
 }

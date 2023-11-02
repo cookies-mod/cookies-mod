@@ -11,10 +11,12 @@ import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import java.io.IOException;
+import java.net.URI;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.text.MutableText;
@@ -28,16 +30,17 @@ import org.apache.logging.log4j.core.filter.StringMatchFilter;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.concurrent.atomic.AtomicReference;
-
-@Slf4j
+/**
+ * Main class for the mod.
+ */
 public class CookiesMod implements ModInitializer {
 
-    private static final String prefix = "Cookies Mod > ";
     public static final Identifier ROOT = new Identifier("cookiesmod", "root");
+    private static final Logger LOGGER = LoggerFactory.getLogger("cookies-mod");
+    private static final String prefix = "Cookies Mod > ";
     @Getter
     private static CookiesMod instance;
     private static boolean firstStart = false;
@@ -47,20 +50,39 @@ public class CookiesMod implements ModInitializer {
         instance = this;
     }
 
+    /**
+     * Sets the first start.
+     */
     public static void setFirstStart() {
         CookiesMod.firstStart = true;
     }
 
+    /**
+     * Creates the prefix as colored text.
+     *
+     * @return The prefix.
+     */
     public static MutableText createPrefix() {
         return Text.literal(prefix).styled(style -> style.withColor(ColorUtils.mainColor));
     }
 
-    public static MutableText createColor() {
-        return Text.empty().styled(style -> style.withColor(ColorUtils.mainColor));
-    }
-
+    /**
+     * Creates the prefix with a gradient from the default mod color to the end color.
+     *
+     * @param endColor The end color.
+     * @return The text.
+     */
     public static MutableText createPrefix(int endColor) {
         return ColorUtils.literalWithGradient(prefix, ColorUtils.mainColor, endColor);
+    }
+
+    /**
+     * Creates a text with the default mod color.
+     *
+     * @return The text.
+     */
+    public static MutableText createColor() {
+        return Text.empty().styled(style -> style.withColor(ColorUtils.mainColor));
     }
 
     @Override
@@ -69,28 +91,28 @@ public class CookiesMod implements ModInitializer {
         ConcurrentUtils.execute(RepositoryManager::load);
 
         Reflections reflections = new Reflections(new ConfigurationBuilder().forPackage("dev.morazzer.cookiesmod")
-                .setScanners(Scanners.TypesAnnotated));
+            .setScanners(Scanners.TypesAnnotated));
 
 
         loadModules();
         HudManager.init();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.loadCommands(
-                reflections,
-                dispatcher
+            reflections,
+            dispatcher
         ));
 
         if (ConfigManager.getConfig().devCategory.hideSpam.getValue()) {
             LoggerContext context = (LoggerContext) LogManager.getContext(false);
             for (LoggerConfig value : context.getConfiguration().getLoggers().values()) {
                 value.addFilter(new StringMatchFilter.Builder().setMatchString(
-                                "Ignoring player info update for unknown player").setOnMismatch(Filter.Result.ACCEPT)
-                        .setOnMatch(Filter.Result.DENY).build());
+                        "Ignoring player info update for unknown player").setOnMismatch(Filter.Result.ACCEPT)
+                    .setOnMatch(Filter.Result.DENY).build());
                 value.addFilter(new StringMatchFilter.Builder().setMatchString(
-                                "Signature is missing from Property textures").setOnMismatch(Filter.Result.ACCEPT)
-                        .setOnMatch(Filter.Result.DENY).build());
+                        "Signature is missing from Property textures").setOnMismatch(Filter.Result.ACCEPT)
+                    .setOnMatch(Filter.Result.DENY).build());
                 value.addFilter(new StringMatchFilter.Builder().setMatchString("Received packet for unknown team ")
-                        .setOnMismatch(Filter.Result.ACCEPT).setOnMatch(Filter.Result.DENY).build());
+                    .setOnMismatch(Filter.Result.ACCEPT).setOnMatch(Filter.Result.DENY).build());
             }
         }
     }
@@ -102,15 +124,15 @@ public class CookiesMod implements ModInitializer {
         AtomicReference<JsonArray> jsonArrayAtomicReference = new AtomicReference<>();
         try {
             HttpUtils.getResponse(
-                    ExceptionHandler.removeThrows(() -> new URI("https://cookies-mod-features.deno.dev")),
-                    ExceptionHandler.wrap(closeableHttpResponse -> {
-                        try {
-                            String body = new String(closeableHttpResponse.getEntity().getContent().readAllBytes());
-                            jsonArrayAtomicReference.set(JsonUtils.CLEAN_GSON.fromJson(body, JsonArray.class));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
+                ExceptionHandler.removeThrows(() -> new URI("https://cookies-mod-features.deno.dev")),
+                ExceptionHandler.wrap(closeableHttpResponse -> {
+                    try {
+                        String body = new String(closeableHttpResponse.getEntity().getContent().readAllBytes());
+                        jsonArrayAtomicReference.set(JsonUtils.CLEAN_GSON.fromJson(body, JsonArray.class));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
             );
         } catch (Exception e) {
             jsonArrayAtomicReference.set(new JsonArray());
@@ -122,7 +144,7 @@ public class CookiesMod implements ModInitializer {
             }
 
             if (jsonArrayAtomicReference.get().contains(new JsonPrimitive(id))) {
-                log.warn("Skipping module {}, it has been marked as disabled by the developers", id);
+                LOGGER.warn("Skipping module {}, it has been marked as disabled by the developers", id);
                 return DevUtils.isDevEnvironment();
             }
 

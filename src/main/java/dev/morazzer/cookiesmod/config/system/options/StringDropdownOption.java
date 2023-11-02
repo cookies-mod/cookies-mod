@@ -5,13 +5,12 @@ import com.google.gson.JsonPrimitive;
 import dev.morazzer.cookiesmod.config.system.Option;
 import dev.morazzer.cookiesmod.config.system.editor.ConfigOptionEditor;
 import dev.morazzer.cookiesmod.config.system.editor.StringDropdownEditor;
+import java.util.Set;
 import joptsimple.internal.Strings;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 /**
  * A dropdown menu in the config which gets its values from an enum instance.
@@ -31,22 +30,22 @@ public class StringDropdownOption extends Option<String, StringDropdownOption> {
     public void load(@NotNull JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
             log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(
-                    possibleValues,
-                    ", "
+                possibleValues,
+                ", "
             ), jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isString()) {
             log.warn("Error while loading config value, expected any of [%s] got %s".formatted(Strings.join(
-                    possibleValues,
-                    ", "
+                possibleValues,
+                ", "
             ), jsonElement.getAsString()));
             return;
         }
         if (!possibleValues.contains(jsonElement.getAsString())) {
             log.warn("Error while loading config value, expected any of [%s] found %s".formatted(Strings.join(
-                    possibleValues,
-                    ", "
+                possibleValues,
+                ", "
             ), jsonElement.getAsString()));
             return;
         }

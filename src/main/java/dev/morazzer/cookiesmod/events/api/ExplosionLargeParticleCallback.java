@@ -11,15 +11,15 @@ import net.minecraft.client.world.ClientWorld;
 public interface ExplosionLargeParticleCallback {
 
     Event<ExplosionLargeParticleCallback> EVENT = EventFactory.createArrayBacked(
-            ExplosionLargeParticleCallback.class,
-            explosionLargeParticleCallbacks -> (world, x, y, z, d, spriteProvider) -> {
-                for (ExplosionLargeParticleCallback explosionLargeParticleCallback : explosionLargeParticleCallbacks) {
-                    if (!explosionLargeParticleCallback.explosion(world, x, y, z, d, spriteProvider)) {
-                        return false;
-                    }
+        ExplosionLargeParticleCallback.class,
+        explosionLargeParticleCallbacks -> (world, x, y, z, d, spriteProvider) -> {
+            for (ExplosionLargeParticleCallback explosionLargeParticleCallback : explosionLargeParticleCallbacks) {
+                if (!explosionLargeParticleCallback.explosion(world, x, y, z, d, spriteProvider)) {
+                    return false;
                 }
-                return true;
             }
+            return true;
+        }
     );
 
     /**
@@ -34,12 +34,12 @@ public interface ExplosionLargeParticleCallback {
      * @return False if the particle should be canceled, true otherwise.
      */
     boolean explosion(
-            ClientWorld world,
-            double x,
-            double y,
-            double z,
-            double scaleFactor,
-            SpriteProvider spriteProvider
+        ClientWorld world,
+        double x,
+        double y,
+        double z,
+        double scaleFactor,
+        SpriteProvider spriteProvider
     );
 
 }

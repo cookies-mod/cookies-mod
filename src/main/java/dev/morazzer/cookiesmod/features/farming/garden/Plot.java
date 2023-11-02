@@ -1,10 +1,9 @@
 package dev.morazzer.cookiesmod.features.farming.garden;
 
+import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.Optional;
 
 /**
  * Utility functions to work with plots.
@@ -25,10 +24,10 @@ public enum Plot {
      */
     public static Plot getCurrentPlot() {
         return Optional
-                .ofNullable(MinecraftClient.getInstance().player)
-                .map(Entity::getPos)
-                .map(Plot::getPlotFromRealCoordinate)
-                .orElse(Plot.NONE);
+            .ofNullable(MinecraftClient.getInstance().player)
+            .map(Entity::getPos)
+            .map(Plot::getPlotFromRealCoordinate)
+            .orElse(Plot.NONE);
     }
 
     /**
@@ -39,8 +38,8 @@ public enum Plot {
      */
     public static Plot getPlotFromRealCoordinate(Vec3d position) {
         return getPlotFromPlotCoordinate(
-                (int) (changeToPlotCenter(Math.abs(position.x)) + 48) / 96,
-                (int) (changeToPlotCenter(Math.abs(position.z)) + 48) / 96
+            (int) (changeToPlotCenter(Math.abs(position.x)) + 48) / 96,
+            (int) (changeToPlotCenter(Math.abs(position.z)) + 48) / 96
         );
     }
 

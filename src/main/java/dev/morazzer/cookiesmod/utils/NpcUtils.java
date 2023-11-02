@@ -7,6 +7,12 @@ import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientConnectionState;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -31,13 +37,9 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
-
+/**
+ * Various utils related to NPCs.
+ */
 public class NpcUtils {
 
     /**
@@ -66,17 +68,17 @@ public class NpcUtils {
             JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(value, JsonObject.class);
             CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
             CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append("Base64 encoded profile: ")
-                    .append(Text.literal("[COPY]")
-                            .setStyle(
-                                    Style.EMPTY.withClickEvent(new ClickEvent(
-                                            ClickEvent.Action.COPY_TO_CLIPBOARD,
-                                            texture.value()
-                                    )).withHoverEvent(new HoverEvent(
-                                            HoverEvent.Action.SHOW_TEXT,
-                                            Text.literal(texture.value())
-                                    )).withColor(Formatting.YELLOW)
-                            )
+                .append(Text.literal("[COPY]")
+                    .setStyle(
+                        Style.EMPTY.withClickEvent(new ClickEvent(
+                            ClickEvent.Action.COPY_TO_CLIPBOARD,
+                            texture.value()
+                        )).withHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            Text.literal(texture.value())
+                        )).withColor(Formatting.YELLOW)
                     )
+                )
             );
         }
         for (String key : playerEntity.getGameProfile().getProperties().keys()) {
@@ -85,7 +87,7 @@ public class NpcUtils {
                 continue;
             }
             CookiesUtils.sendMessage(CookiesMod.createPrefix(-1).append("Values for key ").append(key)
-                    .append(Arrays.toString(properties.toArray())));
+                .append(Arrays.toString(properties.toArray())));
         }
     }
 
@@ -107,29 +109,17 @@ public class NpcUtils {
         private SkinTextures skinTextures;
 
         public CookiesRenderablePlayer(GameProfile gameProfile) {
-            super(
-                    MinecraftClient.getInstance(),
-                    Optional.ofNullable(MinecraftClient.getInstance().world).orElseThrow(),
-                    new ClientPlayNetworkHandler(MinecraftClient.getInstance(), new ClientConnection(
-                            NetworkSide.CLIENTBOUND), new ClientConnectionState(
-                            gameProfile,
-                            new WorldSession(TelemetrySender.NOOP, false,
-                                    Duration.ZERO, ""
-                            ),
-                            MinecraftClient.getInstance().world.getRegistryManager().toImmutable(),
-                            MinecraftClient.getInstance().world.getEnabledFeatures(),
-                            "Cookies player",
-                            null,
-                            null
-                    )),
-                    null,
-                    null,
-                    false,
-                    false
-            );
+            super(MinecraftClient.getInstance(), Optional.ofNullable(MinecraftClient.getInstance().world).orElseThrow(),
+                new ClientPlayNetworkHandler(MinecraftClient.getInstance(),
+                    new ClientConnection(NetworkSide.CLIENTBOUND),
+                    new ClientConnectionState(gameProfile,
+                        new WorldSession(TelemetrySender.NOOP, false, Duration.ZERO, ""),
+                        MinecraftClient.getInstance().world.getRegistryManager().toImmutable(),
+                        MinecraftClient.getInstance().world.getEnabledFeatures(), "Cookies player", null, null)), null,
+                null, false, false);
             this.skinTextures = DefaultSkinHelper.getTexture(gameProfile);
             this.client.getSkinProvider().fetchSkinTextures(this.getGameProfile())
-                    .thenAccept(skinTextures -> this.skinTextures = skinTextures);
+                .thenAccept(skinTextures -> this.skinTextures = skinTextures);
         }
 
         @Override

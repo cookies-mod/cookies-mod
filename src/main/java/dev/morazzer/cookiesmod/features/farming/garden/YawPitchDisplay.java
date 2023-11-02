@@ -46,9 +46,9 @@ public class YawPitchDisplay extends HudElement {
     public boolean shouldRender() {
         this.updateLastYawPitch();
         return Garden.isOnGarden()
-                && this.lastUpdated + 5000 > System.currentTimeMillis()
-                && ItemUtils.hasSkyblockItemInMainHand()
-                && ItemUtils.doesCurrentItemHaveEnchantments("cultivating", "replenish");
+            && this.lastUpdated + 5000 > System.currentTimeMillis()
+            && ItemUtils.hasSkyblockItemInMainHand()
+            && ItemUtils.doesCurrentItemHaveEnchantments("cultivating", "replenish");
     }
 
     @Override
@@ -58,22 +58,22 @@ public class YawPitchDisplay extends HudElement {
         double pitch = CookiesUtils.getPlayer().map(ClientPlayerEntity::getPitch).orElse(0f);
 
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                this.yaw.copy().append(Text.literal("%.4f".formatted(yaw))
-                        .formatted(Formatting.WHITE)),
-                0,
-                0,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            this.yaw.copy().append(Text.literal("%.4f".formatted(yaw))
+                .formatted(Formatting.WHITE)),
+            0,
+            0,
+            -1,
+            true
         );
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                this.pitch.copy().append(Text.literal("%.4f".formatted(pitch))
-                        .formatted(Formatting.WHITE)),
-                0,
-                8,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            this.pitch.copy().append(Text.literal("%.4f".formatted(pitch))
+                .formatted(Formatting.WHITE)),
+            0,
+            8,
+            -1,
+            true
         );
     }
 
@@ -84,7 +84,7 @@ public class YawPitchDisplay extends HudElement {
         double yaw = MathHelper.wrapDegrees(CookiesUtils.getPlayer().map(ClientPlayerEntity::getYaw).orElse(0f));
         double pitch = CookiesUtils.getPlayer().map(ClientPlayerEntity::getPitch).orElse(0f);
         if (this.lastYaw != yaw
-                || this.lastPitch != pitch) {
+            || this.lastPitch != pitch) {
             this.lastPitch = pitch;
             this.lastYaw = yaw;
             this.lastUpdated = System.currentTimeMillis();

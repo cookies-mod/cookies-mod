@@ -3,6 +3,8 @@ package dev.morazzer.cookiesmod.features.dev;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.DevUtils;
+import java.util.ArrayList;
+import java.util.List;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -15,9 +17,6 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Debug method to view the item nbt directly in game.
@@ -59,21 +58,23 @@ public class ShowItemNbtOnHover implements Module {
         for (Slot slot : handledScreen.getScreenHandler().slots) {
             if (handledScreen.isPointOverSlot(slot, mouseX, mouseY)) {
                 NbtCompound orCreateNbt = slot.getStack()
-                        .getNbt();
-                if (orCreateNbt == null || orCreateNbt.isEmpty()) return;
+                    .getNbt();
+                if (orCreateNbt == null || orCreateNbt.isEmpty()) {
+                    return;
+                }
                 Text prettyPrintedText = NbtHelper.toPrettyPrintedText(orCreateNbt);
                 List<OrderedText> orderedTexts = new ArrayList<>(MinecraftClient.getInstance().textRenderer.wrapLines(
-                        prettyPrintedText,
-                        200
+                    prettyPrintedText,
+                    200
                 ));
                 orderedTexts.add(Text.literal("Index: ").append(String.valueOf(slot.getIndex())).asOrderedText());
                 drawContext.drawTooltip(
-                        MinecraftClient.getInstance().textRenderer,
-                        orderedTexts,
-                        HoveredTooltipPositioner.INSTANCE,
-                        mouseX - 216 + (200 - Math.min(MinecraftClient.getInstance().textRenderer.getWidth(
-                                prettyPrintedText), 200)),
-                        mouseY
+                    MinecraftClient.getInstance().textRenderer,
+                    orderedTexts,
+                    HoveredTooltipPositioner.INSTANCE,
+                    mouseX - 216 + (200 - Math.min(MinecraftClient.getInstance().textRenderer.getWidth(
+                        prettyPrintedText), 200)),
+                    mouseY
                 );
             }
         }

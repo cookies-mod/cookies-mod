@@ -1,13 +1,15 @@
 package dev.morazzer.cookiesmod.utils;
 
-import lombok.Getter;
-import org.jetbrains.annotations.Range;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import org.jetbrains.annotations.Range;
 
+/**
+ * Helper methods to deal with roman numerals.
+ */
 @Getter
 public enum RomanNumerals {
     I(1),
@@ -30,10 +32,10 @@ public enum RomanNumerals {
         this.value = value;
     }
 
-    public static List<RomanNumerals> getReverseSortedValues() {
+    private static List<RomanNumerals> getReverseSortedValues() {
         return Arrays.stream(values())
-                .sorted(Comparator.comparing((RomanNumerals e) -> e.value).reversed())
-                .collect(Collectors.toList());
+            .sorted(Comparator.comparing((RomanNumerals e) -> e.value).reversed())
+            .collect(Collectors.toList());
     }
 
     /**

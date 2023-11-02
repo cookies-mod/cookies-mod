@@ -2,13 +2,15 @@ package dev.morazzer.cookiesmod.features.repository.files;
 
 import com.google.gson.JsonElement;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Accessor for the repository files.
+ */
 public abstract class RepositoryFileAccessor {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger("repository-files");
@@ -16,6 +18,8 @@ public abstract class RepositoryFileAccessor {
     private static final RepositoryFileAccessor INSTANCE = createInstance();
 
     /**
+     * Gets the global instance of the file accessor.
+     *
      * @return The global instance.
      */
     public static RepositoryFileAccessor getInstance() {

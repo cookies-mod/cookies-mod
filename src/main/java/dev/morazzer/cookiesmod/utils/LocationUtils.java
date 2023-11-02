@@ -6,10 +6,12 @@ import dev.morazzer.cookiesmod.generated.Area;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import dev.morazzer.cookiesmod.utils.general.ScoreboardUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
-
 import java.time.Duration;
 import java.util.function.Function;
 
+/**
+ * Various variables and methods related to locations.
+ */
 public class LocationUtils {
 
     public static final CachedValue<Area> currentArea = new CachedValue<>(() -> {
@@ -59,6 +61,9 @@ public class LocationUtils {
         return Islands.getIsland(getCurrentArea());
     }
 
+    /**
+     * All islands that are currently in the game.
+     */
     public enum Islands {
         PRIVATE_ISLAND(Area::isIsland),
         GARDEN(Area::isGarden),

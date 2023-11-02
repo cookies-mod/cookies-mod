@@ -13,12 +13,12 @@ import net.minecraft.util.Identifier;
 public enum AlphabeticalSort {
 
     NORMAL(
-            Identifier.of("cookiesmod", "gui/itemlist/alphabetical_sort_normal.png"),
-            Text.literal("> Sort: A-Z").formatted(Formatting.GREEN)
+        Identifier.of("cookiesmod", "gui/itemlist/alphabetical_sort_normal.png"),
+        Text.literal("> Sort: A-Z").formatted(Formatting.GREEN)
     ),
     REVERSED(
-            Identifier.of("cookiesmod", "gui/itemlist/alphabetical_sort_reversed.png"),
-            Text.literal("> Sort: Z-A").formatted(Formatting.GREEN)
+        Identifier.of("cookiesmod", "gui/itemlist/alphabetical_sort_reversed.png"),
+        Text.literal("> Sort: Z-A").formatted(Formatting.GREEN)
     );
 
     private final Identifier identifier;

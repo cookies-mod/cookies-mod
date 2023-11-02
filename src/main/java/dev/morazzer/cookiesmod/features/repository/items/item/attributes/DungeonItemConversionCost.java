@@ -9,6 +9,7 @@ import dev.morazzer.cookiesmod.data.dungeons.EssenceType;
  * @param amount      The amount of essence.
  */
 public record DungeonItemConversionCost(
-        EssenceType essenceType,
-        int amount
-) {}
+    EssenceType essenceType,
+    int amount
+) {
+}

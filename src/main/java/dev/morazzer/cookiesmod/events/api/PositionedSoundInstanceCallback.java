@@ -14,22 +14,23 @@ import net.minecraft.util.math.random.Random;
 public interface PositionedSoundInstanceCallback {
 
     Event<PositionedSoundInstanceCallback> CALLBACK = EventFactory.createArrayBacked(
-            PositionedSoundInstanceCallback.class,
-            positionedSoundInstanceCallbacks -> (id, category, volume, pitch, random, repeat, repeatDelay, attenuationType, x, y, z, relative) -> {
-                for (PositionedSoundInstanceCallback positionedSoundInstanceCallback : positionedSoundInstanceCallbacks) {
+        PositionedSoundInstanceCallback.class,
+        positionedSoundInstanceCallbacks ->
+            (id, category, volume, pitch, random, repeat, repeatDelay, attenuationType, x, y, z, relative) -> {
+                for (var positionedSoundInstanceCallback : positionedSoundInstanceCallbacks) {
                     if (positionedSoundInstanceCallback.play(
-                            id,
-                            category,
-                            volume,
-                            pitch,
-                            random,
-                            repeat,
-                            repeatDelay,
-                            attenuationType,
-                            x,
-                            y,
-                            z,
-                            relative
+                        id,
+                        category,
+                        volume,
+                        pitch,
+                        random,
+                        repeat,
+                        repeatDelay,
+                        attenuationType,
+                        x,
+                        y,
+                        z,
+                        relative
                     )) {
                         return true;
                     }
@@ -56,18 +57,18 @@ public interface PositionedSoundInstanceCallback {
      * @return True if the sound should not be played, false otherwise.
      */
     boolean play(
-            Identifier identifier,
-            SoundCategory category,
-            float volume,
-            float pitch,
-            Random random,
-            boolean repeat,
-            int repeatDelay,
-            SoundInstance.AttenuationType attenuationType,
-            double x,
-            double y,
-            double z,
-            boolean relative
+        Identifier identifier,
+        SoundCategory category,
+        float volume,
+        float pitch,
+        Random random,
+        boolean repeat,
+        int repeatDelay,
+        SoundInstance.AttenuationType attenuationType,
+        double x,
+        double y,
+        double z,
+        boolean relative
     );
 
 }

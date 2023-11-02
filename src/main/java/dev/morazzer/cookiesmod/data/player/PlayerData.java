@@ -1,10 +1,9 @@
 package dev.morazzer.cookiesmod.data.player;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.UUID;
 
 /**
  * Data associated with a player/user of the mod.
@@ -14,18 +13,18 @@ import java.util.UUID;
 public class PlayerData {
 
     @SerializedName("player_uuid")
-    private UUID playerUUID;
+    private UUID playerUuid;
     private String test;
 
     public PlayerData(UUID player) {
-        this.playerUUID = player;
+        this.playerUuid = player;
     }
 
     @Override
     public String toString() {
-        return "PlayerData{" +
-                "playerUUID=" + playerUUID +
-                '}';
+        return "PlayerData{"
+            + "playerUUID=" + playerUuid
+            + '}';
     }
 
 }

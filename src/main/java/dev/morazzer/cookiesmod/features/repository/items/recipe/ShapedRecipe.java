@@ -3,7 +3,6 @@ package dev.morazzer.cookiesmod.features.repository.items.recipe;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
-
 import java.util.Optional;
 
 /**
@@ -27,16 +26,16 @@ public class ShapedRecipe extends RepositoryRecipe {
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
                 this.materials[x * 3 + y] = new Ingredient(Optional
-                        .ofNullable(craft.get("x%s;y%s".formatted(x, y)))
-                        .map(JsonElement::getAsString)
-                        .map(ItemUtils::withNamespace)
-                        .orElse("minecraft:air:1"));
+                    .ofNullable(craft.get("x%s;y%s".formatted(x, y)))
+                    .map(JsonElement::getAsString)
+                    .map(ItemUtils::withNamespace)
+                    .orElse("minecraft:air:1"));
             }
         }
 
         this.result = new Ingredient("%s:%s".formatted(
-                ItemUtils.withNamespace(jsonObject.get("result").getAsString()),
-                jsonObject.get("count").getAsInt()
+            ItemUtils.withNamespace(jsonObject.get("result").getAsString()),
+            jsonObject.get("count").getAsInt()
         ));
     }
 

@@ -31,7 +31,14 @@ public class ItemBackgroundRenderMixin implements ItemBackgroundAccessor {
      * @param slot    The slot the item is in.
      * @param ci      The callback information.
      */
-    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawItem(Lnet/minecraft/item/ItemStack;III)V", shift = At.Shift.BEFORE))
+    @Inject(
+        method = "drawSlot",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/DrawContext;drawItem(Lnet/minecraft/item/ItemStack;III)V",
+            shift = At.Shift.BEFORE
+        )
+    )
     private void renderBackground(DrawContext context, Slot slot, CallbackInfo ci) {
         this.backgroundCallbacks.invoker().renderBackground(context, slot);
     }
@@ -52,12 +59,12 @@ public class ItemBackgroundRenderMixin implements ItemBackgroundAccessor {
     @Unique
     private void cookies$init() {
         this.backgroundCallbacks = EventFactory.createArrayBacked(
-                ItemBackgroundRenderCallback.class,
-                itemBackgroundRenderCallbacks -> (drawContext, slot) -> {
-                    for (ItemBackgroundRenderCallback itemBackgroundRenderCallback : itemBackgroundRenderCallbacks) {
-                        itemBackgroundRenderCallback.renderBackground(drawContext, slot);
-                    }
+            ItemBackgroundRenderCallback.class,
+            itemBackgroundRenderCallbacks -> (drawContext, slot) -> {
+                for (ItemBackgroundRenderCallback itemBackgroundRenderCallback : itemBackgroundRenderCallbacks) {
+                    itemBackgroundRenderCallback.renderBackground(drawContext, slot);
                 }
+            }
         );
     }
 

@@ -12,18 +12,18 @@ import net.minecraft.client.network.PlayerListEntry;
 public interface PlayerListUpdateEvent {
 
     Event<PlayerListUpdateEvent> ADD_PLAYERS = EventFactory.createArrayBacked(
-            PlayerListUpdateEvent.class,
-            PlayerListUpdateEvent::distribute
+        PlayerListUpdateEvent.class,
+        PlayerListUpdateEvent::distribute
     );
 
     Event<PlayerListUpdateEvent> REMOVE_PLAYERS = EventFactory.createArrayBacked(
-            PlayerListUpdateEvent.class,
-            PlayerListUpdateEvent::distribute
+        PlayerListUpdateEvent.class,
+        PlayerListUpdateEvent::distribute
     );
 
     Event<PlayerListUpdateEvent> UPDATE_NAME = EventFactory.createArrayBacked(
-            PlayerListUpdateEvent.class,
-            PlayerListUpdateEvent::distribute
+        PlayerListUpdateEvent.class,
+        PlayerListUpdateEvent::distribute
     );
 
     /**

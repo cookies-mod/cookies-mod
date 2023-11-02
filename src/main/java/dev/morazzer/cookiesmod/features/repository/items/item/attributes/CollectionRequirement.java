@@ -21,12 +21,12 @@ public class CollectionRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(Text
-                        .empty()
-                        .append(StringUtils.capitalize(collection.replace("_", " ").toLowerCase()))
-                        .append(" Collection ")
-                        .append(tier + "."));
+            .getRequirementString()
+            .append(Text
+                .empty()
+                .append(StringUtils.capitalize(collection.replace("_", " ").toLowerCase()))
+                .append(" Collection ")
+                .append(tier + "."));
     }
 
 }

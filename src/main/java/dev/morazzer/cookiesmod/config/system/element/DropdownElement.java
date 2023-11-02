@@ -2,11 +2,10 @@ package dev.morazzer.cookiesmod.config.system.element;
 
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
+import java.util.function.Function;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
-
-import java.util.function.Function;
 
 /**
  * GUI element to render a dropdown menu everywhere.
@@ -58,7 +57,6 @@ public class DropdownElement<T> {
             Text displaySelected = this.textSupplier.apply(selected);
 
             RenderUtils.renderRectangle(drawContext, 0, 0, dropdownWidth, 14, false);
-            //RenderUtils.renderTextScaled(drawContext, Text.literal("▼"), 2, dropdownWidth - 10, top, 0xffb0b0b0, false);
             RenderUtils.renderTextWithMaxWidth(drawContext, displaySelected, dropdownWidth - 16, 3, 3, ~0, false);
         }
     }
@@ -71,7 +69,6 @@ public class DropdownElement<T> {
      */
     public void renderOverlay(DrawContext context, int dropdownWidth) {
         if (open) {
-            Text displaySelected = this.textSupplier.apply(selected);
             T[] values = this.elements;
 
             int dropdownHeight = 12 * values.length;
@@ -89,25 +86,27 @@ public class DropdownElement<T> {
                     continue;
                 }
                 RenderUtils.renderTextWithMaxWidth(
-                        context,
-                        this.textSupplier.apply(value),
-                        dropdownWidth - 6,
-                        3,
-                        3 + dropdownY,
-                        0xffb0b0b0,
-                        false
+                    context,
+                    this.textSupplier.apply(value),
+                    dropdownWidth - 6,
+                    3,
+                    3 + dropdownY,
+                    0xffb0b0b0,
+                    false
                 );
                 dropdownY += 12;
             }
 
+            Text displaySelected = this.textSupplier.apply(selected);
+
             RenderUtils.renderTextWithMaxWidth(
-                    context,
-                    displaySelected,
-                    dropdownWidth - 16,
-                    3,
-                    3,
-                    -1,
-                    false
+                context,
+                displaySelected,
+                dropdownWidth - 16,
+                3,
+                3,
+                -1,
+                false
             );
 
         }
@@ -127,7 +126,7 @@ public class DropdownElement<T> {
             int dropdownHeight = 12 * values.length;
 
             if ((mouseX >= 0) && (mouseX < (dropdownWidth))
-                    && (mouseY >= 0) && (mouseY < (dropdownHeight))) {
+                && (mouseY >= 0) && (mouseY < (dropdownHeight))) {
 
                 T selected = this.selected;
                 int tempIndex = (int) ((mouseY) / 12);
@@ -153,7 +152,7 @@ public class DropdownElement<T> {
 
 
         if (((mouseX >= 0) && (mouseX < (dropdownWidth))
-                && (mouseY >= 0) && (mouseY < (14)))) {
+            && (mouseY >= 0) && (mouseY < (14)))) {
             this.open = true;
             return null;
         }

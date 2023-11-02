@@ -3,11 +3,13 @@ package dev.morazzer.cookiesmod.data.profile;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.data.migrations.Migration;
 import dev.morazzer.cookiesmod.data.profile.migrations.ProfileDataMigration_0001;
-
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Migration handler for the profile data.
+ */
 public class ProfileDataMigrations {
 
     private static final String KEY = "migration";
@@ -17,10 +19,10 @@ public class ProfileDataMigrations {
     static {
         MIGRATIONS.add(new ProfileDataMigration_0001());
         LATEST = MIGRATIONS
-                .stream()
-                .min(Comparator.comparingLong(Migration::getNumber))
-                .map(Migration::getNumber)
-                .orElse(-1L);
+            .stream()
+            .min(Comparator.comparingLong(Migration::getNumber))
+            .map(Migration::getNumber)
+            .orElse(-1L);
     }
 
     /**
@@ -35,9 +37,9 @@ public class ProfileDataMigrations {
 
         long lastApplied = jsonObject.get(KEY).getAsLong();
         for (Migration<JsonObject> migration : MIGRATIONS
-                .stream()
-                .sorted(Comparator.comparingLong(Migration::getNumber))
-                .toList()) {
+            .stream()
+            .sorted(Comparator.comparingLong(Migration::getNumber))
+            .toList()) {
             if (migration.getNumber() > lastApplied) {
                 migration.apply(jsonObject);
             }

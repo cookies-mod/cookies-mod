@@ -10,13 +10,12 @@ import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.utils.TimeUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 
 /**
  * Hud element to display the next n contests on the screen.
@@ -44,15 +43,18 @@ public class NextJacobContestHud extends HudElement {
 
     @Override
     public void init() {
-        SliderOption<Integer> showContestAmount = ConfigManager.getConfig().gardenCategory.jacobFoldable.showContestAmount;
+        SliderOption<Integer> showContestAmount =
+            ConfigManager.getConfig().gardenCategory.jacobFoldable.showContestAmount;
         this.amountToDisplay = showContestAmount.getNumberTransformer().parseNumber(showContestAmount.getValue());
-        this.timestampFormat = ConfigManager.getConfig().gardenCategory.jacobFoldable.nextContestTimestampFormat.getValue();
+        this.timestampFormat =
+            ConfigManager.getConfig().gardenCategory.jacobFoldable.nextContestTimestampFormat.getValue();
         this.onGarden = ConfigManager.getConfig().gardenCategory.jacobFoldable.onlyShowOnGarden.getValue();
         ConfigManager.getConfig().gardenCategory.jacobFoldable.nextContestTimestampFormat
-                .withCallback((oldValue, newValue) -> this.updateTimestampFormat(newValue));
+            .withCallback((oldValue, newValue) -> this.updateTimestampFormat(newValue));
         ConfigManager.getConfig().gardenCategory.jacobFoldable.showContestAmount
-                .withCallback((oldValue, newValue) -> this.updateContestAmount(newValue));
-        ConfigManager.getConfig().gardenCategory.jacobFoldable.onlyShowOnGarden.withCallback((oldValue, newValue) -> this.onGarden = newValue);
+            .withCallback((oldValue, newValue) -> this.updateContestAmount(newValue));
+        ConfigManager.getConfig().gardenCategory.jacobFoldable.onlyShowOnGarden.withCallback(
+            (oldValue, newValue) -> this.onGarden = newValue);
     }
 
     @Override
@@ -78,13 +80,14 @@ public class NextJacobContestHud extends HudElement {
     @Override
     protected void renderOverlay(DrawContext drawContext, float delta) {
         int row = 0;
-        for (Contest contest : JacobsContests.getInstance().getNextNContestsActiveOrFuture(this.amountToDisplay)) {
+        for (Contest contest : JacobsContests.getInstance()
+            .getNextNumberOfContestsActiveOrFuture(this.amountToDisplay)) {
             int cropIndex = 0;
             for (Crop crop : contest.crops()) {
                 drawContext.drawItem(
-                        RepositoryItemManager.getItem(crop.getIdentifier()).getItemStack(),
-                        cropIndex * 16,
-                        row * 16
+                    RepositoryItemManager.getItem(crop.getIdentifier()).getItemStack(),
+                    cropIndex * 16,
+                    row * 16
                 );
                 cropIndex++;
             }
@@ -95,24 +98,24 @@ public class NextJacobContestHud extends HudElement {
             } else {
                 text = switch (this.timestampFormat) {
                     case RELATIVE -> Text.literal("in ").append(TimeUtils.toFormattedTime(contest.time().getInstant()
-                            .minusSeconds(Instant.now().getEpochSecond()).getEpochSecond()).trim());
+                        .minusSeconds(Instant.now().getEpochSecond()).getEpochSecond()).trim());
                     case ABSOLUTE_AM_PM ->
-                            Text.literal(formatAmPm.format(contest.time().getInstant().getEpochSecond() * 1000));
+                        Text.literal(formatAmPm.format(contest.time().getInstant().getEpochSecond() * 1000));
                     case ABSOLUTE ->
-                            Text.literal(format24h.format(contest.time().getInstant().getEpochSecond() * 1000));
+                        Text.literal(format24h.format(contest.time().getInstant().getEpochSecond() * 1000));
                 };
 
             }
 
 
             drawContext.drawText(
-                    MinecraftClient.getInstance().textRenderer,
-                    Text.literal("(").append(text)
-                            .append(")"),
-                    cropIndex * 16 + 2,
-                    row * 16 + 4,
-                    -1,
-                    true
+                MinecraftClient.getInstance().textRenderer,
+                Text.literal("(").append(text)
+                    .append(")"),
+                cropIndex * 16 + 2,
+                row * 16 + 4,
+                -1,
+                true
             );
             row++;
         }

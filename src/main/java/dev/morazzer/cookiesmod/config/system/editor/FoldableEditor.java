@@ -53,20 +53,20 @@ public class FoldableEditor extends ConfigOptionEditor<Object, FoldableOption> {
         }
         tessellator.draw();
         RenderUtils.renderTextWithMaxWidth(
-                drawContext,
-                this.option.getName(),
-                optionWidth - 10,
-                18,
-                6,
-                0xffd0d0d0,
-                true
+            drawContext,
+            this.option.getName(),
+            optionWidth - 10,
+            18,
+            6,
+            0xffd0d0d0,
+            true
         );
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button, int optionWidth) {
         if (mouseX >= 0 && mouseX < optionWidth
-                && mouseY >= 0 && mouseY < getHeight()) {
+            && mouseY >= 0 && mouseY < getHeight()) {
             this.active = !this.active;
         }
         return super.mouseClicked(mouseX, mouseY, button, optionWidth);

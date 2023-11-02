@@ -15,37 +15,37 @@ public class VisitorFoldable extends Foldable {
 
     @Expose
     public final BooleanOption shouldAddItems = new BooleanOption(
-            Text.literal("Show required items"),
-            Text.literal("Whether the items should be added to the description"),
-            true
+        Text.literal("Show required items"),
+        Text.literal("Whether the items should be added to the description"),
+        true
     );
 
     @Expose
     public final BooleanOption useItemRarityColor = new BooleanOption(
-            Text.literal("Use Item Rarity As Color"),
-            Text.literal("Uses the item rarity for the color of the required items"),
-            true
+        Text.literal("Use Item Rarity As Color"),
+        Text.literal("Uses the item rarity for the color of the required items"),
+        true
     ).withTags("tier", "visitors");
 
     @Expose
     public final EnumDropdownOption<CountPosition> countPosition = new EnumDropdownOption<>(
-            Text.literal("Show required amount"),
-            Text.literal("Where to show the required amount for the items"),
-            CountPosition.RIGHT
+        Text.literal("Show required amount"),
+        Text.literal("Where to show the required amount for the items"),
+        CountPosition.RIGHT
     );
 
     @Expose
     public final BooleanOption showPrice = new BooleanOption(
-            Text.literal("Show crop price"),
-            Text.literal("Shows the price of the required items"),
-            true
+        Text.literal("Show crop price"),
+        Text.literal("Shows the price of the required items"),
+        true
     ).withTags("coins", "bazaar", "cost");
 
     @Expose
     public final EnumDropdownOption<BazaarBuyType> buyType = new EnumDropdownOption<>(
-            Text.literal("Bazaar buy type"),
-            Text.literal("Change the behaviour to either show instant buy or buy order price"),
-            BazaarBuyType.INSTANT
+        Text.literal("Bazaar buy type"),
+        Text.literal("Change the behaviour to either show instant buy or buy order price"),
+        BazaarBuyType.INSTANT
     ).withSupplier(BazaarBuyType::getText).withTags("coins", "cost");
 
     @Override
@@ -53,6 +53,9 @@ public class VisitorFoldable extends Foldable {
         return Text.literal("Visitor Helper");
     }
 
+    /**
+     * Types of bazaar buy.
+     */
     @Getter
     public enum BazaarBuyType {
         INSTANT(Text.literal("Instant Buy")),
@@ -65,6 +68,9 @@ public class VisitorFoldable extends Foldable {
         }
     }
 
+    /**
+     * Where to position the count.
+     */
     public enum CountPosition {
         LEFT,
         RIGHT

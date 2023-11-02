@@ -13,12 +13,13 @@ package dev.morazzer.cookiesmod.features.price.bazaar;
  * @param buyOrders      The number of orders that currently are available.
  */
 public record QuickStatus(
-        float sellPrice,
-        long sellVolume,
-        long sellMovingWeek,
-        long sellOrders,
-        float buyPrice,
-        long buyVolume,
-        long buyMovingWeek,
-        long buyOrders
-) {}
+    float sellPrice,
+    long sellVolume,
+    long sellMovingWeek,
+    long sellOrders,
+    float buyPrice,
+    long buyVolume,
+    long buyMovingWeek,
+    long buyOrders
+) {
+}

@@ -3,16 +3,16 @@ package dev.morazzer.cookiesmod.data.profile;
 import java.util.Optional;
 
 /**
- * The game mode of a skyblock profile
+ * The game mode of a skyblock profile.
  */
 public enum GameMode {
 
     CLASSIC,
-    IRONMAN("\u2672 Ironman"),
-    STRANDED("\u2600 Stranded"),
-    BINGO("\u24B7 Bingo"),
+    IRONMAN("♲ Ironman"),
+    STRANDED("☀ Stranded"),
+    BINGO("Ⓑ Bingo"),
     UNSET,
-    UNKNOWN("[^A-Za-z0-9\u23E3] .*");
+    UNKNOWN("[^A-Za-z0-9⏣] .*");
 
     private final String symbol;
 
@@ -25,7 +25,7 @@ public enum GameMode {
     }
 
     /**
-     * Get the game mode based on the symbol.
+     * Gets the game mode based on the symbol.
      *
      * @param gameMode The symbol.
      * @return The game mode.

@@ -2,16 +2,15 @@ package dev.morazzer.cookiesmod.data.player;
 
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Storage for the {@linkplain dev.morazzer.cookiesmod.data.player.PlayerData} to always get the correct instance.
@@ -29,9 +28,9 @@ public class PlayerStorage {
      */
     public static Optional<UUID> getCurrentPlayer() {
         return Optional
-                .of(MinecraftClient.getInstance())
-                .map(minecraftClient -> minecraftClient.player)
-                .map(Entity::getUuid);
+            .of(MinecraftClient.getInstance())
+            .map(minecraftClient -> minecraftClient.player)
+            .map(Entity::getUuid);
     }
 
     /**
@@ -50,11 +49,11 @@ public class PlayerStorage {
         Path playerDataFile = playerDataFolder.resolve(player + ".json");
 
         ExceptionHandler.removeThrows(() -> Files.writeString(
-                playerDataFile,
-                JsonUtils.GSON.toJson(playerData),
-                StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING
+            playerDataFile,
+            JsonUtils.GSON.toJson(playerData),
+            StandardCharsets.UTF_8,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING
         ));
     }
 
@@ -78,8 +77,8 @@ public class PlayerStorage {
         }
 
         playerData = JsonUtils.GSON.fromJson(
-                ExceptionHandler.removeThrows(() -> Files.readString(playerDataFile)),
-                PlayerData.class
+            ExceptionHandler.removeThrows(() -> Files.readString(playerDataFile)),
+            PlayerData.class
         );
     }
 
@@ -91,8 +90,8 @@ public class PlayerStorage {
     @NotNull
     public static Optional<PlayerData> getPlayerData() {
         if (!getCurrentPlayer()
-                .flatMap(player -> Optional.ofNullable(playerData).map(data -> data.getPlayerUUID().equals(player)))
-                .orElse(false)) {
+            .flatMap(player -> Optional.ofNullable(playerData).map(data -> data.getPlayerUuid().equals(player)))
+            .orElse(false)) {
             savePlayerData();
             loadPlayerData();
         }

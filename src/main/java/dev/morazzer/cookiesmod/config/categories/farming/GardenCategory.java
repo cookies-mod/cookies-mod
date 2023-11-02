@@ -13,16 +13,10 @@ import net.minecraft.util.Formatting;
 public class GardenCategory extends Category {
 
     @Expose
-    public BooleanOption yawPitchDisplay = new BooleanOption(
-            Text.literal("Yaw and Pitch"),
-            Text.literal("Shows the Yaw and Pitch for when you farm (only if cultivating or replenish is on the tool)"),
-            false
-    ).withHudElement(new YawPitchDisplay());
-    @Expose
     public final BooleanOption plotBreakdown = new BooleanOption(
-            Text.literal("Plot price breakdown"),
-            Text.literal("Shows a breakdown of the overall price for plots"),
-            false
+        Text.literal("Plot price breakdown"),
+        Text.literal("Shows a breakdown of the overall price for plots"),
+        false
     );
     @Expose
     public final VisitorFoldable visitors = new VisitorFoldable();
@@ -31,6 +25,12 @@ public class GardenCategory extends Category {
     @Expose
     public final JacobFoldable jacobFoldable = new JacobFoldable();
     public final CompostFoldable compostFoldable = new CompostFoldable();
+    @Expose
+    public BooleanOption yawPitchDisplay = new BooleanOption(
+        Text.literal("Yaw and Pitch"),
+        Text.literal("Shows the Yaw and Pitch for when you farm (only if cultivating or replenish is on the tool)"),
+        false
+    ).withHudElement(new YawPitchDisplay());
 
     @Override
     public Text getName() {

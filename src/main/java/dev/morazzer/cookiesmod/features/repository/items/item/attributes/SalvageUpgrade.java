@@ -9,7 +9,8 @@ package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
  * @param <T>         The type.
  */
 public record SalvageUpgrade<T>(
-        SalvageType<T> salvageType,
-        T value,
-        int amount
-) {}
+    SalvageType<T> salvageType,
+    T value,
+    int amount
+) {
+}

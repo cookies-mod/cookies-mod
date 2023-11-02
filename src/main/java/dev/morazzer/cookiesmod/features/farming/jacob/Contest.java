@@ -10,6 +10,7 @@ import dev.morazzer.cookiesmod.utils.general.SkyblockDateTime;
  * @param crops The crops in the contest.
  */
 public record Contest(
-        SkyblockDateTime time,
-        Crop[] crops
-) {}
+    SkyblockDateTime time,
+    Crop[] crops
+) {
+}

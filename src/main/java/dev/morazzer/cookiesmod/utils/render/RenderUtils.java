@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.utils.render;
 
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -12,8 +13,9 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
-import java.util.Optional;
-
+/**
+ * Various methods to render text or other things onto the screen.
+ */
 @Slf4j
 public class RenderUtils {
 
@@ -67,13 +69,13 @@ public class RenderUtils {
      * @param shadow      If the text has shadow.
      */
     public static void renderCenteredTextWithMaxWidth(
-            @NotNull DrawContext drawContext,
-            @NotNull Text text,
-            int width,
-            int centerX,
-            int y,
-            int color,
-            boolean shadow
+        @NotNull DrawContext drawContext,
+        @NotNull Text text,
+        int width,
+        int centerX,
+        int y,
+        int color,
+        boolean shadow
     ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
@@ -101,13 +103,13 @@ public class RenderUtils {
      * @param shadow      If the text has shadow.
      */
     public static void renderTextWithMaxWidth(
-            @NotNull DrawContext drawContext,
-            @NotNull Text text,
-            int width,
-            int x,
-            int y,
-            int color,
-            boolean shadow
+        @NotNull DrawContext drawContext,
+        @NotNull Text text,
+        int width,
+        int x,
+        int y,
+        int color,
+        boolean shadow
     ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
@@ -133,13 +135,13 @@ public class RenderUtils {
      * @param shadow      If the text has shadow.
      */
     public static void renderTextScaled(
-            @NotNull DrawContext drawContext,
-            @NotNull Text text,
-            float scaleFactor,
-            int x,
-            int y,
-            int color,
-            boolean shadow
+        @NotNull DrawContext drawContext,
+        @NotNull Text text,
+        float scaleFactor,
+        int x,
+        int y,
+        int color,
+        boolean shadow
     ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
@@ -162,12 +164,12 @@ public class RenderUtils {
      * @param color       The color of the text.
      */
     public static void renderTextCenteredScaled(
-            @NotNull DrawContext drawContext,
-            @NotNull Text text,
-            float scaleFactor,
-            int x,
-            int y,
-            int color
+        @NotNull DrawContext drawContext,
+        @NotNull Text text,
+        float scaleFactor,
+        int x,
+        int y,
+        int color
     ) {
         TextRenderer textRenderer = getTextRendererOrNull();
         if (textRenderer == null) {
@@ -176,11 +178,11 @@ public class RenderUtils {
         drawContext.getMatrices().push();
         drawContext.getMatrices().scale(scaleFactor, scaleFactor, 1);
         drawContext.drawCenteredTextWithShadow(
-                textRenderer,
-                text,
-                (int) (x / scaleFactor),
-                (int) (y / scaleFactor),
-                color
+            textRenderer,
+            text,
+            (int) (x / scaleFactor),
+            (int) (y / scaleFactor),
+            color
         );
         drawContext.getMatrices().pop();
     }
@@ -198,14 +200,14 @@ public class RenderUtils {
      * @param color                  The color of the text.
      */
     public static void renderTextInWorld(
-            MatrixStack matrixStack,
-            Vec3d position,
-            Text text,
-            VertexConsumerProvider vertexConsumerProvider,
-            float size,
-            boolean center,
-            boolean throughWalls,
-            int color
+        MatrixStack matrixStack,
+        Vec3d position,
+        Text text,
+        VertexConsumerProvider vertexConsumerProvider,
+        float size,
+        boolean center,
+        boolean throughWalls,
+        int color
     ) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         Camera camera = minecraftClient.gameRenderer.getCamera();
@@ -227,16 +229,16 @@ public class RenderUtils {
         int background = (int) (backgroundOpacity * 255.0f) << 24;
 
         textRenderer.draw(
-                text,
-                g,
-                0.0f,
-                color,
-                false,
-                matrixStack.peek().getPositionMatrix(),
-                vertexConsumerProvider,
-                TextRenderer.TextLayerType.SEE_THROUGH,
-                background,
-                0xF000F0
+            text,
+            g,
+            0.0f,
+            color,
+            false,
+            matrixStack.peek().getPositionMatrix(),
+            vertexConsumerProvider,
+            TextRenderer.TextLayerType.SEE_THROUGH,
+            background,
+            0xF000F0
         );
         matrixStack.pop();
     }

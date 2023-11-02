@@ -1,10 +1,9 @@
 package dev.morazzer.cookiesmod.config.system.editor;
 
 import dev.morazzer.cookiesmod.config.system.options.DraggableListOption;
+import java.util.List;
 import net.minecraft.client.gui.DrawContext;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * Editor to render a draggable list (this is currently not implemented).

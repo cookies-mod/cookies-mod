@@ -4,18 +4,17 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.util.Identifier;
-
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.util.Identifier;
 
 /**
  * Helper to fetch the current prices of items from the bazaar.
@@ -72,21 +71,21 @@ public class Bazaar implements Module {
             }
             JsonObject product = products.getAsJsonObject(key);
             Identifier identifier = ItemUtils.skyblockIdToIdentifier(product.get("product_id").getAsString())
-                    .orElse(null);
+                .orElse(null);
             if (identifier == null) {
                 continue;
             }
             ProductSummary[] buySummary = JsonUtils.CLEAN_GSON.fromJson(
-                    product.getAsJsonArray("buy_summary"),
-                    ProductSummary[].class
+                product.getAsJsonArray("buy_summary"),
+                ProductSummary[].class
             );
             ProductSummary[] sellSummary = JsonUtils.CLEAN_GSON.fromJson(
-                    product.getAsJsonArray("sell_summary"),
-                    ProductSummary[].class
+                product.getAsJsonArray("sell_summary"),
+                ProductSummary[].class
             );
             QuickStatus quickStatus = JsonUtils.CLEAN_GSON.fromJson(
-                    product.getAsJsonObject("quick_status"),
-                    QuickStatus.class
+                product.getAsJsonObject("quick_status"),
+                QuickStatus.class
             );
 
             this.productMap.put(identifier, new ProductInformation(identifier, sellSummary, buySummary, quickStatus));

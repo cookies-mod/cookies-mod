@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
 public interface BlockBreakCallback {
 
     Event<BlockBreakCallback> EVENT = EventFactory.createArrayBacked(
-            BlockBreakCallback.class,
-            blockBreakCallbacks -> (world, pos, state) -> {
-                for (BlockBreakCallback blockBreakCallback : blockBreakCallbacks) {
-                    blockBreakCallback.onBlockBreak(world, pos, state);
-                }
+        BlockBreakCallback.class,
+        blockBreakCallbacks -> (world, pos, state) -> {
+            for (BlockBreakCallback blockBreakCallback : blockBreakCallbacks) {
+                blockBreakCallback.onBlockBreak(world, pos, state);
             }
+        }
     );
 
     /**

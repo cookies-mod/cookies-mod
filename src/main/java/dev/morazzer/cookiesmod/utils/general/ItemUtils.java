@@ -2,8 +2,10 @@ package dev.morazzer.cookiesmod.utils.general;
 
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.commands.dev.subcommands.TestEntrypoint;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.TextUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import java.util.Base64;
+import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -12,13 +14,13 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Identifier;
 
-import java.util.Base64;
-import java.util.Optional;
-
+/**
+ * Various methods to get data from items.
+ */
 public class ItemUtils {
 
-    private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
     public static final String NBT_KEY = "ExtraAttributes";
+    private static final Identifier NAMESPACE = new Identifier("skyblock", "items/");
 
     /**
      * Gets the skyblock attribute tag of an item.
@@ -38,7 +40,7 @@ public class ItemUtils {
      */
     public static Optional<String> getSkyblockId(ItemStack itemStack) {
         return getSkyblockAttributes(itemStack)
-                .map(nbtCompound -> nbtCompound.getString("id"));
+            .map(nbtCompound -> nbtCompound.getString("id"));
     }
 
     /**
@@ -79,14 +81,14 @@ public class ItemUtils {
      */
     public static boolean doesCurrentItemHaveEnchantments(String... enchantments) {
         return getMainHand().flatMap(ItemUtils::getSkyblockAttributes)
-                .map(extraAttributes -> extraAttributes.getCompound("enchantments")).map(enchantmentsContainer -> {
-                    for (String enchantment : enchantments) {
-                        if (enchantmentsContainer.contains(enchantment)) {
-                            return true;
-                        }
+            .map(extraAttributes -> extraAttributes.getCompound("enchantments")).map(enchantmentsContainer -> {
+                for (String enchantment : enchantments) {
+                    if (enchantmentsContainer.contains(enchantment)) {
+                        return true;
                     }
-                    return false;
-                }).orElse(false);
+                }
+                return false;
+            }).orElse(false);
     }
 
     /**
@@ -114,7 +116,7 @@ public class ItemUtils {
      */
     public static Optional<ItemStack> getMainHand() {
         return Optional.ofNullable(MinecraftClient.getInstance()).map(client -> client.player)
-                .map(PlayerEntity::getMainHandStack);
+            .map(PlayerEntity::getMainHandStack);
     }
 
     /**
@@ -122,7 +124,9 @@ public class ItemUtils {
      */
     @TestEntrypoint("get_texture_from_item")
     public static void getTextureFromCurrentItem() {
-        if (getMainHand().isEmpty()) return;
+        if (getMainHand().isEmpty()) {
+            return;
+        }
         NbtCompound orCreateNbt = getMainHand().get().getOrCreateNbt();
         NbtCompound properties = orCreateNbt.getCompound("SkullOwner").getCompound("Properties");
         NbtList textures = properties.getList("textures", NbtElement.COMPOUND_TYPE);

@@ -21,7 +21,8 @@ public class Garden implements Module {
      * @return Whether the player is on the garden.
      */
     public static boolean isOnGarden() {
-        return DevUtils.isEnabled(DISABLE_GARDEN_CHECK) || LocationUtils.getCurrentIsland() == LocationUtils.Islands.GARDEN;
+        return DevUtils.isEnabled(DISABLE_GARDEN_CHECK)
+            || LocationUtils.getCurrentIsland() == LocationUtils.Islands.GARDEN;
     }
 
     @Override

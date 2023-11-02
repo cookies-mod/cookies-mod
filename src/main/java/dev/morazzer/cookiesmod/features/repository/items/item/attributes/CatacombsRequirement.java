@@ -8,7 +8,8 @@ package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
  * @param level       The level.
  */
 public record CatacombsRequirement(
-        CatacombsRequirementType type,
-        CatacombsRequirementDungeonType dungeonType,
-        int level
-) {}
+    CatacombsRequirementType type,
+    CatacombsRequirementDungeonType dungeonType,
+    int level
+) {
+}

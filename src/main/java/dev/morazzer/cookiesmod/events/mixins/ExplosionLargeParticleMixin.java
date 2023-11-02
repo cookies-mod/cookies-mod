@@ -29,13 +29,13 @@ public abstract class ExplosionLargeParticleMixin extends SpriteBillboardParticl
      */
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(
-            ClientWorld world,
-            double x,
-            double y,
-            double z,
-            double scaleFactor,
-            SpriteProvider spriteProvider,
-            CallbackInfo ci
+        ClientWorld world,
+        double x,
+        double y,
+        double z,
+        double scaleFactor,
+        SpriteProvider spriteProvider,
+        CallbackInfo ci
     ) {
         if (!ExplosionLargeParticleCallback.EVENT.invoker().explosion(world, x, y, z, scaleFactor, spriteProvider)) {
             this.scale = 0;

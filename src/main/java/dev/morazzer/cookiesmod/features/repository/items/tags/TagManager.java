@@ -3,13 +3,12 @@ package dev.morazzer.cookiesmod.features.repository.items.tags;
 import com.google.gson.Gson;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import net.minecraft.util.Identifier;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
+import net.minecraft.util.Identifier;
 
 /**
  * Manager to load all tags from the repository.

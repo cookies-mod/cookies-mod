@@ -25,8 +25,8 @@ public class PlayerListUpdateMixin {
      */
     @Inject(method = "handlePlayerListAction", at = @At("RETURN"))
     public void addEntry(
-            PlayerListS2CPacket.Action action, PlayerListS2CPacket.Entry receivedEntry, PlayerListEntry currentEntry,
-            CallbackInfo ci
+        PlayerListS2CPacket.Action action, PlayerListS2CPacket.Entry receivedEntry, PlayerListEntry currentEntry,
+        CallbackInfo ci
     ) {
         if (action == PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME) {
             PlayerListUpdateEvent.UPDATE_NAME.invoker().update(currentEntry);

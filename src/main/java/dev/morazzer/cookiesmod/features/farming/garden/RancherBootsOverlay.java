@@ -8,6 +8,12 @@ import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.MinecraftClient;
@@ -19,34 +25,28 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 /**
  * Feature to render a list of speeds in the rancher boots overlay.
  */
 @LoadModule("garden/optimal_speed")
 public class RancherBootsOverlay implements Module {
 
-    private static final Identifier SHOW_BUTTON_BORDERS = DevUtils.createIdentifier("garden/rancher_boots/show_borders");
+    private static final Identifier SHOW_BUTTON_BORDERS =
+        DevUtils.createIdentifier("garden/rancher_boots/show_borders");
     private static final Identifier SKIP_RANCHER_BOOTS_CHECK = DevUtils.createIdentifier(
-            "garden/rancher_boots/disable_boots_check");
+        "garden/rancher_boots/disable_boots_check");
 
     private final Set<Identifier> crops = Set.of(
-            new Identifier("skyblock:items/wheat"),
-            new Identifier("skyblock:items/carrot_item"),
-            new Identifier("skyblock:items/potato_item"),
-            new Identifier("skyblock:items/nether_stalk"),
-            new Identifier("skyblock:items/pumpkin"),
-            new Identifier("skyblock:items/melon"),
-            new Identifier("skyblock:items/ink_sack_3"),
-            new Identifier("skyblock:items/sugar_cane"),
-            new Identifier("skyblock:items/cactus"),
-            new Identifier("skyblock:items/huge_mushroom_2")
+        new Identifier("skyblock:items/wheat"),
+        new Identifier("skyblock:items/carrot_item"),
+        new Identifier("skyblock:items/potato_item"),
+        new Identifier("skyblock:items/nether_stalk"),
+        new Identifier("skyblock:items/pumpkin"),
+        new Identifier("skyblock:items/melon"),
+        new Identifier("skyblock:items/ink_sack_3"),
+        new Identifier("skyblock:items/sugar_cane"),
+        new Identifier("skyblock:items/cactus"),
+        new Identifier("skyblock:items/huge_mushroom_2")
     );
 
     private List<SpeedEntry> entries;
@@ -69,8 +69,8 @@ public class RancherBootsOverlay implements Module {
      */
     private boolean isRancherBootsScreen(SignEditScreen screen) {
         return screen.messages[1].trim().equals("^^^^^^")
-                && screen.messages[2].trim().equals("Set your")
-                && screen.messages[3].trim().equals("speed cap!");
+            && screen.messages[2].trim().equals("Set your")
+            && screen.messages[3].trim().equals("speed cap!");
     }
 
     /**
@@ -85,7 +85,9 @@ public class RancherBootsOverlay implements Module {
         if (!(screen instanceof SignEditScreen)) {
             return;
         }
-        if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds.getValue()) {
             return;
         }
@@ -94,37 +96,37 @@ public class RancherBootsOverlay implements Module {
         }
 
         Speeds speeds = Speeds.merge(
-                ConfigManager.getConfig().gardenCategory.speed.speedPresets.getValue().getSpeeds(),
-                ConfigManager.getConfig().gardenCategory.speed.speeds
+            ConfigManager.getConfig().gardenCategory.speed.speedPresets.getValue().getSpeeds(),
+            ConfigManager.getConfig().gardenCategory.speed.speeds
         );
 
         List<AbstractMap.SimpleEntry<Integer, Identifier>> list = crops.stream()
-                .map(identifier -> new AbstractMap.SimpleEntry<>(speeds.getValue(identifier), identifier)).toList();
+            .map(identifier -> new AbstractMap.SimpleEntry<>(speeds.getValue(identifier), identifier)).toList();
 
         this.entries = new ArrayList<>();
 
         if (ConfigManager.getConfig().gardenCategory.speed.mergeEqualSpeeds.getValue()) {
             HashMap<Integer, List<Identifier>> tempMap = new HashMap<>();
             list.forEach(integerIdentifierSimpleEntry -> tempMap.computeIfAbsent(
-                    integerIdentifierSimpleEntry.getKey(),
-                    integer -> new ArrayList<>()
+                integerIdentifierSimpleEntry.getKey(),
+                integer -> new ArrayList<>()
             ).add(integerIdentifierSimpleEntry.getValue()));
             tempMap.forEach((integer, identifiers) -> {
                 Text text = createText(
-                        identifiers.stream().map(RepositoryItemManager::getItem).map(SkyblockItem::getName)
-                                .map(MutableText::getString).collect(Collectors.joining(", ")),
-                        integer
+                    identifiers.stream().map(RepositoryItemManager::getItem).map(SkyblockItem::getName)
+                        .map(MutableText::getString).collect(Collectors.joining(", ")),
+                    integer
                 );
                 this.entries.add(new SpeedEntry(identifiers, text, integer));
             });
         } else {
             for (AbstractMap.SimpleEntry<Integer, Identifier> integerIdentifierSimpleEntry : list) {
                 Text text = createText(RepositoryItemManager.getItem(integerIdentifierSimpleEntry.getValue()).getName()
-                        .getString(), integerIdentifierSimpleEntry.getKey());
+                    .getString(), integerIdentifierSimpleEntry.getKey());
                 this.entries.add(new SpeedEntry(
-                        List.of(integerIdentifierSimpleEntry.getValue()),
-                        text,
-                        integerIdentifierSimpleEntry.getKey()
+                    List.of(integerIdentifierSimpleEntry.getValue()),
+                    text,
+                    integerIdentifierSimpleEntry.getKey()
                 ));
             }
         }
@@ -161,7 +163,9 @@ public class RancherBootsOverlay implements Module {
      * @param tickDelta The difference in time between the last tick and now.
      */
     private void renderOverlay(Screen screen, DrawContext context, int mouseX, int mouseY, float tickDelta) {
-        if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
+        if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+            return;
+        }
         if (!ConfigManager.getConfig().gardenCategory.speed.showSpeeds.getValue()) {
             return;
         }
@@ -192,19 +196,19 @@ public class RancherBootsOverlay implements Module {
             int bottomRightX = items * 16 + 4 + screen.textRenderer.getWidth(entry.text);
             int bottomRightY = i * 16 + 15;
             if (topLeftX <= translatedMouseX && bottomRightX >= translatedMouseX
-                    && topLeftY <= translatedMouseY && bottomRightY >= translatedMouseY) {
+                && topLeftY <= translatedMouseY && bottomRightY >= translatedMouseY) {
                 formatting = Formatting.UNDERLINE;
             } else {
                 formatting = Formatting.WHITE;
             }
 
             context.drawText(
-                    screen.textRenderer,
-                    entry.text.copy().formatted(formatting),
-                    items * 16 + 4,
-                    i * 16 + 4,
-                    ~0,
-                    true
+                screen.textRenderer,
+                entry.text.copy().formatted(formatting),
+                items * 16 + 4,
+                i * 16 + 4,
+                ~0,
+                true
             );
 
             if (DevUtils.isEnabled(SHOW_BUTTON_BORDERS)) {
@@ -233,7 +237,6 @@ public class RancherBootsOverlay implements Module {
             return;
         }
 
-        SignEditScreen signEditScreen = (SignEditScreen) screen;
         int difference = screen.height / 4 + 55;
         int negativeOffsetY = 0;
         if (difference < 160) {
@@ -255,13 +258,14 @@ public class RancherBootsOverlay implements Module {
             return;
         }
 
+        SignEditScreen signEditScreen = (SignEditScreen) screen;
         signEditScreen.messages[0] = String.valueOf(speedEntry.speed);
     }
 
     private record SpeedEntry(
-            List<Identifier> identifiers,
-            Text text,
-            int speed
+        List<Identifier> identifiers,
+        Text text,
+        int speed
     ) {
     }
 

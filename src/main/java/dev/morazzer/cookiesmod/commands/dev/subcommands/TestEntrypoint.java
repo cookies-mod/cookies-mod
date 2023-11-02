@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Adding this annotation to a public static method with zero parameters will add it to the {@code /dev test} command as a literal argument.
+ * Adding this annotation to a public static method with zero parameters will add it to the {@code /dev test} command as
+ * a literal argument.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

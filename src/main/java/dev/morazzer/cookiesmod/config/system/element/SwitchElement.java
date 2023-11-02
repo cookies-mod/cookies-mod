@@ -74,7 +74,7 @@ public class SwitchElement {
      */
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if ((mouseX >= 0) && (mouseX < (48))
-                && (mouseY >= 0) && (mouseY < (14))) {
+            && (mouseY >= 0) && (mouseY < (14))) {
             if (button == 0) {
                 this.booleanValue = !booleanValue;
                 int newTarget = this.booleanValue ? 100 : 0;

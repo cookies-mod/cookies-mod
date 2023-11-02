@@ -32,7 +32,7 @@ public class ScathaWarning implements Module {
             clientPlayerEntity.playSound(SoundEvent.of(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE.getId()), 2, 2f);
             clientPlayerEntity.playSound(SoundEvent.of(SoundEvents.ENTITY_TURTLE_EGG_BREAK.getId()), 1f, 1);
             MinecraftClient.getInstance().inGameHud.setTitle(Text.literal("Worm Approaching!")
-                    .formatted(Formatting.RED));
+                .formatted(Formatting.RED));
             MinecraftClient.getInstance().inGameHud.setTitleTicks(2, 50, 10);
         });
     }
@@ -40,8 +40,12 @@ public class ScathaWarning implements Module {
     @Override
     public void load() {
         ClientReceiveMessageEvents.GAME.register(ExceptionHandler.wrap((message, overlay) -> {
-            if (!ConfigManager.getConfig().miningCategory.scathaAlert.getValue()) return;
-            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.CRYSTAL_HOLLOWS) return;
+            if (!ConfigManager.getConfig().miningCategory.scathaAlert.getValue()) {
+                return;
+            }
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.CRYSTAL_HOLLOWS) {
+                return;
+            }
             if (message.getString().equals(WORM_MESSAGE)) {
                 playSound();
             }

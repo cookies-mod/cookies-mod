@@ -7,6 +7,10 @@ import dev.morazzer.cookiesmod.features.repository.constants.PlotCostData;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.LinkedList;
+import java.util.List;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -21,11 +25,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Display the price of the compost/the missing compost in the plot menu.
  */
@@ -33,10 +32,10 @@ import java.util.List;
 public class PlotPriceDisplay implements Module {
 
     private static final int[][] costs = new int[][] {
-            {13, 21, 23, 31}, // inner
-            {12, 14, 30, 32}, // middle
-            {3, 4, 5, 11, 15, 20, 24, 29, 33, 39, 40, 41}, // edges
-            {2, 6, 38, 42} // corner
+        {13, 21, 23, 31}, // inner
+        {12, 14, 30, 32}, // middle
+        {3, 4, 5, 11, 15, 20, 24, 29, 33, 39, 40, 41}, // edges
+        {2, 6, 38, 42} // corner
     };
 
     private final NumberFormat numberFormat = new DecimalFormat();
@@ -47,14 +46,24 @@ public class PlotPriceDisplay implements Module {
     @Override
     public void load() {
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (!ConfigManager.getConfig().gardenCategory.plotBreakdown.getValue()) return;
-            if (!(screen instanceof HandledScreen<?>)) return;
-            if (!Garden.isOnGarden()) return;
-            if (!screen.getTitle().getString().equals("Configure Plots")) return;
-            if (!PlotCostData.loaded()) return;
+            if (!ConfigManager.getConfig().gardenCategory.plotBreakdown.getValue()) {
+                return;
+            }
+            if (!(screen instanceof HandledScreen<?>)) {
+                return;
+            }
+            if (!Garden.isOnGarden()) {
+                return;
+            }
+            if (!screen.getTitle().getString().equals("Configure Plots")) {
+                return;
+            }
+            if (!PlotCostData.loaded()) {
+                return;
+            }
 
             ScreenEvents.afterRender(screen)
-                    .register(ExceptionHandler.wrap(this::renderPlotCostBreakdown));
+                .register(ExceptionHandler.wrap(this::renderPlotCostBreakdown));
         });
     }
 
@@ -83,7 +92,7 @@ public class PlotPriceDisplay implements Module {
                     continue;
                 }
                 if (slot.getStack().getItem() == Items.OAK_BUTTON
-                        || slot.getStack().getItem() == Items.RED_STAINED_GLASS_PANE) {
+                    || slot.getStack().getItem() == Items.RED_STAINED_GLASS_PANE) {
                     amountMissing++;
                 } else {
                     amountBought++;
@@ -108,24 +117,24 @@ public class PlotPriceDisplay implements Module {
 
         breakdown.add(Text.empty());
         breakdown.add(Text.literal("Plots missing: ").formatted(Formatting.GRAY)
-                .append(Text.literal(String.valueOf(missingPlots)).formatted(
-                        Formatting.GOLD)));
+            .append(Text.literal(String.valueOf(missingPlots)).formatted(
+                Formatting.GOLD)));
         breakdown.add(Text.literal("Plots owned: ").formatted(Formatting.GRAY)
-                .append(Text.literal(String.valueOf(ownedPlots)).formatted(
-                        Formatting.GOLD)));
+            .append(Text.literal(String.valueOf(ownedPlots)).formatted(
+                Formatting.GOLD)));
         breakdown.add(Text.empty());
         breakdown.add(Text.empty());
         breakdown.add(Text.empty().append(Text.literal(numberFormat.format(missingCompost)).formatted(Formatting.GOLD)
-                .append("x ")).append(Text.literal("Compost").formatted(Formatting.GREEN)));
+            .append("x ")).append(Text.literal("Compost").formatted(Formatting.GREEN)));
         breakdown.add(Text.empty().append(Text.literal(numberFormat.format(missingBundles)).formatted(Formatting.GOLD)
-                .append("x ")).append(Text.literal("Compost Bundle").formatted(Formatting.BLUE)));
+            .append("x ")).append(Text.literal("Compost Bundle").formatted(Formatting.BLUE)));
         breakdown.add(Text.literal(" -> ")
-                .append(Text.literal(numberFormat.format(missingBundles * 160L)).formatted(Formatting.GOLD)
-                        .append("x "))
-                .append(Text.literal("Compost").formatted(Formatting.GREEN)).formatted(Formatting.DARK_GRAY));
+            .append(Text.literal(numberFormat.format(missingBundles * 160L)).formatted(Formatting.GOLD)
+                .append("x "))
+            .append(Text.literal("Compost").formatted(Formatting.GREEN)).formatted(Formatting.DARK_GRAY));
         breakdown.add(Text.literal("Missing: ").formatted(Formatting.GRAY)
-                .append(Text.literal(numberFormat.format(regularCompost)).formatted(Formatting.GOLD)
-                        .append("x ")).append(Text.literal("Compost").formatted(Formatting.GREEN)));
+            .append(Text.literal(numberFormat.format(regularCompost)).formatted(Formatting.GOLD)
+                .append("x ")).append(Text.literal("Compost").formatted(Formatting.GREEN)));
 
 
         int maxLineWidth = 0;
@@ -135,26 +144,26 @@ public class PlotPriceDisplay implements Module {
 
         int equalsWidth = MinecraftClient.getInstance().textRenderer.getWidth(" ");
         breakdown.add(
-                breakdown.size() - 1,
-                Text.literal(StringUtils.leftPad("", maxLineWidth / equalsWidth, " "))
-                        .formatted(Formatting.STRIKETHROUGH, Formatting.BLUE)
+            breakdown.size() - 1,
+            Text.literal(StringUtils.leftPad("", maxLineWidth / equalsWidth, " "))
+                .formatted(Formatting.STRIKETHROUGH, Formatting.BLUE)
         );
 
         Text breakdownLine = Text.literal("Breakdown").formatted(Formatting.BOLD, Formatting.BLUE);
         int breakdownWidth = MinecraftClient.getInstance().textRenderer.getWidth(breakdownLine);
 
         breakdown.add(
-                0,
-                Text.literal(StringUtils.leftPad("", ((maxLineWidth - breakdownWidth) / 2) / equalsWidth))
-                        .append(breakdownLine)
+            0,
+            Text.literal(StringUtils.leftPad("", ((maxLineWidth - breakdownWidth) / 2) / equalsWidth))
+                .append(breakdownLine)
         );
 
         Text compostBreakdownLine = Text.literal("Compost Breakdown").formatted(Formatting.BOLD, Formatting.BLUE);
         int compostBreakdownWidth = MinecraftClient.getInstance().textRenderer.getWidth(compostBreakdownLine);
         breakdown.add(
-                5,
-                Text.literal(StringUtils.leftPad("", ((maxLineWidth - compostBreakdownWidth) / 2) / equalsWidth))
-                        .append(compostBreakdownLine)
+            5,
+            Text.literal(StringUtils.leftPad("", ((maxLineWidth - compostBreakdownWidth) / 2) / equalsWidth))
+                .append(compostBreakdownLine)
         );
 
 
@@ -173,11 +182,11 @@ public class PlotPriceDisplay implements Module {
      * @param tickDelta   The difference in time between the last tick and now.
      */
     private void renderPlotCostBreakdown(
-            Screen screen,
-            DrawContext drawContext,
-            int mouseX,
-            int mouseY,
-            float tickDelta
+        Screen screen,
+        DrawContext drawContext,
+        int mouseX,
+        int mouseY,
+        float tickDelta
     ) {
         HandledScreen<?> handledScreen = (HandledScreen<?>) screen;
 
@@ -186,11 +195,11 @@ public class PlotPriceDisplay implements Module {
         }
 
         drawContext.drawTooltip(
-                MinecraftClient.getInstance().textRenderer,
-                this.lines,
-                HoveredTooltipPositioner.INSTANCE,
-                handledScreen.x - this.lineWidth - 32,
-                handledScreen.y + 16
+            MinecraftClient.getInstance().textRenderer,
+            this.lines,
+            HoveredTooltipPositioner.INSTANCE,
+            handledScreen.x - this.lineWidth - 32,
+            handledScreen.y + 16
         );
     }
 

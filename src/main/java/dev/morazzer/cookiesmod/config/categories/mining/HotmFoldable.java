@@ -11,21 +11,21 @@ import net.minecraft.util.Formatting;
 public class HotmFoldable extends Foldable {
 
     public final BooleanOption showTotalPowder = new BooleanOption(
-            Text.literal("Show total powder"),
-            Text.literal("Show total powder cost for a perk"),
-            false
+        Text.literal("Show total powder"),
+        Text.literal("Show total powder cost for a perk"),
+        false
     ).withTags("gemstone", "mithril");
 
     public final BooleanOption showNextTenPowder = new BooleanOption(
-            Text.literal("Show next 10 cost"),
-            Text.literal("Show cost for next 10 level of a perk"),
-            false
+        Text.literal("Show next 10 cost"),
+        Text.literal("Show cost for next 10 level of a perk"),
+        false
     ).withTags("gemstone", "mithril");
 
     public final BooleanOption showLevelInCount = new BooleanOption(
-            Text.literal("Show perk level as count"),
-            Text.literal("Show the current perk level as count"),
-            false
+        Text.literal("Show perk level as count"),
+        Text.literal("Show the current perk level as count"),
+        false
     );
 
     @Override

@@ -1,5 +1,8 @@
 package dev.morazzer.cookiesmod.utils;
 
+/**
+ * Various methods related to strings and string manipulation.
+ */
 public class StringUtils {
 
     /**
@@ -31,8 +34,8 @@ public class StringUtils {
      */
     public static String hex(byte[] bytes) {
         StringBuilder result = new StringBuilder();
-        for (byte aByte : bytes) {
-            result.append(String.format("%02x", aByte));
+        for (byte singleByte : bytes) {
+            result.append(String.format("%02x", singleByte));
         }
         return result.toString();
     }

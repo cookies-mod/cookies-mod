@@ -12,6 +12,9 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.slot.Slot;
 import org.intellij.lang.annotations.Language;
 
+/**
+ * Solver for the "starts with" terminal.
+ */
 @LoadModule("dungeons/solvers/terminals/starts_with")
 public class StartsWithSolver implements Module {
 
@@ -20,25 +23,32 @@ public class StartsWithSolver implements Module {
     @Override
     public void load() {
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (!(screen instanceof HandledScreen<?> handledScreen)) return;
-            if (!LocationUtils.getCurrentArea().isCatacombsFloor7() && !LocationUtils.getCurrentArea()
-                    .isCatacombsMasterFloor7()) {
+            if (!(screen instanceof HandledScreen<?> handledScreen)) {
                 return;
             }
-            if (!ConfigManager.getConfig().dungeonCategory.solverFoldable.terminalFoldable.clickAllStartingWith.getValue()) return;
-            if (!screen.getTitle().getString().matches(titleRegex)) return;
+            if (!LocationUtils.getCurrentArea().isCatacombsFloor7()
+                && !LocationUtils.getCurrentArea().isCatacombsMasterFloor7()) {
+                return;
+            }
+            if (!ConfigManager.getConfig()
+                .dungeonCategory.solverFoldable.terminalFoldable.clickAllStartingWith.getValue()) {
+                return;
+            }
+            if (!screen.getTitle().getString().matches(titleRegex)) {
+                return;
+            }
 
             String region = screen.getTitle().getString().replaceAll(titleRegex, "$1");
 
 
             ItemBackgroundRenderCallback.register(
-                    handledScreen,
-                    (drawContext, slot) -> draw(drawContext, slot, region)
+                handledScreen,
+                (drawContext, slot) -> draw(drawContext, slot, region)
             );
         });
     }
 
-    public void draw(DrawContext drawContext, Slot slot, String prefix) {
+    private void draw(DrawContext drawContext, Slot slot, String prefix) {
         if (slot.getStack().getName().getString().toLowerCase().startsWith(prefix.toLowerCase())) {
             drawContext.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, ColorUtils.failColor | (0xff << 24));
         }

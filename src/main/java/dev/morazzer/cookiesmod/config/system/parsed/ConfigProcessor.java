@@ -5,11 +5,10 @@ import dev.morazzer.cookiesmod.config.system.Config;
 import dev.morazzer.cookiesmod.config.system.Foldable;
 import dev.morazzer.cookiesmod.config.system.Option;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import lombok.extern.slf4j.Slf4j;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Processor to parse/compile the config, so it can be displayed.
@@ -62,15 +61,15 @@ public class ConfigProcessor {
     public static void processAny(Object object, ConfigReader configReader) {
         for (Field field : object.getClass().getDeclaredFields()) {
             if (!Optional
-                    .ofNullable(field.getType().getSuperclass())
-                    .map(clazz -> clazz.isAssignableFrom(Option.class) || clazz.isAssignableFrom(Foldable.class))
-                    .orElse(false)) {
+                .ofNullable(field.getType().getSuperclass())
+                .map(clazz -> clazz.isAssignableFrom(Option.class) || clazz.isAssignableFrom(Foldable.class))
+                .orElse(false)) {
                 continue;
             }
             if (Optional
-                    .of(field.getType().getSuperclass())
-                    .map(clazz -> clazz.isAssignableFrom(Foldable.class))
-                    .orElse(false)) {
+                .of(field.getType().getSuperclass())
+                .map(clazz -> clazz.isAssignableFrom(Foldable.class))
+                .orElse(false)) {
                 Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> field.get(object));
                 configReader.beginFoldable(foldable);
                 processFoldable(foldable, configReader);
@@ -79,9 +78,9 @@ public class ConfigProcessor {
             }
 
             if (Optional
-                    .of(field.getType().getSuperclass())
-                    .map(clazz -> clazz.isAssignableFrom(Option.class))
-                    .orElse(false)) {
+                .of(field.getType().getSuperclass())
+                .map(clazz -> clazz.isAssignableFrom(Option.class))
+                .orElse(false)) {
                 configReader.processOption((Option<?, ?>) ExceptionHandler.removeThrows(() -> field.get(object)));
                 continue;
             }

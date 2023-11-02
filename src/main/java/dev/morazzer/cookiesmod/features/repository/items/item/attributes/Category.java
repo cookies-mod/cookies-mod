@@ -42,6 +42,12 @@ public enum Category {
     POWER_STONE,
     UNKNOWN;
 
+    /**
+     * Gets the category by name or the default {@linkplain Category#UNKNOWN}.
+     *
+     * @param name The name of the category.
+     * @return The category.
+     */
     public static Category byName(String name) {
         for (Category repositoryItem : values()) {
             if (repositoryItem.name().equals(name)) {

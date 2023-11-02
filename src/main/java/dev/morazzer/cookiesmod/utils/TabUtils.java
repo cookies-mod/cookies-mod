@@ -2,6 +2,9 @@ package dev.morazzer.cookiesmod.utils;
 
 import net.minecraft.client.network.PlayerListEntry;
 
+/**
+ * Various methods related to tab entries.
+ */
 public class TabUtils {
 
     /**

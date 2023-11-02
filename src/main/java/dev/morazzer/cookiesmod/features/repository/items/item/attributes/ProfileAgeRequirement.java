@@ -1,12 +1,11 @@
 package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
 
+import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
-
-import java.time.temporal.ChronoUnit;
 
 /**
  * A requirement to have a profile age above a set value.
@@ -24,15 +23,15 @@ public class ProfileAgeRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return Text
-                .literal("*hidden* ")
-                .append(super.getRequirementString())
-                .append(Text
-                        .literal("Profile age of ")
-                        .append(String.valueOf(minimumAge))
-                        .append(StringUtils.capitalize(minimumAgeUnit.name().toLowerCase()))
-                        .formatted(Formatting.DARK_PURPLE))
-                .append(" *hidden*")
-                .formatted(Formatting.DARK_RED);
+            .literal("*hidden* ")
+            .append(super.getRequirementString())
+            .append(Text
+                .literal("Profile age of ")
+                .append(String.valueOf(minimumAge))
+                .append(StringUtils.capitalize(minimumAgeUnit.name().toLowerCase()))
+                .formatted(Formatting.DARK_PURPLE))
+            .append(" *hidden*")
+            .formatted(Formatting.DARK_RED);
     }
 
 }

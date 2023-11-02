@@ -1,8 +1,7 @@
 package dev.morazzer.cookiesmod.features.repository.items.tags;
 
-import net.minecraft.util.Identifier;
-
 import java.util.List;
+import net.minecraft.util.Identifier;
 
 /**
  * A tag representing a collection of items/identifiers.
@@ -11,6 +10,7 @@ import java.util.List;
  * @param key         The tag identifier.
  */
 public record Tag(
-        List<Identifier> identifiers,
-        Identifier key
-) {}
+    List<Identifier> identifiers,
+    Identifier key
+) {
+}

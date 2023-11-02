@@ -14,10 +14,10 @@ public class GuiCategory extends Category {
 
     @Expose
     public ButtonOption buttonOption = new ButtonOption(
-            Text.literal("Edit Locations"),
-            Text.literal("Lets you move all HUD elements"),
-            () -> MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new HudEditor())),
-            Text.literal("Edit")
+        Text.literal("Edit Locations"),
+        Text.literal("Lets you move all HUD elements"),
+        () -> MinecraftClient.getInstance().send(() -> MinecraftClient.getInstance().setScreen(new HudEditor())),
+        Text.literal("Edit")
     );
 
     @Override

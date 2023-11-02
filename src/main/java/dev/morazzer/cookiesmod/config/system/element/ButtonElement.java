@@ -44,7 +44,7 @@ public class ButtonElement {
      */
     public boolean mouseClicked(double mouseX, double mouseY) {
         if ((mouseX > 0) && (mouseX < (48))
-                && (mouseY > 0) && (mouseY < (16))) {
+            && (mouseY > 0) && (mouseY < (16))) {
             this.runnable.run();
             return true;
         }

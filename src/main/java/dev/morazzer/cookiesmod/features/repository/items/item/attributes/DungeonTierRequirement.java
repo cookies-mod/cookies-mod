@@ -23,13 +23,13 @@ public class DungeonTierRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(Text
-                        .empty()
-                        .append(StringUtils.capitalize(dungeonType.name().replace("_", " ").toLowerCase()))
-                        .append(" Floor ")
-                        .append(RomanNumerals.toRoman(tier))
-                        .append(" Completion."));
+            .getRequirementString()
+            .append(Text
+                .empty()
+                .append(StringUtils.capitalize(dungeonType.name().replace("_", " ").toLowerCase()))
+                .append(" Floor ")
+                .append(RomanNumerals.toRoman(tier))
+                .append(" Completion."));
     }
 
 }

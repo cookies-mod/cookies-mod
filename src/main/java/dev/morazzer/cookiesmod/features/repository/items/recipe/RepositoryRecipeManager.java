@@ -4,10 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
-import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +14,9 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manager to handle all recipes in the repository.
@@ -63,15 +62,15 @@ public class RepositoryRecipeManager {
      * @return The single lowest ingredient.
      */
     public static Optional<Ingredient> resolveToLowestSingleIngredient(
-            Identifier identifier,
-            ArrayList<Identifier> visited
+        Identifier identifier,
+        ArrayList<Identifier> visited
     ) {
         visited.add(identifier);
         List<Ingredient> ingredients = getRecipe(identifier, RecipeType.CRAFTING)
-                .map(RepositoryRecipe::getIngredients)
-                .map(Arrays::asList)
-                .map(Ingredient::mergeToList)
-                .orElse(Collections.emptyList());
+            .map(RepositoryRecipe::getIngredients)
+            .map(Arrays::asList)
+            .map(Ingredient::mergeToList)
+            .orElse(Collections.emptyList());
 
         ingredients.removeIf(ingredient -> ingredient.getPath().equals("air"));
 
@@ -84,8 +83,8 @@ public class RepositoryRecipeManager {
             return Optional.empty();
         }
         return resolveToLowestSingleIngredient(lower, visited)
-                .map(craft -> craft.withAmount(craft.getAmount() * lower.getAmount()))
-                .or(() -> Optional.of(lower));
+            .map(craft -> craft.withAmount(craft.getAmount() * lower.getAmount()))
+            .or(() -> Optional.of(lower));
     }
 
     /**
@@ -98,12 +97,12 @@ public class RepositoryRecipeManager {
         Optional<RepositoryRecipe> recipe = getRecipe(identifier, RecipeType.CRAFTING);
 
         return recipe.map(repositoryRecipe -> Ingredient
-                        .mergeIngredients(Arrays.asList(repositoryRecipe.getIngredients()), Collectors.toList())
-                        .stream()
-                        .filter(Predicate.not(Ingredient::isAir))
-                        .sorted(Comparator.comparingInt(Ingredient::getAmount))
-                        .toList())
-                .orElse(Collections.emptyList());
+                .mergeIngredients(Arrays.asList(repositoryRecipe.getIngredients()), Collectors.toList())
+                .stream()
+                .filter(Predicate.not(Ingredient::isAir))
+                .sorted(Comparator.comparingInt(Ingredient::getAmount))
+                .toList())
+            .orElse(Collections.emptyList());
 
     }
 
@@ -116,8 +115,8 @@ public class RepositoryRecipeManager {
     @SuppressWarnings("unused")
     public static Optional<RepositoryRecipe> getRecipe(Identifier identifier) {
         return MAP.getOrDefault(identifier, Collections.emptyList())
-                .stream()
-                .findFirst();
+            .stream()
+            .findFirst();
     }
 
     /**
@@ -129,9 +128,9 @@ public class RepositoryRecipeManager {
      */
     public static Optional<RepositoryRecipe> getRecipe(Identifier identifier, RecipeType type) {
         return MAP.getOrDefault(identifier, Collections.emptyList())
-                .stream()
-                .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
-                .findFirst();
+            .stream()
+            .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
+            .findFirst();
     }
 
     /**
@@ -144,10 +143,10 @@ public class RepositoryRecipeManager {
     @SuppressWarnings("unused")
     public static List<RepositoryRecipe> getRecipes(Identifier identifier, RecipeType type) {
         return MAP
-                .getOrDefault(identifier, Collections.emptyList())
-                .stream()
-                .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
-                .toList();
+            .getOrDefault(identifier, Collections.emptyList())
+            .stream()
+            .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
+            .toList();
     }
 
 }

@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-
 import java.lang.reflect.Field;
 
 /**
@@ -14,9 +13,9 @@ import java.lang.reflect.Field;
 public class JsonUtils {
 
     public static final Gson GSON = new GsonBuilder()
-            .setPrettyPrinting()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
+        .setPrettyPrinting()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .create();
 
     public static final Gson CLEAN_GSON = new Gson();
 
@@ -34,8 +33,8 @@ public class JsonUtils {
                 jsonObject.add(field.getName(), ExceptionHandler.removeThrows(() -> toJsonObject(field.get(object))));
             } else {
                 jsonObject.add(
-                        field.getName(),
-                        ExceptionHandler.removeThrows(() -> CLEAN_GSON.toJsonTree(field.get(object)))
+                    field.getName(),
+                    ExceptionHandler.removeThrows(() -> CLEAN_GSON.toJsonTree(field.get(object)))
                 );
             }
         }
@@ -54,19 +53,23 @@ public class JsonUtils {
         for (Field field : instance.getClass().getDeclaredFields()) {
             field.trySetAccessible();
             if (field.isAnnotationPresent(Save.class)) {
-                if (!jsonObject.has(field.getName())) continue;
+                if (!jsonObject.has(field.getName())) {
+                    continue;
+                }
                 fromJson(
-                        ExceptionHandler.removeThrows(() -> field.get(instance)),
-                        jsonObject.get(field.getName()).getAsJsonObject()
+                    ExceptionHandler.removeThrows(() -> field.get(instance)),
+                    jsonObject.get(field.getName()).getAsJsonObject()
                 );
             } else {
-                if (!jsonObject.has(field.getName())) continue;
+                if (!jsonObject.has(field.getName())) {
+                    continue;
+                }
                 try {
                     field.set(instance, CLEAN_GSON.fromJson(jsonObject.get(field.getName()), field.getType()));
                 } catch (IllegalAccessException e) {
                     ExceptionHandler.handleException(new RuntimeException(field
-                            .getDeclaringClass()
-                            .getName() + "#" + field.getName(), e));
+                        .getDeclaringClass()
+                        .getName() + "#" + field.getName(), e));
                 }
             }
         }

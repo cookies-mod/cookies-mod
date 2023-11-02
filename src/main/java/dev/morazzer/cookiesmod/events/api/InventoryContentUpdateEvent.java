@@ -9,11 +9,17 @@ import net.minecraft.screen.ScreenHandler;
  */
 public interface InventoryContentUpdateEvent {
 
+    /**
+     * Registers an {@linkplain InventoryContentUpdateEvent} for the given {@linkplain ScreenHandler}.
+     *
+     * @param screenHandler The screen handler.
+     * @param event         The event.
+     */
     static void register(ScreenHandler screenHandler, InventoryContentUpdateEvent event) {
         ScreenHandlerUpdateEventAccessor
-                .getInventoryUpdateEventAccessor(screenHandler)
-                .cookies$inventoryUpdateEvent()
-                .register(event);
+            .getInventoryUpdateEventAccessor(screenHandler)
+            .cookies$inventoryUpdateEvent()
+            .register(event);
     }
 
     /**

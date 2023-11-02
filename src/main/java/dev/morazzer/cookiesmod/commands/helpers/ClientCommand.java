@@ -5,6 +5,11 @@ import com.mojang.brigadier.SingleRedirectModifier;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.morazzer.cookiesmod.utils.DevUtils;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -14,15 +19,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
-
 /**
- * A client command is a command that will always only be available to the client itself.
- * This class helps with creating those, and therefore every client command has to extend it.
+ * A client command is a command that will always only be available to the client itself. This class helps with creating
+ * those, and therefore every client command has to extend it.
  */
 @Slf4j
 public abstract class ClientCommand implements Helper {
@@ -31,37 +30,39 @@ public abstract class ClientCommand implements Helper {
     private String originalCommandName;
 
     /**
-     * Loads all classes that
-     * extend {@linkplain dev.morazzer.cookiesmod.commands.helpers.ClientCommand}
-     * and are annotated with {@linkplain dev.morazzer.cookiesmod.commands.helpers.LoadCommand} into the command registry.
+     * Loads all classes that extend {@linkplain dev.morazzer.cookiesmod.commands.helpers.ClientCommand} and are
+     * annotated with {@linkplain dev.morazzer.cookiesmod.commands.helpers.LoadCommand} into the command registry.
      *
-     * @param reflections A {@linkplain org.reflections.Reflections} instance with predefined path to narrow in the scan.
-     * @param dispatcher  The command dispatcher that is provided by the {@linkplain net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback}.
+     * @param reflections A {@linkplain org.reflections.Reflections} instance with predefined path to narrow in the
+     *                    scan.
+     * @param dispatcher  The command dispatcher that is provided by the
+     *                    {@linkplain net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback}.
      */
     public static void loadCommands(
-            @NotNull Reflections reflections,
-            @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher
+        @NotNull Reflections reflections,
+        @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher
     ) {
-        reflections.getTypesAnnotatedWith(LoadCommand.class).forEach(aClass -> {
+        reflections.getTypesAnnotatedWith(LoadCommand.class).forEach(clazz -> {
             log.debug("Found class annotated with @LoadCommand");
-            if (!ClientCommand.class.isAssignableFrom(aClass)) {
-                log.warn("{} does not extend ClientCommand but is annotated with @LoadCommand", aClass);
+            if (!ClientCommand.class.isAssignableFrom(clazz)) {
+                log.warn("{} does not extend ClientCommand but is annotated with @LoadCommand", clazz);
                 return;
             }
 
             try {
                 //noinspection unchecked
-                Constructor<? extends ClientCommand> constructor = (Constructor<? extends ClientCommand>) aClass.getConstructor();
+                Constructor<? extends ClientCommand> constructor =
+                    (Constructor<? extends ClientCommand>) clazz.getConstructor();
                 ClientCommand clientCommand = constructor.newInstance();
                 clientCommand.register(dispatcher);
             } catch (NoSuchMethodException e) {
-                log.warn("No empty constructor found for class {}", aClass);
+                log.warn("No empty constructor found for class {}", clazz);
             } catch (InvocationTargetException e) {
-                log.error("Error while invoking constructor {}", aClass, e);
+                log.error("Error while invoking constructor {}", clazz, e);
             } catch (InstantiationException e) {
-                log.error("Module {} is an abstract class", aClass);
+                log.error("Module {} is an abstract class", clazz);
             } catch (IllegalAccessException e) {
-                log.error("Constructor not accessible {}", aClass);
+                log.error("Constructor not accessible {}", clazz);
             }
         });
     }
@@ -81,9 +82,9 @@ public abstract class ClientCommand implements Helper {
             command.requires(fabricClientCommandSource -> {
                 ClientWorld world = MinecraftClient.getInstance().world;
                 return (this.isAvailableOnServers()
-                        || world != null
-                        && world.isClient())
-                        && requirement.test(fabricClientCommandSource);
+                    || world != null
+                    && world.isClient())
+                    && requirement.test(fabricClientCommandSource);
             });
         }
 
@@ -91,27 +92,31 @@ public abstract class ClientCommand implements Helper {
         this.originalCommandName = register.getName();
         for (String alias : getAliases()) {
             dispatcher.register(literal(alias)
-                    .executes(command.getCommand())
-                    .requires(command.getRequirement())
-                    .redirect(register, getRedirectModifier(alias)));
+                .executes(command.getCommand())
+                .requires(command.getRequirement())
+                .redirect(register, getRedirectModifier(alias)));
 
-            if (alias.startsWith("cookie")) alias = alias.substring(6);
+            if (alias.startsWith("cookie")) {
+                alias = alias.substring(6);
+            }
 
             String namespace = String.format("%s:%s", identifier.getNamespace(), alias);
             dispatcher.register(literal(namespace)
-                    .executes(command.getCommand())
-                    .requires(command.getRequirement())
-                    .redirect(register, getRedirectModifier(namespace)));
-        }
-
-        String name = this.originalCommandName;
-        if (name.startsWith("cookie")) name = name.substring(6);
-        String namespace = String.format("%s:%s", identifier.getNamespace(), name);
-
-        dispatcher.register(literal(namespace)
                 .executes(command.getCommand())
                 .requires(command.getRequirement())
                 .redirect(register, getRedirectModifier(namespace)));
+        }
+
+        String name = this.originalCommandName;
+        if (name.startsWith("cookie")) {
+            name = name.substring(6);
+        }
+        String namespace = String.format("%s:%s", identifier.getNamespace(), name);
+
+        dispatcher.register(literal(namespace)
+            .executes(command.getCommand())
+            .requires(command.getRequirement())
+            .redirect(register, getRedirectModifier(namespace)));
     }
 
     /**

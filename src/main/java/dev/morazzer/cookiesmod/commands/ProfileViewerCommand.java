@@ -2,11 +2,10 @@ package dev.morazzer.cookiesmod.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.List;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Command to open the profile viewer (currently not implemented).

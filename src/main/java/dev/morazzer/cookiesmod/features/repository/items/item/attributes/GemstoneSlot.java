@@ -1,7 +1,6 @@
 package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
 
 import dev.morazzer.cookiesmod.data.enums.GemstoneSlotTypes;
-
 import java.util.List;
 
 /**
@@ -11,6 +10,7 @@ import java.util.List;
  * @param slots    The requirements to unlock the slot.
  */
 public record GemstoneSlot(
-        GemstoneSlotTypes slotType,
-        List<GemstoneSlotRequirement<?>> slots
-) {}
+    GemstoneSlotTypes slotType,
+    List<GemstoneSlotRequirement<?>> slots
+) {
+}

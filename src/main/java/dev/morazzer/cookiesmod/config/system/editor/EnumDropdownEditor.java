@@ -2,11 +2,10 @@ package dev.morazzer.cookiesmod.config.system.editor;
 
 import dev.morazzer.cookiesmod.config.system.element.DropdownElement;
 import dev.morazzer.cookiesmod.config.system.options.EnumDropdownOption;
+import java.util.Arrays;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 /**
  * Editor to select a value from an enum.
@@ -34,8 +33,8 @@ public class EnumDropdownEditor<T extends Enum<T>> extends ConfigOptionEditor<T,
     @Override
     public void init() {
         this.dropdownElement = new DropdownElement<>(
-                this.option.getValue().getDeclaringClass().getEnumConstants(),
-                this.option.getTextSupplier()::supplyText
+            this.option.getValue().getDeclaringClass().getEnumConstants(),
+            this.option.getTextSupplier()::supplyText
         );
         this.dropdownElement.setSelected(this.option.getValue());
     }
@@ -54,10 +53,10 @@ public class EnumDropdownEditor<T extends Enum<T>> extends ConfigOptionEditor<T,
     @Override
     public boolean doesMatchSearch(@NotNull String search) {
         return super.doesMatchSearch(search) || Arrays
-                .stream(this.option.getValue().getDeclaringClass().getEnumConstants())
-                .map(this.option.getTextSupplier()::supplyText)
-                .map(Text::getString)
-                .anyMatch(option -> option.contains(search));
+            .stream(this.option.getValue().getDeclaringClass().getEnumConstants())
+            .map(this.option.getTextSupplier()::supplyText)
+            .map(Text::getString)
+            .anyMatch(option -> option.contains(search));
     }
 
     @Override
@@ -68,9 +67,9 @@ public class EnumDropdownEditor<T extends Enum<T>> extends ConfigOptionEditor<T,
         T value;
 
         if ((value = this.dropdownElement.mouseClicked(
-                mouseX - dropdownLeft,
-                mouseY - dropdownTop,
-                dropdownWidth
+            mouseX - dropdownLeft,
+            mouseY - dropdownTop,
+            dropdownWidth
         )) != null) {
             this.option.setValue(value);
             return true;

@@ -22,14 +22,25 @@ public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdow
 
     private TextSupplier<T> textSupplier;
 
+    /**
+     * Creats an enum dropdown option.
+     *
+     * @param name        The name of the option.
+     * @param description The description of the option.
+     * @param value       The initial value of the option.
+     */
     public EnumDropdownOption(Text name, Text description, T value) {
         super(name, description, value);
-        this.textSupplier = enumValue -> Text.literal(StringUtils.capitalize(enumValue
-                .name()
-                .replace('_', ' ')
-                .toLowerCase()));
+        this.textSupplier =
+            enumValue -> Text.literal(StringUtils.capitalize(enumValue.name().replace('_', ' ').toLowerCase()));
     }
 
+    /**
+     * Sets a supplier for the text.
+     *
+     * @param textSupplier The supplier.
+     * @return The option.
+     */
     public EnumDropdownOption<T> withSupplier(TextSupplier<T> textSupplier) {
         this.textSupplier = textSupplier;
         return this;
@@ -38,7 +49,8 @@ public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdow
     @Override
     public void load(@NotNull JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
-            log.warn("Error while loading config value, expected string got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            log.warn("Error while loading config value, expected string got %s".formatted(
+                jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isString()) {
@@ -60,6 +72,11 @@ public class EnumDropdownOption<T extends Enum<T>> extends Option<T, EnumDropdow
         return new EnumDropdownEditor<>(this);
     }
 
+    /**
+     * Functional interface to map the keys to text.
+     *
+     * @param <T> The type of the enum.
+     */
     @FunctionalInterface
     public interface TextSupplier<T extends Enum<T>> {
 
