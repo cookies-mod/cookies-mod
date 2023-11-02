@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * Manger to handle all recipes in the repository.
+ * Manager to handle all recipes in the repository.
  */
 public class RepositoryRecipeManager {
 

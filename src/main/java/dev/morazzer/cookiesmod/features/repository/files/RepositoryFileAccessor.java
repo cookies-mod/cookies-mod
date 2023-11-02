@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class RepositoryFileAccessor {
 
-    protected static final Logger logger = LoggerFactory.getLogger("repository-files");
+    protected static final Logger LOGGER = LoggerFactory.getLogger("repository-files");
 
     private static final RepositoryFileAccessor INSTANCE = createInstance();
 
@@ -29,10 +29,10 @@ public abstract class RepositoryFileAccessor {
      */
     private static RepositoryFileAccessor createInstance() {
         if (Files.exists(RepositoryManager.getRepoRoot().resolve(".local"))) {
-            logger.debug("Using disperse file accessor.");
+            LOGGER.debug("Using disperse file accessor.");
             return new DisperseFileAccessor();
         } else {
-            logger.debug("Using bundled file accessor.");
+            LOGGER.debug("Using bundled file accessor.");
             return new BundledFileAccessor();
         }
     }
@@ -46,7 +46,7 @@ public abstract class RepositoryFileAccessor {
     public abstract List<JsonElement> getDirectory(Path path);
 
     /**
-     * Get a file as a {@linkplain com.google.gson.JsonElement}.
+     * Gets a file as a {@linkplain com.google.gson.JsonElement}.
      *
      * @param path The path to the file (without .json extension).
      * @return The file.

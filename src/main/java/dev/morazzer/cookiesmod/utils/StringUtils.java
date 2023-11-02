@@ -24,7 +24,7 @@ public class StringUtils {
     }
 
     /**
-     * Returns the byes as a hex string with lowercase characters.
+     * Returns the bytes as a hex string with lowercase characters.
      *
      * @param bytes The bytes to convert.
      * @return The string.

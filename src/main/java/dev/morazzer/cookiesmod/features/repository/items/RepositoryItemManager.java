@@ -105,7 +105,7 @@ public class RepositoryItemManager {
     }
 
     /**
-     * Load one item from the local repository copy.
+     * Loads one item from the local repository copy.
      *
      * @param jsonObject The object to load as item.
      * @param consumer   The callback to run after the item was loaded.
