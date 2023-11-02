@@ -1,0 +1,48 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          check-latest: true
+          distribution: 'temurin'
+          cache: gradle
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - uses: gradle/gradle-build-action@v2
+      - name: Get Version
+        id: get_version
+        run: |
+          ./gradlew createTagName
+          echo "version=$(cat version)" >> "$GITHUB_OUTPUT"
+      - name: Build Mod
+        run: ./gradlew remapJar
+      - name: Rename jars
+        run: mv ./build/libs/cookies-mod-*-remapped.jar ./build/libs/cookies-mod-${{steps.get_version.outputs.version}}.jar | echo
+      - name: Hash jars
+        run: ./gradlew hashLibraries
+      - name: Generate Changelog
+        run: |
+          ./gradlew generateChangelog
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          prerelease: ${{ !endsWith(steps.get_version.outputs.version, 'snapshot') }}
+          tag_name: $version
+          name: $version
+          body_path: CHANGELOG.md
+          files: |
+            ./build/libs/cookies-mod-${{ steps.get_version.outputs.version }}.jar
+            ./build/libs/cookies-mod-${{ steps.get_version.outputs.version }}.jar.sha256

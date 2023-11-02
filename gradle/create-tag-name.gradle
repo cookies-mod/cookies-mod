@@ -7,6 +7,6 @@ tasks.register("createTagName") {
     doLast {
         var tag = "v${rootProject.version.toString().toLowerCase()}"
         println(tag)
-        Files.writeString(java.nio.file.Path.of("version"), "version=$tag", StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING)
+        Files.writeString(java.nio.file.Path.of("version"), "$tag", StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING)
     }
 }
