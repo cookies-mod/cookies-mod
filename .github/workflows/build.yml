@@ -4,16 +4,11 @@ on:
 jobs:
   build:
     name: Build
-    if: ${{ !startsWith(github.event.pull_request.title, '[CI SKIP]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check For CI Skip
-        id: commit
-        run: echo "message=$(git log -1 --pretty=format:"%s")" >> "$GITHUB_OUTPUT"
       - name: Setup Java
-        if: ${{ !startsWith(steps.commit.outputs.message, '[CI SKIP]') }}
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -21,16 +16,12 @@ jobs:
           distribution: 'temurin'
           cache: gradle
       - name: Make Gradlew Executable
-        if: ${{ !startsWith(steps.commit.outputs.message, '[CI SKIP]') }}
         run: chmod +x ./gradlew
       - name: Build & Checkstyle
-        if: ${{ !startsWith(steps.commit.outputs.message, '[CI SKIP]') }}
         run: ./gradlew check remapJar
       - name: Hash Jars
-        if: ${{ !startsWith(steps.commit.outputs.message, '[CI SKIP]') }}
         run: ./gradlew hashLibraries
       - name: Create Artifact
-        if: ${{ !startsWith(steps.commit.outputs.message, '[CI SKIP]') }}
         uses: actions/upload-artifact@v3
         with:
           name: build
