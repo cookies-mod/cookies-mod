@@ -12,16 +12,16 @@ public class DevCategory extends Category {
 
     @Expose
     public final BooleanOption displayRepoOption = new BooleanOption(
-            Text.literal("Show repo options"),
-            Text.literal("Shows repo options in the /dev command"),
-            true
+        Text.literal("Show repo options"),
+        Text.literal("Shows repo options in the /dev command"),
+        true
     ).withTags("repo", "dev options", "item list");
 
     @Expose
     public final BooleanOption hideSpam = new BooleanOption(
-            Text.literal("Hide spam from console log"),
-            Text.literal("Hides all packet spam from log"),
-            true
+        Text.literal("Hide spam from console log"),
+        Text.literal("Hides all packet spam from log"),
+        true
     );
 
     @Override

@@ -18,10 +18,11 @@ public interface Module {
     /**
      * Unloads a module.
      */
-    default void unload() {}
+    default void unload() {
+    }
 
     /**
-     * @return Whether the module should be loaded.
+     * Returns whether the module should be loaded.
      */
     default boolean shouldLoad() {
         return true;

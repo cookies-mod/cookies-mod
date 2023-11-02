@@ -100,6 +100,12 @@ loom {
     accessWidenerPath.set(file("src/main/resources/cookiesmod.accesswidener"))
 }
 
+configure<CheckstyleExtension> {
+    maxWarnings = 0
+    toolVersion = "10.12.4"
+    this.configProperties["mod_id"] = "cookies"
+}
+
 apply(from = "gradle/generate-changelog.gradle")
 apply(from = "gradle/create-tag-name.gradle")
 apply(from = "gradle/hash-libraries.gradle")

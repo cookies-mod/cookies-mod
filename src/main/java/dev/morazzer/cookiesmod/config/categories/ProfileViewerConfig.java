@@ -12,9 +12,9 @@ public class ProfileViewerConfig extends Category {
 
     @Expose
     public BooleanOption keepLastProfileOpen = new BooleanOption(
-            Text.of("Keep last search"),
-            Text.of("Keeps the last viewed profile open when you open the profile viewer again"),
-            false
+        Text.of("Keep last search"),
+        Text.of("Keeps the last viewed profile open when you open the profile viewer again"),
+        false
     );
 
     @Override

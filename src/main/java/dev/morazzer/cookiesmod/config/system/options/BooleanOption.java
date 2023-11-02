@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Used for simple toggle buttons in the config
+ * Used for simple toggle buttons in the config.
  */
 @Slf4j
 public class BooleanOption extends Option<Boolean, BooleanOption> {
@@ -69,7 +69,8 @@ public class BooleanOption extends Option<Boolean, BooleanOption> {
             return;
         }
         if (!jsonElement.isJsonPrimitive()) {
-            log.warn("Error while loading config value, expected boolean got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            log.warn("Error while loading config value, expected boolean got %s".formatted(
+                jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isBoolean()) {

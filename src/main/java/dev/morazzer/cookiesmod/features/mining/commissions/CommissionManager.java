@@ -14,15 +14,17 @@ import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
-
 import java.awt.Color;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
 
+/**
+ * Commission manager.
+ */
 @LoadModule("mining/commissions")
 public class CommissionManager implements Module {
 
@@ -66,7 +68,9 @@ public class CommissionManager implements Module {
         waypointGroup.enabled = true;
         WaypointManager.addCodingGroup(waypointGroup);
         RepositoryManager.addReloadCallback(this::loadRepo);
-        if (RepositoryManager.isFinishedLoading()) this.loadRepo();
+        if (RepositoryManager.isFinishedLoading()) {
+            this.loadRepo();
+        }
     }
 
     @Override
@@ -76,22 +80,28 @@ public class CommissionManager implements Module {
 
     private void loadRepo() {
         Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/dwarven_locations_to_coordinates"))
-                .ifPresent(this::loadLocations);
+            .ifPresent(this::loadLocations);
         Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/commissions"))
-                .ifPresent(this::loadCommissions);
+            .ifPresent(this::loadCommissions);
     }
 
     private void loadCommissions(JsonElement jsonElement) {
-        if (!jsonElement.isJsonObject()) return;
+        if (!jsonElement.isJsonObject()) {
+            return;
+        }
         this.commissions.clear();
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-        this.commissions.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("values"), new TypeToken<>() {}));
-        this.namesToValue.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {}));
+        this.commissions.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("values"), new TypeToken<>() {
+        }));
+        this.namesToValue.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {
+        }));
     }
 
     private void loadLocations(JsonElement jsonElement) {
-        if (!jsonElement.isJsonObject()) return;
+        if (!jsonElement.isJsonObject()) {
+            return;
+        }
         this.locations.clear();
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         WaypointManager.clearCodingGroup(this.waypointGroup);

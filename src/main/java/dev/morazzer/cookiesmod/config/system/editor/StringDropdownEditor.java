@@ -20,8 +20,8 @@ public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropd
     @Override
     public void init() {
         this.dropdownElement = new DropdownElement<>(
-                this.option.getPossibleValues().toArray(String[]::new),
-                Text::literal
+            this.option.getPossibleValues().toArray(String[]::new),
+            Text::literal
         );
         this.dropdownElement.setSelected(this.option.getValue());
     }
@@ -40,9 +40,9 @@ public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropd
     @Override
     public boolean doesMatchSearch(@NotNull String search) {
         return super.doesMatchSearch(search) || this.option
-                .getPossibleValues()
-                .stream()
-                .anyMatch(key -> key.contains(search));
+            .getPossibleValues()
+            .stream()
+            .anyMatch(key -> key.contains(search));
     }
 
     @Override
@@ -53,9 +53,9 @@ public class StringDropdownEditor extends ConfigOptionEditor<String, StringDropd
 
         String value;
         if ((value = this.dropdownElement.mouseClicked(
-                mouseX - dropdownLeft,
-                mouseY - dropdownTop,
-                dropdownWidth
+            mouseX - dropdownLeft,
+            mouseY - dropdownTop,
+            dropdownWidth
         )) != null) {
             this.option.setValue(value);
         }

@@ -6,14 +6,13 @@ import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.CachedValue;
 import dev.morazzer.cookiesmod.utils.DevUtils;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Functions related to skyblock.
@@ -23,9 +22,9 @@ public class SkyblockUtils implements Module {
 
     private static final Identifier DISABLE_SKYBLOCK_CHECK = DevUtils.createIdentifier("disable_skyblock_check");
     private static final CachedValue<Boolean> isCurrentlyInSkyblock = new CachedValue<>(
-            () -> ScoreboardUtils.getTitle().getString().matches("SK[YI]BLOCK.*"),
-            5,
-            TimeUnit.SECONDS
+        () -> ScoreboardUtils.getTitle().getString().matches("SK[YI]BLOCK.*"),
+        5,
+        TimeUnit.SECONDS
     );
     @Getter
     private static long lastServerSwap = -1;
@@ -34,7 +33,7 @@ public class SkyblockUtils implements Module {
     private static UUID lastProfileId;
 
     /**
-     * @return Whether the user is in skyblock.
+     * Returns whether the user is in skyblock.
      */
     public static boolean isCurrentlyInSkyblock() {
         if (lastServerSwap + 5000 > System.currentTimeMillis()) {
@@ -59,13 +58,15 @@ public class SkyblockUtils implements Module {
      * @param overlay If the message is in the overlay.
      */
     private static void lookForProfileIdMessage(Text text, boolean overlay) {
-        if (overlay) return;
+        if (overlay) {
+            return;
+        }
         if (text.getString().matches("Profile ID: .*")) {
             DevUtils.log(
-                    "profile.switch",
-                    "Found new profile id was {} is {}",
-                    lastProfileId,
-                    text.getString().substring(12).trim()
+                "profile.switch",
+                "Found new profile id was {} is {}",
+                lastProfileId,
+                text.getString().substring(12).trim()
             );
             UUID uuid = UUID.fromString(text.getString().substring(12).trim());
 

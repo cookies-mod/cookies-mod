@@ -37,7 +37,8 @@ public class KeybindingOption extends Option<InputUtil.Key, KeybindingOption> {
     @Override
     public void load(@NotNull JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
-            log.warn("Error while loading config value, expected string got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            log.warn("Error while loading config value, expected string got %s".formatted(
+                jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isString()) {

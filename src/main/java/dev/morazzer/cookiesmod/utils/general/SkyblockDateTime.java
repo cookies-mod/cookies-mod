@@ -1,9 +1,8 @@
 package dev.morazzer.cookiesmod.utils.general;
 
-import lombok.Getter;
-
 import java.time.Duration;
 import java.time.Instant;
+import lombok.Getter;
 
 /**
  * Class to represent skyblock date and time.
@@ -11,7 +10,7 @@ import java.time.Instant;
 @Getter
 public class SkyblockDateTime {
 
-    private final static Instant SKYBLOCK_EPOCH = Instant.ofEpochMilli(1_560_275_700_000L);
+    private static final Instant SKYBLOCK_EPOCH = Instant.ofEpochMilli(1_560_275_700_000L);
     private static final long SB_HOUR = 50;
     private static final long SB_DAY = SB_HOUR * 24;
     private static final long SB_MONTH = SB_DAY * 31;
@@ -61,7 +60,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * @return Whether the time is in the future.
+     * Returns whether the time is in the future.
      */
     public boolean isInFuture() {
         SkyblockDateTime now = now();
@@ -69,7 +68,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * @return Whether the date is the currently active skyblock day.
+     * Returns whether the date is the currently active skyblock day.
      */
     public boolean isCurrentDay() {
         SkyblockDateTime now = now();
@@ -77,7 +76,7 @@ public class SkyblockDateTime {
     }
 
     /**
-     * @return Whether the date is in the past.
+     * Returns whether the date is in the past.
      */
     public boolean isInPast() {
         SkyblockDateTime now = now();
@@ -101,8 +100,8 @@ public class SkyblockDateTime {
             suffix = "[%s]".formatted(stringBuilder.substring(0, stringBuilder.length() - 2));
         }
         return "%s %s".formatted(
-                toString(),
-                suffix
+            toString(),
+            suffix
         );
     }
 
@@ -114,7 +113,7 @@ public class SkyblockDateTime {
      */
     public SkyblockDateTime withYear(int year) {
         return new SkyblockDateTime(Instant.ofEpochSecond((this.getInstant()
-                .getEpochSecond() - ((this.getSkyblockYear()) * SB_YEAR)) + (year * SB_YEAR)));
+            .getEpochSecond() - ((this.getSkyblockYear()) * SB_YEAR)) + (year * SB_YEAR)));
     }
 
     /**
@@ -125,7 +124,7 @@ public class SkyblockDateTime {
      */
     public SkyblockDateTime withMonth(int month) {
         return new SkyblockDateTime(Instant.ofEpochSecond((this.getInstant()
-                .getEpochSecond() - ((this.getCurrentSkyblockMonth() - 1) * SB_MONTH)) + (month * SB_MONTH)));
+            .getEpochSecond() - ((this.getCurrentSkyblockMonth() - 1) * SB_MONTH)) + (month * SB_MONTH)));
     }
 
     /**
@@ -136,7 +135,7 @@ public class SkyblockDateTime {
      */
     public SkyblockDateTime withDay(int day) {
         return new SkyblockDateTime(Instant.ofEpochSecond((this.getInstant()
-                .getEpochSecond() - ((this.getCurrentSkyblockDay() - 1) * SB_DAY)) + (day * SB_DAY)));
+            .getEpochSecond() - ((this.getCurrentSkyblockDay() - 1) * SB_DAY)) + (day * SB_DAY)));
     }
 
     /**
@@ -147,7 +146,7 @@ public class SkyblockDateTime {
      */
     public SkyblockDateTime withMinute(int minute) {
         return new SkyblockDateTime(Instant.ofEpochMilli((long) (this.getInstant()
-                .getEpochSecond() - this.getInstant().getEpochSecond() % 50 + minute * 0.83) * 1000));
+            .getEpochSecond() - this.getInstant().getEpochSecond() % 50 + minute * 0.83) * 1000));
     }
 
     /**
@@ -157,7 +156,7 @@ public class SkyblockDateTime {
      */
     public SkyblockDateTime withMinuteZero() {
         return new SkyblockDateTime(Instant.ofEpochSecond(this.getInstant()
-                .getEpochSecond() - this.getInstant().getEpochSecond() % 50));
+            .getEpochSecond() - this.getInstant().getEpochSecond() % 50));
     }
 
     /**
@@ -168,7 +167,7 @@ public class SkyblockDateTime {
      */
     public SkyblockDateTime withHour(int hour) {
         return new SkyblockDateTime(Instant.ofEpochSecond(((this.getInstant()
-                .getEpochSecond() - (this.getInstant().getEpochSecond() % SB_DAY)) + (hour * SB_HOUR))));
+            .getEpochSecond() - (this.getInstant().getEpochSecond() % SB_DAY)) + (hour * SB_HOUR))));
     }
 
     /**
@@ -184,16 +183,17 @@ public class SkyblockDateTime {
             case STAR_CULT -> (getCurrentSkyblockDay() != 0) && ((getCurrentSkyblockDay() % 7) == 0);
             case NEW_YEAR -> (getCurrentSkyblockMonth() == 12) && (getCurrentSkyblockDay() >= 29);
             case TRAVELING_ZOO -> ((getCurrentSkyblockMonth() == 4) && (getCurrentSkyblockDay() <= 3))
-                    || ((getCurrentSkyblockMonth() == 10) && (getCurrentSkyblockDay() <= 3));
+                || ((getCurrentSkyblockMonth() == 10) && (getCurrentSkyblockDay() <= 3));
             case SPOOKY_FESTIVAL -> getCurrentSkyblockMonth() == 8 && getCurrentSkyblockDay() >= 29;
             case WINTER_ISLAND -> getCurrentSkyblockMonth() == 12;
             case JERRY_WORKSHOP -> getCurrentSkyblockMonth() == 12 && getCurrentSkyblockDay() >= 24
-                    && getCurrentSkyblockDay() <= 26;
+                && getCurrentSkyblockDay() <= 26;
             case ELECTION_START -> this.getCurrentSkyblockMonth() == 6 && this.getCurrentSkyblockDay() == 27;
             case ELECTION_CLOSE -> this.getCurrentSkyblockMonth() == 3 && this.getCurrentSkyblockDay() == 27;
-            case ELECTION_OPEN ->
-                    (this.getCurrentSkyblockMonth() < 3) || ((this.getCurrentSkyblockMonth() == 3) && (this.getCurrentSkyblockDay() < 27))
-                            || (this.getCurrentSkyblockMonth() > 6) || ((this.getCurrentSkyblockMonth() == 6) && (this.getCurrentSkyblockDay() >= 27));
+            case ELECTION_OPEN -> (this.getCurrentSkyblockMonth() < 3)
+                || ((this.getCurrentSkyblockMonth() == 3) && (this.getCurrentSkyblockDay() < 27))
+                || (this.getCurrentSkyblockMonth() > 6)
+                || ((this.getCurrentSkyblockMonth() == 6) && (this.getCurrentSkyblockDay() >= 27));
             default -> false;
         };
     }
@@ -207,35 +207,35 @@ public class SkyblockDateTime {
     public SkyblockDateTime getNext(SkyblockEvents skyblockEvents) {
         return switch (skyblockEvents) {
             case FARMING_CONTEST -> this.with(
-                    0,
-                    0,
-                    (this.getCurrentSkyblockDay() + 3) - ((this.getCurrentSkyblockDay() % 3)) - 1,
-                    getCurrentSkyblockMonth() - 1,
-                    getSkyblockYear() - 1
+                0,
+                0,
+                (this.getCurrentSkyblockDay() + 3) - ((this.getCurrentSkyblockDay() % 3)) - 1,
+                getCurrentSkyblockMonth() - 1,
+                getSkyblockYear() - 1
             );
             case DARK_AUCTION -> this.with(
-                    0,
-                    0,
-                    (this.getCurrentSkyblockDay() + 3) - ((this.getCurrentSkyblockDay() % 3)) - 2,
-                    getCurrentSkyblockMonth() - 1,
-                    getSkyblockYear() - 1
+                0,
+                0,
+                (this.getCurrentSkyblockDay() + 3) - ((this.getCurrentSkyblockDay() % 3)) - 2,
+                getCurrentSkyblockMonth() - 1,
+                getSkyblockYear() - 1
             );
             case STAR_CULT -> {
                 if (this.getCurrentSkyblockDay() < 27) {
                     yield this.with(
-                            0,
-                            0,
-                            this.getCurrentSkyblockDay() - (this.getCurrentSkyblockDay() % 7) + 6,
-                            getCurrentSkyblockMonth() - 1,
-                            getSkyblockYear() - 1
+                        0,
+                        0,
+                        this.getCurrentSkyblockDay() - (this.getCurrentSkyblockDay() % 7) + 6,
+                        getCurrentSkyblockMonth() - 1,
+                        getSkyblockYear() - 1
                     );
                 } else {
                     yield this.with(
-                            0,
-                            0,
-                            6,
-                            getCurrentSkyblockMonth(),
-                            getSkyblockYear() - 1
+                        0,
+                        0,
+                        6,
+                        getCurrentSkyblockMonth(),
+                        getSkyblockYear() - 1
                     );
                 }
             }
@@ -248,7 +248,7 @@ public class SkyblockDateTime {
             }
             case TRAVELING_ZOO -> {
                 if (this.getCurrentSkyblockMonth() == 10 && this.getCurrentSkyblockDay() > 3
-                        || this.getCurrentSkyblockMonth() > 10 || this.getCurrentSkyblockMonth() < 3) {
+                    || this.getCurrentSkyblockMonth() > 10 || this.getCurrentSkyblockMonth() < 3) {
                     yield this.with(0, 0, 0, 2, this.getSkyblockYear());
                 } else {
                     yield this.with(0, 0, 0, 9, this.getSkyblockYear());
@@ -262,14 +262,16 @@ public class SkyblockDateTime {
                 }
             }
             case ELECTION_CLOSE -> {
-                if (this.getCurrentSkyblockMonth() < 3 || this.getCurrentSkyblockMonth() == 3 && getCurrentSkyblockDay() < 27) {
+                if (this.getCurrentSkyblockMonth() < 3
+                    || this.getCurrentSkyblockMonth() == 3 && getCurrentSkyblockDay() < 27) {
                     yield this.with(0, 0, 26, 2, this.getSkyblockYear() - 1);
                 } else {
                     yield this.with(0, 0, 26, 2, this.getSkyblockYear());
                 }
             }
             case ELECTION_START, ELECTION_OPEN -> {
-                if (this.getCurrentSkyblockMonth() < 6 || this.getCurrentSkyblockMonth() == 6 && this.getCurrentSkyblockDay() < 27) {
+                if (this.getCurrentSkyblockMonth() < 6
+                    || this.getCurrentSkyblockMonth() == 6 && this.getCurrentSkyblockDay() < 27) {
                     yield this.with(0, 0, 26, 5, this.getSkyblockYear() - 1);
                 } else {
                     yield this.with(0, 0, 26, 5, this.getSkyblockYear());
@@ -283,7 +285,9 @@ public class SkyblockDateTime {
                 }
             }
             case SPOOKY_FESTIVAL -> {
-                if (this.getCurrentSkyblockMonth() > 8 || this.getCurrentSkyblockMonth() == 8 && this.getCurrentSkyblockDay() >= 29) {
+                if (this.getCurrentSkyblockMonth() > 8
+                    || this.getCurrentSkyblockMonth() == 8
+                    && this.getCurrentSkyblockDay() >= 29) {
                     yield this.with(0, 0, 28, 7, this.getSkyblockYear());
                 } else {
                     yield this.with(0, 0, 28, 7, this.getSkyblockYear() - 1);
@@ -301,11 +305,11 @@ public class SkyblockDateTime {
     @Override
     public String toString() {
         return "%s:%S %s/%s/%s".formatted(
-                getCurrentSkyblockHour(),
-                getCurrentSkyblockMinute(),
-                getCurrentSkyblockDay(),
-                getCurrentSkyblockMonth(),
-                getSkyblockYear()
+            getCurrentSkyblockHour(),
+            getCurrentSkyblockMinute(),
+            getCurrentSkyblockDay(),
+            getCurrentSkyblockMonth(),
+            getSkyblockYear()
         );
     }
 
@@ -411,7 +415,8 @@ public class SkyblockDateTime {
      */
     @SuppressWarnings("SameParameterValue")
     private SkyblockDateTime with(int minute, int hour, int day, int month, int year) {
-        return SkyblockDateTime.ofSkyblockInstant(Instant.ofEpochMilli((long) ((minute * 0.83 + hour * SB_HOUR + day * SB_DAY + month * SB_MONTH + year * SB_YEAR) * 1000)));
+        return SkyblockDateTime.ofSkyblockInstant(Instant.ofEpochMilli(
+            (long) ((minute * 0.83 + hour * SB_HOUR + day * SB_DAY + month * SB_MONTH + year * SB_YEAR) * 1000)));
     }
 
     /**

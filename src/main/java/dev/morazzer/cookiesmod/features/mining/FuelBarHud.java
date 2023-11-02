@@ -6,12 +6,11 @@ import dev.morazzer.cookiesmod.features.repository.constants.MiningData;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import dev.morazzer.cookiesmod.utils.maths.LinearInterpolatedInteger;
 import dev.morazzer.cookiesmod.utils.render.Position;
+import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
-
-import java.util.Optional;
 
 /**
  * Hud element to render the fuel in a drill as bar.
@@ -19,8 +18,8 @@ import java.util.Optional;
 public class FuelBarHud extends HudElement {
 
     private static final LinearInterpolatedInteger interpolatedFuelAmount = new LinearInterpolatedInteger(10000, 0);
-    final Identifier FUEL_BAR_EMPTY = new Identifier("cookiesmod:hud/mining/fuel/bar.png");
-    final Identifier FUEL_BAR_FILLED = new Identifier("cookiesmod:hud/mining/fuel/bar_filled.png");
+    private static final Identifier FUEL_BAR_EMPTY = new Identifier("cookiesmod:hud/mining/fuel/bar.png");
+    private static final Identifier FUEL_BAR_FILLED = new Identifier("cookiesmod:hud/mining/fuel/bar_filled.png");
 
     public FuelBarHud() {
         super(new Position(0, -100, true, true));
@@ -44,10 +43,10 @@ public class FuelBarHud extends HudElement {
     @Override
     public boolean shouldRender() {
         return ItemUtils.hasSkyblockItemInMainHand() && ItemUtils
-                .getMainHand()
-                .flatMap(ItemUtils::getSkyblockIdAsIdentifier)
-                .map(MiningData.getInstance().getDrills()::contains)
-                .orElse(false);
+            .getMainHand()
+            .flatMap(ItemUtils::getSkyblockIdAsIdentifier)
+            .map(MiningData.getInstance().getDrills()::contains)
+            .orElse(false);
     }
 
     @Override
@@ -62,14 +61,18 @@ public class FuelBarHud extends HudElement {
         }
 
         Optional<NbtCompound> optionalAttributes = ItemUtils.getMainHand().flatMap(ItemUtils::getSkyblockAttributes);
-        if (optionalAttributes.isEmpty()) return;
+        if (optionalAttributes.isEmpty()) {
+            return;
+        }
         NbtCompound extraAttributes = optionalAttributes.get();
 
         final int maxFuel = ItemUtils.skyblockIdToIdentifier(extraAttributes.getString("drill_part_fuel_tank"))
-                .map(MiningData.getInstance().getParts()::get)
-                .orElse(3000);
+            .map(MiningData.getInstance().getParts()::get)
+            .orElse(3000);
 
-        if (!extraAttributes.contains("drill_fuel")) return;
+        if (!extraAttributes.contains("drill_fuel")) {
+            return;
+        }
 
         final int currentFuel = extraAttributes.getInt("drill_fuel");
         final float fuelPercentage = (float) currentFuel / maxFuel;
@@ -90,15 +93,15 @@ public class FuelBarHud extends HudElement {
         drawContext.drawTexture(FUEL_BAR_EMPTY, 0, 5, 0, 0, 0, 182, 5, 182, 5);
         if (fuelPercentage > 0) {
             drawContext.drawTexture(
-                    FUEL_BAR_FILLED,
-                    0,
-                    5,
-                    0,
-                    0,
-                    (int) (fuelPercentage * 182.0f),
-                    5,
-                    183,
-                    5
+                FUEL_BAR_FILLED,
+                0,
+                5,
+                0,
+                0,
+                (int) (fuelPercentage * 182.0f),
+                5,
+                183,
+                5
             );
         }
         String text = "Drill Fuel";
@@ -107,12 +110,12 @@ public class FuelBarHud extends HudElement {
         }
 
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                text,
-                3,
-                -2,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            text,
+            3,
+            -2,
+            -1,
+            true
         );
         drawContext.setShaderColor(1, 1, 1, 1);
     }

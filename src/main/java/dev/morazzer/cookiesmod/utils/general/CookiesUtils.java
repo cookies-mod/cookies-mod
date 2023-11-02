@@ -4,20 +4,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
-
+/**
+ * Various miscellaneous helpers.
+ */
 public class CookiesUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("cookies-utils");
@@ -76,7 +78,7 @@ public class CookiesUtils {
      * @return The uuid.
      */
     public static Optional<UUID> getUuid(String username) {
-        AtomicReference<UUID> atomicUUID = new AtomicReference<>(null);
+        AtomicReference<UUID> atomicUuid = new AtomicReference<>(null);
         HttpUtils.getResponse(URI.create("https://api.mojang.com/users/profiles/minecraft/" + username), response -> {
             if (response == null) {
                 logger.warn("Response object from Mojang api equals null");
@@ -91,9 +93,9 @@ public class CookiesUtils {
                     default -> {
                         try {
                             logger.warn(
-                                    "Error while executing uuid to username request (statusCode={}, body={})",
-                                    statusCode,
-                                    new String(response.getEntity().getContent().readAllBytes())
+                                "Error while executing uuid to username request (statusCode={}, body={})",
+                                statusCode,
+                                new String(response.getEntity().getContent().readAllBytes())
                             );
                         } catch (IOException e) {
                             ExceptionHandler.handleException(e);
@@ -104,31 +106,33 @@ public class CookiesUtils {
             }
 
             JsonObject fromJson = ExceptionHandler.removeThrows(
-                    () -> JsonUtils.GSON.fromJson(
-                            new String(
-                                    response.getEntity()
-                                            .getContent()
-                                            .readAllBytes()
-                            ),
-                            JsonObject.class
+                () -> JsonUtils.GSON.fromJson(
+                    new String(
+                        response.getEntity()
+                            .getContent()
+                            .readAllBytes()
                     ),
-                    new JsonObject()
+                    JsonObject.class
+                ),
+                new JsonObject()
             );
 
-            if (fromJson.isEmpty()) return;
+            if (fromJson.isEmpty()) {
+                return;
+            }
             JsonElement jsonElement = fromJson.get("id");
             String uuidAsString = jsonElement.getAsString();
             if (uuidAsString.length() == 32) {
                 uuidAsString = uuidAsString.replaceFirst(
-                        "([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)",
-                        "$1-$2-$3-$4-$5"
+                    "([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)",
+                    "$1-$2-$3-$4-$5"
                 );
             }
 
-            atomicUUID.set(UUID.fromString(uuidAsString));
+            atomicUuid.set(UUID.fromString(uuidAsString));
         });
 
-        return Optional.ofNullable(atomicUUID.get());
+        return Optional.ofNullable(atomicUuid.get());
     }
 
     /**
@@ -153,9 +157,9 @@ public class CookiesUtils {
                     default -> {
                         try {
                             logger.warn(
-                                    "Error while executing uuid to username request (statusCode={}, body={})",
-                                    statusCode,
-                                    new String(response.getEntity().getContent().readAllBytes())
+                                "Error while executing uuid to username request (statusCode={}, body={})",
+                                statusCode,
+                                new String(response.getEntity().getContent().readAllBytes())
                             );
                         } catch (IOException e) {
                             ExceptionHandler.handleException(e);
@@ -167,9 +171,9 @@ public class CookiesUtils {
 
             try {
                 JsonObject fromJson = JsonUtils.GSON.fromJson(new String(response
-                        .getEntity()
-                        .getContent()
-                        .readAllBytes()), JsonObject.class);
+                    .getEntity()
+                    .getContent()
+                    .readAllBytes()), JsonObject.class);
                 JsonElement jsonElement = fromJson.get("name");
 
                 atomicReference.set(jsonElement.getAsString());

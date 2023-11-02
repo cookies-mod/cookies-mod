@@ -3,6 +3,9 @@ package dev.morazzer.cookiesmod.features.farming.garden;
 import dev.morazzer.cookiesmod.events.api.BlockBreakCallback;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.Getter;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -10,10 +13,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldAccess;
-
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Tracker for crop milestones.
@@ -26,17 +25,17 @@ public class CropMilestoneTracker implements Module {
 
     @Getter
     Set<Identifier> crops = Stream.of(
-            Blocks.WHEAT,
-            Blocks.CARROTS,
-            Blocks.POTATOES,
-            Blocks.NETHER_WART,
-            Blocks.SUGAR_CANE,
-            Blocks.COCOA,
-            Blocks.CACTUS,
-            Blocks.RED_MUSHROOM,
-            Blocks.BROWN_MUSHROOM,
-            Blocks.PUMPKIN,
-            Blocks.MELON
+        Blocks.WHEAT,
+        Blocks.CARROTS,
+        Blocks.POTATOES,
+        Blocks.NETHER_WART,
+        Blocks.SUGAR_CANE,
+        Blocks.COCOA,
+        Blocks.CACTUS,
+        Blocks.RED_MUSHROOM,
+        Blocks.BROWN_MUSHROOM,
+        Blocks.PUMPKIN,
+        Blocks.MELON
     ).map(Registries.BLOCK::getId).collect(Collectors.toUnmodifiableSet());
 
     @Override
@@ -58,14 +57,18 @@ public class CropMilestoneTracker implements Module {
      * @param blockState  The block state of the block.
      */
     private void blockBroken(
-            WorldAccess worldAccess,
-            BlockPos blockPos,
-            BlockState blockState
+        WorldAccess worldAccess,
+        BlockPos blockPos,
+        BlockState blockState
     ) {
-        if (!Garden.isOnGarden()) return;
+        if (!Garden.isOnGarden()) {
+            return;
+        }
 
         Identifier blockId = Registries.BLOCK.getId(blockState.getBlock());
-        if (!crops.contains(blockId)) return;
+        if (!crops.contains(blockId)) {
+            return;
+        }
         assert true; // reachable line of code to not cause warnings with the if statement above
     }
 

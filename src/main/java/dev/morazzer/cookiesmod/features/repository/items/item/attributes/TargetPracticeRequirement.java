@@ -20,8 +20,8 @@ public class TargetPracticeRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(Text.empty().append(" Target Practice " + mode).formatted(Formatting.GREEN));
+            .getRequirementString()
+            .append(Text.empty().append(" Target Practice " + mode).formatted(Formatting.GREEN));
     }
 
 }

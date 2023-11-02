@@ -2,13 +2,12 @@ package dev.morazzer.cookiesmod.features.hud;
 
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The hud manager to render all hud elements.
@@ -63,8 +62,8 @@ public class HudManager implements Module {
     }
 
     /**
-     * Renders all hud elements onto the screen,
-     * if the {@linkplain dev.morazzer.cookiesmod.features.hud.HudEditor} is not open.
+     * Renders all hud elements onto the screen, if the {@linkplain dev.morazzer.cookiesmod.features.hud.HudEditor} is
+     * not open.
      *
      * @param drawContext The current draw context.
      * @param tickDelta   The difference in time between the last tick and now.

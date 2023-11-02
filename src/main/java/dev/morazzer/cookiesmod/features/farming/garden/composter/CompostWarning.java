@@ -33,9 +33,9 @@ public class CompostWarning implements Module {
         instance = this;
         CompostFoldable compostFoldable = ConfigManager.getConfig().gardenCategory.compostFoldable;
         this.organicMatterAmount = compostFoldable.organicMatterAmount.getNumberTransformer()
-                .parseNumber(compostFoldable.organicMatterAmount.getValue());
+            .parseNumber(compostFoldable.organicMatterAmount.getValue());
         this.fuelAmount = compostFoldable.fuelWarningAmount.getNumberTransformer()
-                .parseNumber(compostFoldable.fuelWarningAmount.getValue());
+            .parseNumber(compostFoldable.fuelWarningAmount.getValue());
         compostFoldable.organicMatterAmount.withCallback((oldValue, newValue) -> this.organicMatterAmount = newValue);
         compostFoldable.fuelWarningAmount.withCallback((oldValue, newValue) -> this.fuelAmount = newValue);
         PlayerListUpdateEvent.UPDATE_NAME.register(this::updateNames);
@@ -52,41 +52,56 @@ public class CompostWarning implements Module {
      * @param entry The entry to check.
      */
     private void updateNames(PlayerListEntry entry) {
-        if (!Garden.isOnGarden()) return;
-        if (!TabUtils.isInRange(2, 7, 11, entry)) return;
-        if (!ConfigManager.getConfig().gardenCategory.compostFoldable.showWarnings.getValue()) return;
-        if (entry.getDisplayName() == null) return;
+        if (!Garden.isOnGarden()) {
+            return;
+        }
+        if (!TabUtils.isInRange(2, 7, 11, entry)) {
+            return;
+        }
+        if (!ConfigManager.getConfig().gardenCategory.compostFoldable.showWarnings.getValue()) {
+            return;
+        }
+        if (entry.getDisplayName() == null) {
+            return;
+        }
 
         String name = entry.getDisplayName().getString().trim();
 
         switch (TabUtils.getRow(entry)) {
             case 8 -> {
-                if (!name.matches("Organic Matter: \\d+(?:.\\d+)?.?")) return;
+                if (!name.matches("Organic Matter: \\d+(?:.\\d+)?.?")) {
+                    return;
+                }
                 long l = NumberFormat.fromString(name.substring(16));
                 if (l <= this.organicMatterAmount) {
                     if (this.lowMatter) {
                         return;
                     }
                     CookiesUtils.sendMessage(CookiesMod.createPrefix(ColorUtils.failColor)
-                            .append("Low Organic Matter!"));
+                        .append("Low Organic Matter!"));
                     this.lowMatter = true;
                     return;
                 }
                 this.lowMatter = false;
             }
             case 9 -> {
-                if (!name.matches("Fuel: \\d+(?:.\\d+)?.?")) return;
+                if (!name.matches("Fuel: \\d+(?:.\\d+)?.?")) {
+                    return;
+                }
                 long l = NumberFormat.fromString(name.substring(6));
                 if (l <= this.fuelAmount) {
                     if (this.lowFuel) {
                         return;
                     }
                     CookiesUtils.sendMessage(CookiesMod.createPrefix(ColorUtils.failColor)
-                            .append("Low on fuel!"));
+                        .append("Low on fuel!"));
                     this.lowFuel = true;
                     return;
                 }
                 this.lowFuel = false;
+            }
+            default -> {
+                // Not handled
             }
         }
     }

@@ -13,76 +13,90 @@ public class Speeds extends Foldable {
 
     @Expose
     public final SliderOption<Integer> wheat = SliderOption.integerOption(
-            Text.literal("Wheat"),
-            Text.literal("Overrides the preset value for wheat (-1 to keep preset)"),
-            -1
+        Text.literal("Wheat"),
+        Text.literal("Overrides the preset value for wheat (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> carrot = SliderOption.integerOption(
-            Text.literal("Carrot"),
-            Text.literal("Overrides the preset value for carrots (-1 to keep preset)"),
-            -1
+        Text.literal("Carrot"),
+        Text.literal("Overrides the preset value for carrots (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> potato = SliderOption.integerOption(
-            Text.literal("Potato"),
-            Text.literal("Overrides the preset value for potatoes (-1 to keep preset)"),
-            -1
+        Text.literal("Potato"),
+        Text.literal("Overrides the preset value for potatoes (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> netherWart = SliderOption.integerOption(
-            Text.literal("Nether Wart"),
-            Text.literal("Overrides the preset value for nether warts (-1 to keep preset)"),
-            -1
+        Text.literal("Nether Wart"),
+        Text.literal("Overrides the preset value for nether warts (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> pumpkin = SliderOption.integerOption(
-            Text.literal("Pumpkin"),
-            Text.literal("Overrides the preset value for pumpkins (-1 to keep preset)"),
-            -1
+        Text.literal("Pumpkin"),
+        Text.literal("Overrides the preset value for pumpkins (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> melon = SliderOption.integerOption(
-            Text.literal("Melon"),
-            Text.literal("Overrides the preset value for melons (-1 to keep preset)"),
-            -1
+        Text.literal("Melon"),
+        Text.literal("Overrides the preset value for melons (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> cocoaBeans = SliderOption.integerOption(
-            Text.literal("Cocoa Beans"),
-            Text.literal("Overrides the preset value for cocoa beans (-1 to keep preset)"),
-            -1
+        Text.literal("Cocoa Beans"),
+        Text.literal("Overrides the preset value for cocoa beans (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> sugarCane = SliderOption.integerOption(
-            Text.literal("Sugar Cane"),
-            Text.literal("Overrides the preset value for sugar cane (-1 to keep preset)"),
-            -1
+        Text.literal("Sugar Cane"),
+        Text.literal("Overrides the preset value for sugar cane (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> cactus = SliderOption.integerOption(
-            Text.literal("Cactus"),
-            Text.literal("Overrides the preset value for cactus (-1 to keep preset)"),
-            -1
+        Text.literal("Cactus"),
+        Text.literal("Overrides the preset value for cactus (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
     @Expose
     public final SliderOption<Integer> mushroom = SliderOption.integerOption(
-            Text.literal("Mushroom"),
-            Text.literal("Overrides the preset value for mushrooms (-1 to keep preset)"),
-            -1
+        Text.literal("Mushroom"),
+        Text.literal("Overrides the preset value for mushrooms (-1 to keep preset)"),
+        -1
     ).withMax(500).withMin(-1).withStep(1);
 
+    /**
+     * Creates a speeds instance.
+     *
+     * @param wheat      The speed for wheat.
+     * @param carrot     The speed for carrot.
+     * @param potato     The speed for potato.
+     * @param netherWart The speed for nether wart.
+     * @param pumpkin    The speed for pumpkin.
+     * @param melon      The speed for melon.
+     * @param cocoaBeans The speed for cocoa beans.
+     * @param sugarCane  The speed for sugar cane.
+     * @param cactus     The speed for cactus.
+     * @param mushroom   The speed for mushroom.
+     */
     public Speeds(
-            int wheat,
-            int carrot,
-            int potato,
-            int netherWart,
-            int pumpkin,
-            int melon,
-            int cocoaBeans,
-            int sugarCane,
-            int cactus,
-            int mushroom
+        int wheat,
+        int carrot,
+        int potato,
+        int netherWart,
+        int pumpkin,
+        int melon,
+        int cocoaBeans,
+        int sugarCane,
+        int cactus,
+        int mushroom
     ) {
         this.wheat.setValue(wheat);
         this.carrot.setValue(carrot);
@@ -99,27 +113,42 @@ public class Speeds extends Foldable {
     public Speeds() {
     }
 
+    /**
+     * Merges two existing speeds instances. The value of the override well be taken if it is != -1.
+     *
+     * @param preset The first base instance.
+     * @param config The override instance.
+     * @return The merged instance.
+     */
     public static Speeds merge(Speeds preset, Speeds config) {
-        if (preset.equals(config)) return preset;
+        if (preset.equals(config)) {
+            return preset;
+        }
 
         return new SpeedsBuilder()
-                .setWheat(getValue(preset.wheat, config.wheat))
-                .setCarrot(getValue(preset.carrot, config.carrot))
-                .setPotato(getValue(preset.potato, config.potato))
-                .setNetherWart(getValue(preset.netherWart, config.netherWart))
-                .setPumpkin(getValue(preset.pumpkin, config.pumpkin))
-                .setMelon(getValue(preset.melon, config.melon))
-                .setCocoaBeans(getValue(preset.cocoaBeans, config.cocoaBeans))
-                .setSugarCane(getValue(preset.sugarCane, config.sugarCane))
-                .setCactus(getValue(preset.cactus, config.cactus))
-                .setMushroom(getValue(preset.mushroom, config.mushroom))
-                .createSpeeds();
+            .setWheat(getValue(preset.wheat, config.wheat))
+            .setCarrot(getValue(preset.carrot, config.carrot))
+            .setPotato(getValue(preset.potato, config.potato))
+            .setNetherWart(getValue(preset.netherWart, config.netherWart))
+            .setPumpkin(getValue(preset.pumpkin, config.pumpkin))
+            .setMelon(getValue(preset.melon, config.melon))
+            .setCocoaBeans(getValue(preset.cocoaBeans, config.cocoaBeans))
+            .setSugarCane(getValue(preset.sugarCane, config.sugarCane))
+            .setCactus(getValue(preset.cactus, config.cactus))
+            .setMushroom(getValue(preset.mushroom, config.mushroom))
+            .createSpeeds();
     }
 
     private static int getValue(SliderOption<? extends Number> preset, SliderOption<? extends Number> config) {
         return config.getValue().intValue() != -1 ? config.getValue().intValue() : preset.getValue().intValue();
     }
 
+    /**
+     * Map the item identifier to the corresponding speed.
+     *
+     * @param identifier The identifier.
+     * @return The speed.
+     */
     public int getValue(Identifier identifier) {
         return switch (identifier.getPath()) {
             case "items/wheat" -> this.wheat.getValue();

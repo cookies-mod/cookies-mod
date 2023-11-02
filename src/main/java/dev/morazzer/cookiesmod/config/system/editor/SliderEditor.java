@@ -19,8 +19,8 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
     private static final Identifier SLIDER_CAP_OFF = Identifier.of("cookiesmod", "gui/config/slider_cap_off.png");
     private static final Identifier SLIDER_SEGMENT_ON = Identifier.of("cookiesmod", "gui/config/slider_segment_on.png");
     private static final Identifier SLIDER_SEGMENT_OFF = Identifier.of(
-            "cookiesmod",
-            "gui/config/slider_segment_off.png"
+        "cookiesmod",
+        "gui/config/slider_segment_off.png"
     );
     private static final Identifier SLIDER_NOTCH_ON = Identifier.of("cookiesmod", "gui/config/slider_notch_on.png");
     private static final Identifier SLIDER_NOTCH_OFF = Identifier.of("cookiesmod", "gui/config/slider_notch_off.png");
@@ -70,13 +70,13 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
         textFieldWidget.render(drawContext, mouseX, mouseY, tickDelta);
 
         float sliderAmount = Math.max(
-                0,
-                Math.min(
-                        1,
-                        (this.option.getValue().floatValue() - this.option.getMin().floatValue()) / (this.option
-                                .getMax()
-                                .floatValue() - this.option.getMin().floatValue())
-                )
+            0,
+            Math.min(
+                1,
+                (this.option.getValue().floatValue() - this.option.getMin().floatValue()) / (this.option
+                    .getMax()
+                    .floatValue() - this.option.getMin().floatValue())
+            )
         );
         int sliderPosition = (int) (sliderWidth * sliderAmount);
 
@@ -88,28 +88,28 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
 
         if (sliderPosition > 5) {
             drawContext.drawTexture(
-                    SLIDER_SEGMENT_ON,
-                    sliderX + 4,
-                    sliderY,
-                    0,
-                    0,
-                    sliderPosition - 4,
-                    16,
-                    sliderPosition - 4,
-                    16
+                SLIDER_SEGMENT_ON,
+                sliderX + 4,
+                sliderY,
+                0,
+                0,
+                sliderPosition - 4,
+                16,
+                sliderPosition - 4,
+                16
             );
         }
         if (sliderPosition < sliderWidth - 5) {
             drawContext.drawTexture(
-                    SLIDER_SEGMENT_OFF,
-                    sliderX + sliderPosition,
-                    sliderY,
-                    0,
-                    0,
-                    sliderWidth - 4 - sliderPosition,
-                    16,
-                    sliderWidth - 4 - sliderPosition,
-                    16
+                SLIDER_SEGMENT_OFF,
+                sliderX + sliderPosition,
+                sliderY,
+                0,
+                0,
+                sliderWidth - 4 - sliderPosition,
+                16,
+                sliderWidth - 4 - sliderPosition,
+                16
             );
         }
 
@@ -139,11 +139,11 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
         int sliderX = optionWidth / 6 - fullWidth / 2;
         int sliderY = getHeight() - 7 - 14;
         if (mouseX > sliderX + sliderWidth + 5
-                && mouseX < sliderX + sliderWidth + 5 + textFieldWidth + this
-                .getTextRenderer()
-                .getWidth(this.textFieldWidget.getText())
-                && mouseY > getHeight() - 21
-                && mouseY < getHeight() - 5) {
+            && mouseX < sliderX + sliderWidth + 5 + textFieldWidth + this
+            .getTextRenderer()
+            .getWidth(this.textFieldWidget.getText())
+            && mouseY > getHeight() - 21
+            && mouseY < getHeight() - 5) {
             this.textFieldWidget.setFocused(true);
             this.textFieldWidget.active = true;
             return true;
@@ -152,7 +152,8 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
             this.saveValue();
         }
 
-        isCurrentlyClicked = (mouseX > sliderX) && (mouseX < (sliderX + sliderWidth)) && (mouseY > sliderY) && (mouseY < (sliderY + 16));
+        isCurrentlyClicked =
+            (mouseX > sliderX) && (mouseX < (sliderX + sliderWidth)) && (mouseY > sliderY) && (mouseY < (sliderY + 16));
         this.setIfClicked((float) mouseX, optionWidth);
 
         return false;
@@ -166,7 +167,7 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
 
     @Override
     public boolean mouseDragged(
-            double mouseX, double mouseY, int button, double deltaX, double deltaY, int optionWidth
+        double mouseX, double mouseY, int button, double deltaX, double deltaY, int optionWidth
     ) {
         this.setIfClicked((float) mouseX, optionWidth);
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY, optionWidth);
@@ -207,12 +208,12 @@ public class SliderEditor<T extends Number> extends ConfigOptionEditor<T, Slider
             int sliderX = optionWidth / 6 - fullWidth / 2;
             float mouseClickPercentage = (mouseX - sliderX) / sliderWidth;
             float value = mouseClickPercentage * (this.option.getMax().floatValue() - this.option
-                    .getMin()
-                    .floatValue()) + this.option.getMin().floatValue();
+                .getMin()
+                .floatValue()) + this.option.getMin().floatValue();
             value = Math.max(this.option.getMin().floatValue(), Math.min(this.option.getMax().floatValue(), value));
             value = (float) (Math.round(value / this.option.getStep().floatValue()) * (double) this.option
-                    .getStep()
-                    .floatValue());
+                .getStep()
+                .floatValue());
             this.option.setValue(value);
         }
     }

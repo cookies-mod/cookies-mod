@@ -1,7 +1,6 @@
 package dev.morazzer.cookiesmod.features.waypoints;
 
 import dev.morazzer.cookiesmod.utils.LocationUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 

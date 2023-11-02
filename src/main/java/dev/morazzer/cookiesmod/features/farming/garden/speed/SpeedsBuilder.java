@@ -17,6 +17,8 @@ public class SpeedsBuilder {
     private int mushroom;
 
     /**
+     * Sets the speed for wheat.
+     *
      * @param wheat The speed for wheat.
      * @return The builder.
      */
@@ -26,6 +28,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for carrot.
+     *
      * @param carrot The speed for carrot.
      * @return The builder.
      */
@@ -35,6 +39,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for potato.
+     *
      * @param potato The speed for potato.
      * @return The builder.
      */
@@ -44,6 +50,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for nether wart.
+     *
      * @param netherWart The speed for nether wart.
      * @return The builder.
      */
@@ -53,6 +61,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for pumpkin.
+     *
      * @param pumpkin The speed for pumpkin.
      * @return The builder.
      */
@@ -62,6 +72,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for melon.
+     *
      * @param melon The speed for melon.
      * @return The builder.
      */
@@ -71,6 +83,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for cocoa beans.
+     *
      * @param cocoaBeans The speed for cocoa beans.
      * @return The builder.
      */
@@ -80,6 +94,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for sugar cane.
+     *
      * @param sugarCane The speed for sugar cane.
      * @return The builder.
      */
@@ -89,6 +105,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for cactus.
+     *
      * @param cactus The speed for cactus.
      * @return The builder.
      */
@@ -98,6 +116,8 @@ public class SpeedsBuilder {
     }
 
     /**
+     * Sets the speed for mushroom.
+     *
      * @param mushroom The speed for mushroom.
      * @return The builder.
      */
@@ -107,7 +127,8 @@ public class SpeedsBuilder {
     }
 
     /**
-     * Creates the {@linkplain dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds} instance with the values provided.
+     * Creates the {@linkplain dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds} instance with the values
+     * provided.
      *
      * @return The new instance.
      */

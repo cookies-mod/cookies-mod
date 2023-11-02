@@ -2,15 +2,14 @@ package dev.morazzer.cookiesmod.config.system;
 
 import com.google.gson.JsonElement;
 import dev.morazzer.cookiesmod.config.system.editor.ConfigOptionEditor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * An option that can be displayed in the config.
@@ -119,8 +118,8 @@ public abstract class Option<T, O extends Option<T, O>> {
     public abstract ConfigOptionEditor<T, O> getEditor();
 
     /**
-     * Whether the option can be serialized or not.
-     * Returning false will disable calls to {@link Option#save()} and {@link Option#load(com.google.gson.JsonElement)}.
+     * Whether the option can be serialized or not. Returning false will disable calls to {@link Option#save()} and
+     * {@link Option#load(com.google.gson.JsonElement)}.
      *
      * @return If the option is serializable.
      */
@@ -160,6 +159,11 @@ public abstract class Option<T, O extends Option<T, O>> {
         this.callbacks.forEach(callbacks -> callbacks.valueChanged(oldValue, this.value));
     }
 
+    /**
+     * Functional interface to listen to value changes.
+     *
+     * @param <T> The type of the value.
+     */
     @FunctionalInterface
     public interface ValueChangeCallback<T> {
 

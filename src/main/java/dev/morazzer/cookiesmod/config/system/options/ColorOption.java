@@ -5,12 +5,11 @@ import com.google.gson.JsonPrimitive;
 import dev.morazzer.cookiesmod.config.system.Option;
 import dev.morazzer.cookiesmod.config.system.editor.ColorEditor;
 import dev.morazzer.cookiesmod.config.system.editor.ConfigOptionEditor;
+import java.awt.Color;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.Color;
 
 /**
  * Option to select a color in the config.
@@ -38,7 +37,8 @@ public class ColorOption extends Option<Color, ColorOption> {
     @Override
     public void load(@NotNull JsonElement jsonElement) {
         if (!jsonElement.isJsonPrimitive()) {
-            log.warn("Error while loading config value, expected number got %s".formatted(jsonElement.isJsonObject() ? "json-object" : "json-array"));
+            log.warn("Error while loading config value, expected number got %s".formatted(
+                jsonElement.isJsonObject() ? "json-object" : "json-array"));
             return;
         }
         if (!jsonElement.getAsJsonPrimitive().isNumber()) {

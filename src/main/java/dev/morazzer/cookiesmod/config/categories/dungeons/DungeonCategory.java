@@ -10,9 +10,9 @@ import net.minecraft.text.Text;
 public class DungeonCategory extends Category {
 
     public final BooleanOption implosionHider = new BooleanOption(
-            Text.literal("Implosion Hider"),
-            Text.literal("Hides the explosion particles of the Wither Impact ability"),
-            true
+        Text.literal("Implosion Hider"),
+        Text.literal("Hides the explosion particles of the Wither Impact ability"),
+        true
     );
 
     public final SolverFoldable solverFoldable = new SolverFoldable();

@@ -27,19 +27,19 @@ public class KeybindingEditor extends ConfigOptionEditor<InputUtil.Key, Keybindi
 
         Text keyName = this.option.getValue().getLocalizedText();
         Text text = this.currentlyEditingKey ? Text.literal("> ")
-                .append(keyName)
-                .append(" <")
-                .formatted(Formatting.YELLOW) : keyName;
+            .append(keyName)
+            .append(" <")
+            .formatted(Formatting.YELLOW) : keyName;
 
         drawContext.drawTexture(BUTTON, optionWidth / 6 - 24, this.getHeight() - 21, 0, 0, 48, 16, 48, 16);
         RenderUtils.renderCenteredTextWithMaxWidth(
-                drawContext,
-                text,
-                40,
-                (int) (optionWidth / 6f),
-                getHeight() - 13,
-                ~0,
-                true
+            drawContext,
+            text,
+            40,
+            (int) (optionWidth / 6f),
+            getHeight() - 13,
+            ~0,
+            true
         );
     }
 
@@ -68,10 +68,10 @@ public class KeybindingEditor extends ConfigOptionEditor<InputUtil.Key, Keybindi
         }
 
         if ((button == 0)
-                && (mouseX > ((optionWidth / 6f) - 24))
-                && (mouseX < ((optionWidth / 6f) + 24))
-                && (mouseY > (this.getHeight() - 21))
-                && (mouseY < (this.getHeight() - 5))
+            && (mouseX > ((optionWidth / 6f) - 24))
+            && (mouseX < ((optionWidth / 6f) + 24))
+            && (mouseY > (this.getHeight() - 21))
+            && (mouseY < (this.getHeight() - 5))
         ) {
             this.currentlyEditingKey = true;
             return false;

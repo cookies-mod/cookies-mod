@@ -3,6 +3,8 @@ package dev.morazzer.cookiesmod.features.farming.garden.debug;
 import dev.morazzer.cookiesmod.features.farming.garden.Garden;
 import dev.morazzer.cookiesmod.features.farming.garden.Plot;
 import dev.morazzer.cookiesmod.utils.DevUtils;
+import java.awt.Color;
+import java.util.Optional;
 import me.x150.renderer.render.Renderer3d;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -11,16 +13,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.Color;
-import java.util.Optional;
-
 /**
  * Debug to show the calculated plot outlines on the garden.
  */
 public class PlotOutlines {
 
     private static final Identifier RENDER_DEBUG_PLOT_OUTLINES = DevUtils.createIdentifier(
-            "garden/plots/show_boundaries");
+        "garden/plots/show_boundaries");
     private static final Identifier RENDER_DEBUG_PLOT_BORDERS = DevUtils.createIdentifier("garden/plots/show_borders");
     private static final Vec3d plotMiddle = new Vec3d(48, 0, 48);
 
@@ -49,19 +48,19 @@ public class PlotOutlines {
         }
 
         Plot plot = Optional
-                .ofNullable(MinecraftClient.getInstance().player)
-                .map(Entity::getPos)
-                .map(Plot::getPlotFromRealCoordinate)
-                .orElse(Plot.NONE);
+            .ofNullable(MinecraftClient.getInstance().player)
+            .map(Entity::getPos)
+            .map(Plot::getPlotFromRealCoordinate)
+            .orElse(Plot.NONE);
 
         if (!plot.isValidPlot()) {
             return;
         }
 
         Optional<Vec3d> vec3d = Optional
-                .ofNullable(MinecraftClient.getInstance().player)
-                .map(Entity::getPos)
-                .map(plot::getPlotCenter);
+            .ofNullable(MinecraftClient.getInstance().player)
+            .map(Entity::getPos)
+            .map(plot::getPlotCenter);
         if (vec3d.isEmpty()) {
             return;
         }
@@ -70,10 +69,10 @@ public class PlotOutlines {
         Vec3d topLeftPlot = vec3d.get();
         Renderer3d.renderFilled(context.matrixStack(), Color.BLACK, topLeftPlot.add(0, 200, 0), new Vec3d(1, 1, 1));
         Renderer3d.renderFilled(
-                context.matrixStack(),
-                Color.RED,
-                topLeftPlot.add(48, 71.01, 48),
-                plotMiddle.multiply(-2).add(0, 0, 0)
+            context.matrixStack(),
+            Color.RED,
+            topLeftPlot.add(48, 71.01, 48),
+            plotMiddle.multiply(-2).add(0, 0, 0)
         );
     }
 

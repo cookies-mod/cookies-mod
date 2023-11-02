@@ -1,5 +1,10 @@
 package dev.morazzer.cookiesmod.screen.widgets;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
@@ -11,12 +16,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
  * Widget to allow selection of an enum value.
  *
@@ -25,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
 
+    final AtomicInteger lastButton = new AtomicInteger();
     private final IdentifierResolver<T> identifierResolver;
     private final TextSupplier<T> textSupplier;
     private final OnClick<T> onClick;
@@ -32,7 +32,6 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     private final ValueSupplier<T, V> valueSupplier;
     private final AtomicReference<Identifier> identifier = new AtomicReference<>();
     private final AtomicReference<List<Text>> tooltips = new AtomicReference<>();
-    final AtomicInteger lastButton = new AtomicInteger();
     @Getter
     @Setter
     private int enumIndex = 0;
@@ -51,15 +50,15 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
      * @param valueSupplier      The supplier for the values.
      */
     public EnumCycleWidget(
-            int x,
-            int y,
-            int width,
-            int height,
-            Enum<T>[] values,
-            IdentifierResolver<T> identifierResolver,
-            TextSupplier<T> textSupplier,
-            OnClick<T> onClick,
-            ValueSupplier<T, V> valueSupplier
+        int x,
+        int y,
+        int width,
+        int height,
+        Enum<T>[] values,
+        IdentifierResolver<T> identifierResolver,
+        TextSupplier<T> textSupplier,
+        OnClick<T> onClick,
+        ValueSupplier<T, V> valueSupplier
     ) {
         super(x, y, width, height, Text.empty());
         this.identifierResolver = identifierResolver;
@@ -85,16 +84,16 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     @SuppressWarnings("unchecked")
     public void constructTooltip() {
         this.tooltips.set(
-                this.values.stream()
-                        .map(tEnum -> (T) tEnum)
-                        .map(t -> {
-                            if (t.ordinal() == enumIndex) {
-                                return textSupplier.resolve(t).copy();
-                            } else {
-                                return textSupplier.resolve(t).copy().formatted(Formatting.GRAY);
-                            }
-                        }).map(Text.class::cast)
-                        .toList()
+            this.values.stream()
+                .map(value -> (T) value)
+                .map(t -> {
+                    if (t.ordinal() == enumIndex) {
+                        return textSupplier.resolve(t).copy();
+                    } else {
+                        return textSupplier.resolve(t).copy().formatted(Formatting.GRAY);
+                    }
+                }).map(Text.class::cast)
+                .toList()
         );
     }
 
@@ -130,7 +129,11 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
         switch (lastButton.get()) {
             case 0 -> enumIndex++;
             case 1 -> enumIndex--;
+            default -> {
+                return;
+            }
         }
+
         if (enumIndex > values.size() - 1) {
             enumIndex = 0;
         } else if (enumIndex < 0) {
@@ -145,22 +148,22 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderButton(context, mouseX, mouseY, delta);
         context.drawTexture(
-                this.identifier.get(),
-                this.getX() + 1,
-                this.getY() + 1,
-                0,
-                0,
-                this.getWidth() - 2,
-                this.getHeight() - 2,
-                this.getWidth() - 2,
-                this.getHeight() - 2
+            this.identifier.get(),
+            this.getX() + 1,
+            this.getY() + 1,
+            0,
+            0,
+            this.getWidth() - 2,
+            this.getHeight() - 2,
+            this.getWidth() - 2,
+            this.getHeight() - 2
         );
         if (super.isHovered()) {
             context.drawTooltip(
-                    MinecraftClient.getInstance().textRenderer,
-                    this.tooltips.get(),
-                    mouseX,
-                    mouseY
+                MinecraftClient.getInstance().textRenderer,
+                this.tooltips.get(),
+                mouseX,
+                mouseY
             );
         }
     }
@@ -168,7 +171,7 @@ public class EnumCycleWidget<T extends Enum<T>, V> extends PressableWidget {
     /**
      * On click handler.
      *
-     * @param <T>
+     * @param <T> They enum type.
      */
     @FunctionalInterface
     public interface OnClick<T extends Enum<T>> {

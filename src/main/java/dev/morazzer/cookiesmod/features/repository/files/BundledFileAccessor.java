@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,8 +26,8 @@ public class BundledFileAccessor extends RepositoryFileAccessor {
         Path jsonFile = path.resolveSibling(path.getFileName().toString() + ".json");
         try {
             return StreamSupport.stream(JsonUtils.CLEAN_GSON.fromJson(
-                    Files.readString(jsonFile, StandardCharsets.UTF_8),
-                    JsonArray.class
+                Files.readString(jsonFile, StandardCharsets.UTF_8),
+                JsonArray.class
             ).spliterator(), false).toList();
         } catch (IOException e) {
             ExceptionHandler.handleException(new RuntimeException("Failed loading files", e));
@@ -48,8 +47,8 @@ public class BundledFileAccessor extends RepositoryFileAccessor {
 
         try {
             JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(Files.readString(path
-                    .getParent()
-                    .resolveSibling(jsonFile), StandardCharsets.UTF_8), JsonObject.class);
+                .getParent()
+                .resolveSibling(jsonFile), StandardCharsets.UTF_8), JsonObject.class);
             this.map.put(key, jsonObject);
             return jsonObject.get(file);
         } catch (IOException e) {

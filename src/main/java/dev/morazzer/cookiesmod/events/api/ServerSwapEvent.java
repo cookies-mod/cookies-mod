@@ -10,12 +10,12 @@ import net.fabricmc.fabric.api.event.EventFactory;
 public interface ServerSwapEvent {
 
     Event<ServerSwapEvent> SERVER_SWAP = EventFactory.createArrayBacked(
-            ServerSwapEvent.class,
-            serverSwapEvents -> () -> {
-                for (ServerSwapEvent serverSwapEvent : serverSwapEvents) {
-                    serverSwapEvent.onServerSwap();
-                }
+        ServerSwapEvent.class,
+        serverSwapEvents -> () -> {
+            for (ServerSwapEvent serverSwapEvent : serverSwapEvents) {
+                serverSwapEvent.onServerSwap();
             }
+        }
     );
 
     /**

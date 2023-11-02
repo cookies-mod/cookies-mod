@@ -1,16 +1,18 @@
 package dev.morazzer.cookiesmod.utils;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
+/**
+ * Various methods related to development settings.
+ */
 @Slf4j
 public class DevUtils {
 
@@ -30,7 +32,9 @@ public class DevUtils {
      * @param replacements The replacements.
      */
     public static void log(String key, Object message, Object... replacements) {
-        if (!enabledTools.contains(EXTRA_LOGGING)) return;
+        if (!enabledTools.contains(EXTRA_LOGGING)) {
+            return;
+        }
         LoggerFactory.getLogger(key).info("%s".formatted(message), replacements);
     }
 

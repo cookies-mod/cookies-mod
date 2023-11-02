@@ -15,30 +15,30 @@ public class SpeedFoldable extends Foldable {
 
     @Expose
     public final BooleanOption showSpeeds = new BooleanOption(
-            Text.literal("Show speeds"),
-            Text.literal("Shows the speeds in the rancher boots for specific crops"),
-            true
+        Text.literal("Show speeds"),
+        Text.literal("Shows the speeds in the rancher boots for specific crops"),
+        true
     );
 
     @Expose
     public final BooleanOption showNames = new BooleanOption(
-            Text.literal("Show crop names"),
-            Text.literal("Shows the crop names next to the icons"),
-            true
+        Text.literal("Show crop names"),
+        Text.literal("Shows the crop names next to the icons"),
+        true
     );
 
     @Expose
     public final BooleanOption mergeEqualSpeeds = new BooleanOption(
-            Text.literal("Merge Equal Speeds"),
-            Text.literal("If two crops with the same speed should be merged into one line"),
-            true
+        Text.literal("Merge Equal Speeds"),
+        Text.literal("If two crops with the same speed should be merged into one line"),
+        true
     );
 
     @Expose
     public final EnumDropdownOption<SpeedPresets> speedPresets = new EnumDropdownOption<>(
-            Text.literal("Use speed preset"),
-            Text.literal("Change the preset that is used for speeds"),
-            SpeedPresets.NORMAL
+        Text.literal("Use speed preset"),
+        Text.literal("Change the preset that is used for speeds"),
+        SpeedPresets.NORMAL
     );
 
     @Expose

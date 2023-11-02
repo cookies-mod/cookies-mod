@@ -6,13 +6,6 @@ import dev.morazzer.cookiesmod.features.repository.items.recipe.RepositoryRecipe
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import dev.morazzer.cookiesmod.utils.StringUtils;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.kohsuke.github.GHAsset;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
-
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.kohsuke.github.GHAsset;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 /**
  * Manager to handle all repository-related actions.
@@ -66,18 +65,20 @@ public class RepositoryManager {
                 Files.createDirectory(repoRoot);
                 List<GHAsset> list = repository.getLatestRelease().listAssets().toList();
                 for (GHAsset ghAsset : list) {
-                    if (ghAsset.getName().endsWith(".sha256")) continue;
+                    if (ghAsset.getName().endsWith(".sha256")) {
+                        continue;
+                    }
                     Files.write(
-                            repoRoot.resolve(ghAsset.getName()),
-                            HttpUtils.getResponseBody(new URI(ghAsset.getBrowserDownloadUrl())),
-                            StandardOpenOption.CREATE_NEW
+                        repoRoot.resolve(ghAsset.getName()),
+                        HttpUtils.getResponseBody(new URI(ghAsset.getBrowserDownloadUrl())),
+                        StandardOpenOption.CREATE_NEW
                     );
                 }
             } else {
                 List<GHAsset> list = repository.getLatestRelease().listAssets().toList();
                 List<GHAsset> hashes = new ArrayList<>(list.stream()
-                        .filter(ghAsset -> ghAsset.getName().endsWith(".sha256"))
-                        .toList());
+                    .filter(ghAsset -> ghAsset.getName().endsWith(".sha256"))
+                    .toList());
                 List<GHAsset> files = new ArrayList<>(list.stream().filter(Predicate.not(hashes::contains)).toList());
                 MessageDigest sha256 = MessageDigest.getInstance("sha256");
 
@@ -92,8 +93,8 @@ public class RepositoryManager {
                             throw new RuntimeException(e);
                         }
                         String remoteHash = new String(
-                                HttpUtils.getResponseBody(URI.create(hash.getBrowserDownloadUrl())),
-                                StandardCharsets.UTF_8
+                            HttpUtils.getResponseBody(URI.create(hash.getBrowserDownloadUrl())),
+                            StandardCharsets.UTF_8
                         );
                         return remoteHash.equalsIgnoreCase(localHash);
                     }
@@ -107,14 +108,14 @@ public class RepositoryManager {
                     log.info("Downloading file {} from {}", file.getName(), file.getBrowserDownloadUrl());
                     Path path = repoRoot.resolve(file.getName());
                     Files.writeString(
-                            path,
-                            new String(
-                                    HttpUtils.getResponseBody(new URI(file.getBrowserDownloadUrl())),
-                                    StandardCharsets.UTF_8
-                            ),
-                            StandardCharsets.UTF_8,
-                            StandardOpenOption.CREATE,
-                            StandardOpenOption.TRUNCATE_EXISTING
+                        path,
+                        new String(
+                            HttpUtils.getResponseBody(new URI(file.getBrowserDownloadUrl())),
+                            StandardCharsets.UTF_8
+                        ),
+                        StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING
                     );
                 }
             }

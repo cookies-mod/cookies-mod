@@ -9,7 +9,12 @@ import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBl
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("unused")
+/**
+ * Generic option editor.
+ *
+ * @param <T> Type of the value.
+ * @param <O> Type of the option.
+ */
 public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
 
     protected final O option;
@@ -48,7 +53,8 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
     /**
      * Called whenever the screen is resized or the config menu is opened.
      */
-    public void init() {}
+    public void init() {
+    }
 
     /**
      * Renders the editor.
@@ -60,34 +66,34 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @param optionWidth The width the option has to be rendered at.
      */
     public void render(
-            @NotNull DrawContext drawContext,
-            int mouseX,
-            int mouseY,
-            float tickDelta,
-            int optionWidth
+        @NotNull DrawContext drawContext,
+        int mouseX,
+        int mouseY,
+        float tickDelta,
+        int optionWidth
     ) {
         RenderUtils.renderRectangle(
-                drawContext,
-                0,
-                0,
-                optionWidth - 2,
-                getHeight(optionWidth) - 2,
-                true
+            drawContext,
+            0,
+            0,
+            optionWidth - 2,
+            getHeight(optionWidth) - 2,
+            true
         );
 
         RenderUtils.renderCenteredTextWithMaxWidth(
-                drawContext,
-                this.option.getName(),
-                optionWidth / 3 - 10,
-                optionWidth / 6 + 2,
-                13,
-                -1,
-                true
+            drawContext,
+            this.option.getName(),
+            optionWidth / 3 - 10,
+            optionWidth / 6 + 2,
+            13,
+            -1,
+            true
         );
 
         int lineCount = this.getTextRenderer().wrapLines(
-                this.option.getDescription(),
-                optionWidth * 2 / 3 - 10
+            this.option.getDescription(),
+            optionWidth * 2 / 3 - 10
         ).size();
         if (lineCount == 0) {
             return;
@@ -95,12 +101,12 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
 
 
         drawContext.drawTextWrapped(
-                this.getTextRenderer(),
-                this.option.getDescription(),
-                5 + optionWidth / 3,
-                getHeight() / 2 - (lineCount * 9) / 2,
-                (optionWidth * 2 / 3 - 10),
-                ~0
+            this.getTextRenderer(),
+            this.option.getDescription(),
+            5 + optionWidth / 3,
+            getHeight() / 2 - (lineCount * 9) / 2,
+            (optionWidth * 2 / 3 - 10),
+            ~0
         );
     }
 
@@ -112,11 +118,11 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      */
     public boolean doesMatchSearch(@NotNull @NotBlank String search) {
         return this.option.getName().getString().contains(search) || this.option.getDescription().getString()
-                .contains(search) || this.option.getTags()
-                .stream()
-                .anyMatch(
-                        key -> key.contains(
-                                search));
+            .contains(search) || this.option.getTags()
+            .stream()
+            .anyMatch(
+                key -> key.contains(
+                    search));
     }
 
     /**
@@ -128,9 +134,9 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @return If the action was consumed.
      */
     public boolean keyPressed(
-            final int keyCode,
-            final int scanCode,
-            final int modifiers
+        final int keyCode,
+        final int scanCode,
+        final int modifiers
     ) {
         return false;
     }
@@ -145,10 +151,10 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @return If the action was consumed.
      */
     public boolean mouseClicked(
-            double mouseX,
-            double mouseY,
-            int button,
-            int optionWidth
+        double mouseX,
+        double mouseY,
+        int button,
+        int optionWidth
     ) {
         return false;
     }
@@ -162,9 +168,9 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @return If the action was consumed.
      */
     public boolean mouseReleased(
-            double mouseX,
-            double mouseY,
-            int button
+        double mouseX,
+        double mouseY,
+        int button
     ) {
         return false;
     }
@@ -181,12 +187,12 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @return If the action was consumed.
      */
     public boolean mouseDragged(
-            double mouseX,
-            double mouseY,
-            int button,
-            double deltaX,
-            double deltaY,
-            int optionWidth
+        double mouseX,
+        double mouseY,
+        int button,
+        double deltaX,
+        double deltaY,
+        int optionWidth
     ) {
         return false;
     }
@@ -219,11 +225,12 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      */
     @SuppressWarnings("EmptyMethod")
     public void mouseScrolled(
-            double mouseX,
-            double mouseY,
-            double horizontalAmount,
-            double verticalAmount
-    ) {}
+        double mouseX,
+        double mouseY,
+        double horizontalAmount,
+        double verticalAmount
+    ) {
+    }
 
     /**
      * Called whenever a key was released.
@@ -234,10 +241,11 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      */
     @SuppressWarnings("EmptyMethod")
     public void keyReleased(
-            int keyCode,
-            int scanCode,
-            int modifiers
-    ) {}
+        int keyCode,
+        int scanCode,
+        int modifiers
+    ) {
+    }
 
     /**
      * Called whenever a character was typed.
@@ -246,9 +254,10 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @param modifiers The modifiers that apply to the character.
      */
     public void charTyped(
-            char character,
-            int modifiers
-    ) {}
+        char character,
+        int modifiers
+    ) {
+    }
 
     /**
      * Called to render the overlay for the current editor.
@@ -260,12 +269,13 @@ public abstract class ConfigOptionEditor<T, O extends Option<T, O>> {
      * @param optionWidth The width the option has to be rendered at.
      */
     public void renderOverlay(
-            DrawContext drawContext,
-            int mouseX,
-            int mouseY,
-            float tickDelta,
-            int optionWidth
-    ) {}
+        DrawContext drawContext,
+        int mouseX,
+        int mouseY,
+        float tickDelta,
+        int optionWidth
+    ) {
+    }
 
     /**
      * Gets the {@linkplain net.minecraft.client.font.TextRenderer} instance.

@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,8 +25,8 @@ public class DisperseFileAccessor extends RepositoryFileAccessor {
                     return JsonUtils.CLEAN_GSON.fromJson(Files.readString(file), JsonElement.class);
                 } catch (Exception exception) {
                     ExceptionHandler.handleException(new RuntimeException("Error while loading file %s".formatted(file
-                            .getFileName()
-                            .toString()), exception));
+                        .getFileName()
+                        .toString()), exception));
                 }
                 return null;
             }).filter(Objects::nonNull).toList();
@@ -41,9 +40,10 @@ public class DisperseFileAccessor extends RepositoryFileAccessor {
     public JsonElement getFile(Path path) {
         try {
             return JsonUtils.CLEAN_GSON.fromJson(Files.readString(
-                    path.resolveSibling(path.getFileName().toString() + ".json"),
-                    StandardCharsets.UTF_8
-            ), new TypeToken<>() {});
+                path.resolveSibling(path.getFileName().toString() + ".json"),
+                StandardCharsets.UTF_8
+            ), new TypeToken<>() {
+            });
         } catch (Exception e) {
             ExceptionHandler.handleException(new RuntimeException("Failed loading files", e));
         }

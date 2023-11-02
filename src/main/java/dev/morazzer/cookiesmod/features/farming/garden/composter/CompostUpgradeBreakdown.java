@@ -12,17 +12,16 @@ import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.RomanNumerals;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Stream;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Breakdown for the composter cost in the garden.
@@ -48,25 +47,35 @@ public class CompostUpgradeBreakdown implements Module {
      * @param texts          The current lore.
      */
     private void tooltips(ItemStack itemStack, TooltipContext tooltipContext, List<Text> texts) {
-        if (!Garden.isOnGarden()) return;
-        if (!Plot.getCurrentPlot().isBarn()) return;
-        if (!ConfigManager.getConfig().gardenCategory.compostFoldable.showUpgradeCost.getValue()) return;
-        if (!CompostUpgradeCost.loaded()) return;
-        if (!itemStack.hasCustomName()) return;
+        if (!Garden.isOnGarden()) {
+            return;
+        }
+        if (!Plot.getCurrentPlot().isBarn()) {
+            return;
+        }
+        if (!ConfigManager.getConfig().gardenCategory.compostFoldable.showUpgradeCost.getValue()) {
+            return;
+        }
+        if (!CompostUpgradeCost.loaded()) {
+            return;
+        }
+        if (!itemStack.hasCustomName()) {
+            return;
+        }
 
         LinkedList<Text> list = new LinkedList<>();
 
         String name = itemStack.getName().getString();
         if (!name.startsWith("Composter Speed")
-                && !name.startsWith("Multi Drop")
-                && !name.startsWith("Fuel Cap")
-                && !name.startsWith("Organic Matter Cap")
-                && !name.startsWith("Cost Reduction")) {
+            && !name.startsWith("Multi Drop")
+            && !name.startsWith("Fuel Cap")
+            && !name.startsWith("Organic Matter Cap")
+            && !name.startsWith("Cost Reduction")) {
             return;
         }
         String upgradeName = name.replaceAll(
-                "(Composter Speed|Multi Drop|Fuel Cap|Organic Matter Cap|Cost Reduction).*",
-                "$1"
+            "(Composter Speed|Multi Drop|Fuel Cap|Organic Matter Cap|Cost Reduction).*",
+            "$1"
         );
         String lastPart = name.substring(upgradeName.length()).trim();
         int currentLevel;
@@ -108,20 +117,21 @@ public class CompostUpgradeBreakdown implements Module {
             list.add(text);
             if (text.getString().startsWith("Next Tier: ")) {
                 list.add(Text.literal("Max Tier: ").formatted(Formatting.GRAY)
-                        .append(Text.literal(maxAmount).formatted(Formatting.GREEN)));
+                    .append(Text.literal(maxAmount).formatted(Formatting.GREEN)));
             } else if (text.getString().startsWith("+")) {
                 list.add(Text.empty());
                 list.add(Text.literal("Remaining Upgrade Cost: ").formatted(Formatting.GRAY));
                 List<CompostUpgradeCost.CompostUpgrade> subList = upgrades.subList(Math.min(
-                        currentLevel,
-                        upgrades.size()
+                    currentLevel,
+                    upgrades.size()
                 ), upgrades.size());
                 List<Ingredient> subListIngredients = subList.stream()
-                        .flatMap(compostUpgrade -> compostUpgrade.cost().stream()).toList();
+                    .flatMap(compostUpgrade -> compostUpgrade.cost().stream()).toList();
                 Stream<Ingredient> stream = Ingredient.mergeToList(subListIngredients).stream()
-                        .sorted(Comparator.comparingInt(Ingredient::getAmount));
+                    .sorted(Comparator.comparingInt(Ingredient::getAmount));
 
-                if (ConfigManager.getConfig().gardenCategory.compostFoldable.itemSort.getValue() == CompostFoldable.ItemSortMode.DOWN) {
+                if (ConfigManager.getConfig().gardenCategory.compostFoldable.itemSort.getValue()
+                    == CompostFoldable.ItemSortMode.DOWN) {
                     stream = stream.sorted(Comparator.comparingInt(Ingredient::getAmount).reversed());
                 }
 
@@ -133,13 +143,13 @@ public class CompostUpgradeBreakdown implements Module {
                         return;
                     }
                     entry.append(Text.literal(String.valueOf(ingredient.getAmount())).append("x ")
-                            .formatted(Formatting.DARK_GRAY));
+                        .formatted(Formatting.DARK_GRAY));
                     entry.append(item.getName());
                     list.add(entry);
                 });
                 int sum = subList.stream().mapToInt(CompostUpgradeCost.CompostUpgrade::copper).sum();
                 list.add(Text.literal("  ")
-                        .append(Text.literal(String.valueOf(sum)).append(" Copper").formatted(Formatting.RED)));
+                    .append(Text.literal(String.valueOf(sum)).append(" Copper").formatted(Formatting.RED)));
                 break;
             }
         }

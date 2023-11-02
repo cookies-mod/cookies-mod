@@ -1,13 +1,12 @@
 package dev.morazzer.cookiesmod.features.repository.items.recipe;
 
-import lombok.Getter;
-import net.minecraft.util.Identifier;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import net.minecraft.util.Identifier;
 
 /**
  * An ingredient used in a crafting recipe or in a different type of recipe.
@@ -30,9 +29,9 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Creates an ingredient from its string representation.
-     * The string has to be formatted like the following: namespace:path:amount.
-     * <p>
+     * Creates an ingredient from its string representation. The string has to be formatted like the following:
+     * namespace:path:amount.
+     * <br>
      * For example {@code skyblock:items/wheat:10} represents a wheat item with amount 10.
      *
      * @param id The string representation.
@@ -78,7 +77,7 @@ public class Ingredient extends Identifier {
     }
 
     /**
-     * Merges any given Iterable of Ingredients to not contain duplicated keys
+     * Merges any given Iterable of Ingredients to not contain duplicated keys.
      *
      * @param ingredients The original list of ingredients
      * @param collector   The collector to create the returned value
@@ -88,11 +87,11 @@ public class Ingredient extends Identifier {
     public static <T> T mergeIngredients(Iterable<Ingredient> ingredients, Collector<Ingredient, ?, T> collector) {
         HashMap<String, Ingredient> ingredientMap = new HashMap<>();
         ingredients.forEach(ingredient ->
-                ingredientMap.merge(
-                        ingredient.toString(),
-                        ingredient,
-                        (ingredient1, ingredient2) -> ingredient1.withAmount(ingredient1.getAmount() + ingredient2.getAmount())
-                )
+            ingredientMap.merge(
+                ingredient.toString(),
+                ingredient,
+                (ingredient1, ingredient2) -> ingredient1.withAmount(ingredient1.getAmount() + ingredient2.getAmount())
+            )
         );
 
         return ingredientMap.values().stream().collect(collector);

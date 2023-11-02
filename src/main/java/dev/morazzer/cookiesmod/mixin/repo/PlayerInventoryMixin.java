@@ -14,16 +14,27 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(PlayerInventory.class)
 public class PlayerInventoryMixin {
 
-    @Inject(method = "addStack(ILnet/minecraft/item/ItemStack;)I", at = @At("RETURN"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V")), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(
+        method = "addStack(ILnet/minecraft/item/ItemStack;)I",
+        at = @At("RETURN"),
+        slice = @Slice(
+            from = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V"
+            )
+        ),
+        locals = LocalCapture.CAPTURE_FAILSOFT
+    )
     public void addStack(
-            int slot,
-            ItemStack stack,
-            CallbackInfoReturnable<Integer> cir,
-            Item item,
-            int i,
-            ItemStack copy
+        int slot,
+        ItemStack stack,
+        CallbackInfoReturnable<Integer> cir,
+        Item item,
+        int i,
+        ItemStack copy
     ) {
-        ((ItemStackTooltip) (Object) copy).cookies$setSkyblockItem(((ItemStackTooltip) (Object) stack).cookies$getSkyblockItem());
+        ((ItemStackTooltip) (Object) copy).cookies$setSkyblockItem(
+            ((ItemStackTooltip) (Object) stack).cookies$getSkyblockItem());
     }
 
 }

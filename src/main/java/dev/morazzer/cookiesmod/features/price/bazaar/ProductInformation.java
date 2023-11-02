@@ -11,8 +11,9 @@ import net.minecraft.util.Identifier;
  * @param quickStatus A quick view of all data.
  */
 public record ProductInformation(
-        Identifier productId,
-        ProductSummary[] sellSummary,
-        ProductSummary[] buySummary,
-        QuickStatus quickStatus
-) {}
+    Identifier productId,
+    ProductSummary[] sellSummary,
+    ProductSummary[] buySummary,
+    QuickStatus quickStatus
+) {
+}

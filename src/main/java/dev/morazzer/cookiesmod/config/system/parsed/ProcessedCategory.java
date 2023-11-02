@@ -1,11 +1,10 @@
 package dev.morazzer.cookiesmod.config.system.parsed;
 
 import dev.morazzer.cookiesmod.config.system.Category;
-import lombok.Getter;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import net.minecraft.text.Text;
 
 /**
  * A processed category that is generic for all categories.

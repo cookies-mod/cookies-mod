@@ -21,8 +21,7 @@ public class PositionedSoundInstanceMixin extends AbstractSoundInstance {
     }
 
     /**
-     * Called when the game spawns a new sound instance.
-     * Called when a sound should be played.
+     * Called when the game spawns a new sound instance. Called when a sound should be played.
      *
      * @param identifier      The identifier of the sound.
      * @param category        The category of the sound.
@@ -38,37 +37,40 @@ public class PositionedSoundInstanceMixin extends AbstractSoundInstance {
      * @param relative        If the coordinates are relative or not.
      * @param ci              The callback information.
      */
-    @Inject(method = "<init>(Lnet/minecraft/util/Identifier;Lnet/minecraft/sound/SoundCategory;FFLnet/minecraft/util/math/random/Random;ZILnet/minecraft/client/sound/SoundInstance$AttenuationType;DDDZ)V", at = @At("RETURN"))
+    @Inject(
+        method = "<init>(Lnet/minecraft/util/Identifier;Lnet/minecraft/sound/SoundCategory;FFLnet/minecraft/util/math/random/Random;ZILnet/minecraft/client/sound/SoundInstance$AttenuationType;DDDZ)V",
+        at = @At("RETURN")
+    )
     public void create(
-            Identifier identifier,
-            SoundCategory category,
-            float volume,
-            float pitch,
-            Random random,
-            boolean repeat,
-            int repeatDelay,
-            SoundInstance.AttenuationType attenuationType,
-            double x,
-            double y,
-            double z,
-            boolean relative,
-            CallbackInfo ci
+        Identifier identifier,
+        SoundCategory category,
+        float volume,
+        float pitch,
+        Random random,
+        boolean repeat,
+        int repeatDelay,
+        SoundInstance.AttenuationType attenuationType,
+        double x,
+        double y,
+        double z,
+        boolean relative,
+        CallbackInfo ci
     ) {
         if (PositionedSoundInstanceCallback.CALLBACK.invoker()
-                .play(
-                        identifier,
-                        category,
-                        volume,
-                        pitch,
-                        random,
-                        repeat,
-                        repeatDelay,
-                        attenuationType,
-                        x,
-                        y,
-                        z,
-                        relative
-                )) {
+            .play(
+                identifier,
+                category,
+                volume,
+                pitch,
+                random,
+                repeat,
+                repeatDelay,
+                attenuationType,
+                x,
+                y,
+                z,
+                relative
+            )) {
             super.volume = 0;
         }
     }

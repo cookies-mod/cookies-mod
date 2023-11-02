@@ -9,9 +9,6 @@ import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.HttpUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import lombok.extern.slf4j.Slf4j;
-import net.minecraft.util.Identifier;
-
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import lombok.extern.slf4j.Slf4j;
+import net.minecraft.util.Identifier;
 
 /**
  * Manager to handle all repository items.
@@ -40,7 +39,7 @@ public class RepositoryItemManager {
      */
     public static boolean loadOfficialItemList() {
         JsonObject jsonObject = JsonUtils.GSON.fromJson(new String(HttpUtils.getResponseBody(URI.create(
-                "https://api.hypixel.net/resources/skyblock/items"))), JsonObject.class);
+            "https://api.hypixel.net/resources/skyblock/items"))), JsonObject.class);
 
         if (!jsonObject.get("success").getAsBoolean()) {
             return false;
@@ -52,14 +51,16 @@ public class RepositoryItemManager {
         for (JsonElement item : items) {
             JsonObject itemObject = item.getAsJsonObject();
             Path itemPath = RepositoryItemManager.items.resolve(itemObject
-                    .get("id")
-                    .getAsString()
-                    .replace(":", "_") + ".json");
-            if (!ExceptionHandler.tryCatch(() -> Files.createDirectories(itemPath.getParent()))) continue;
+                .get("id")
+                .getAsString()
+                .replace(":", "_") + ".json");
+            if (!ExceptionHandler.tryCatch(() -> Files.createDirectories(itemPath.getParent()))) {
+                continue;
+            }
             boolean result = ExceptionHandler.tryCatch(() -> Files.write(
-                    itemPath,
-                    JsonUtils.GSON.toJson(itemObject).getBytes(),
-                    StandardOpenOption.CREATE_NEW
+                itemPath,
+                JsonUtils.GSON.toJson(itemObject).getBytes(),
+                StandardOpenOption.CREATE_NEW
             ));
             if (!result) {
                 log.warn("Failed saving {}", itemPath);
@@ -71,6 +72,9 @@ public class RepositoryItemManager {
         return true;
     }
 
+    /**
+     * Reloads all items from the local repository.
+     */
     public static void reloadItems() {
         itemMap.clear();
         loadItems();
@@ -82,12 +86,12 @@ public class RepositoryItemManager {
      */
     public static void loadItems() {
         RepositoryFileAccessor.getInstance()
-                .getDirectory(items)
-                .stream()
-                .filter(JsonElement::isJsonObject)
-                .map(JsonElement::getAsJsonObject)
-                .filter(Predicate.not(RepositoryItemManager::loadItem))
-                .forEach(value -> log.warn("Failed to load item {}", value.get("")));
+            .getDirectory(items)
+            .stream()
+            .filter(JsonElement::isJsonObject)
+            .map(JsonElement::getAsJsonObject)
+            .filter(Predicate.not(RepositoryItemManager::loadItem))
+            .forEach(value -> log.warn("Failed to load item {}", value.get("")));
 
         log.info("Loaded {} items", itemMap.size());
         updateItemList();
@@ -101,7 +105,8 @@ public class RepositoryItemManager {
      */
     @SuppressWarnings("UnusedReturnValue")
     public static boolean loadItem(JsonObject jsonObject) {
-        return loadItem(jsonObject, (o) -> {});
+        return loadItem(jsonObject, (o) -> {
+        });
     }
 
     /**
@@ -141,8 +146,8 @@ public class RepositoryItemManager {
      */
     public static Optional<Identifier> findByName(String name) {
         return itemMap.values().stream()
-                .filter(item -> item.getItemNameAlphanumerical().equalsIgnoreCase(name))
-                .map(SkyblockItem::getSkyblockId).findFirst();
+            .filter(item -> item.getItemNameAlphanumerical().equalsIgnoreCase(name))
+            .map(SkyblockItem::getSkyblockId).findFirst();
     }
 
     /**

@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.events.mixins;
 
 import dev.morazzer.cookiesmod.events.accessors.ScreenHandlerUpdateEventAccessor;
 import dev.morazzer.cookiesmod.events.api.InventoryContentUpdateEvent;
+import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.item.ItemStack;
@@ -12,20 +13,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-
 @Mixin(ScreenHandler.class)
 public class ScreenHandlerUpdateEventMixin implements ScreenHandlerUpdateEventAccessor {
 
     @Unique
-    final
-    Event<InventoryContentUpdateEvent> cookies$inventoryUpdateEvent = EventFactory.createArrayBacked(
-            InventoryContentUpdateEvent.class,
-            inventoryUpdateEvents -> (slot, item) -> {
-                for (InventoryContentUpdateEvent inventoryContentUpdateEvent : inventoryUpdateEvents) {
-                    inventoryContentUpdateEvent.updateInventory(slot, item);
-                }
+    final Event<InventoryContentUpdateEvent> cookies$inventoryUpdateEvent = EventFactory.createArrayBacked(
+        InventoryContentUpdateEvent.class,
+        inventoryUpdateEvents -> (slot, item) -> {
+            for (InventoryContentUpdateEvent inventoryContentUpdateEvent : inventoryUpdateEvents) {
+                inventoryContentUpdateEvent.updateInventory(slot, item);
             }
+        }
     );
 
     /**

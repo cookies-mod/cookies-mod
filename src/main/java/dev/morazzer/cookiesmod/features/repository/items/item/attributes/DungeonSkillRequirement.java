@@ -21,10 +21,10 @@ public class DungeonSkillRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(StringUtils.capitalize(dungeonType.name().replace("_", " ").toLowerCase()))
-                .append(" Skill ")
-                .append(level + ".");
+            .getRequirementString()
+            .append(StringUtils.capitalize(dungeonType.name().replace("_", " ").toLowerCase()))
+            .append(" Skill ")
+            .append(level + ".");
     }
 
 }

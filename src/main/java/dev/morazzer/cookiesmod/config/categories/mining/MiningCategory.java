@@ -12,43 +12,37 @@ import net.minecraft.text.Text;
  */
 public class MiningCategory extends Category {
 
-    public BooleanOption showDwarvenOverlay = new BooleanOption(
-            Text.literal("Dwarven Overlay"),
-            Text.literal("Enables the dwarven mines overlay"),
-            false
-    ).withHudElement(new DwarvenMinesOverlay());
-
     public final BooleanOption showPuzzlerSolution = new BooleanOption(
-            Text.literal("Puzzler solver"),
-            Text.literal("Highlights the block you have to break for the puzzler"),
-            false
+        Text.literal("Puzzler solver"),
+        Text.literal("Highlights the block you have to break for the puzzler"),
+        false
     );
-
-    public BooleanOption currentFetchurItem = new BooleanOption(
-            Text.literal("Fetchur solver"),
-            Text.literal("Show next fetchur item"),
-            false
-    ).withHudElement(new FetchurHud());
-
-    public BooleanOption showDrillFuelBar = new BooleanOption(
-            Text.literal("Drill fuel bar"),
-            Text.literal("Shows your remaining drill fuel in a bar"),
-            false
-    ).withHudElement(new FuelBarHud());
-
     public final BooleanOption showDrillFuelPercentage = new BooleanOption(
-            Text.literal("Fuel percentage"),
-            Text.literal("Show the remaining fuel percentage in the fuel bar"),
-            false
+        Text.literal("Fuel percentage"),
+        Text.literal("Show the remaining fuel percentage in the fuel bar"),
+        false
     ).withTags("drill", "fuel", "bar", "drill fuel bar");
-
     public final BooleanOption scathaAlert = new BooleanOption(
-            Text.literal("Scatha Alert"),
-            Text.literal("Show an alert and play a sound when a worm approaches"),
-            true
+        Text.literal("Scatha Alert"),
+        Text.literal("Show an alert and play a sound when a worm approaches"),
+        true
     );
-
     public final HotmFoldable heartOfTheMountain = new HotmFoldable();
+    public BooleanOption showDwarvenOverlay = new BooleanOption(
+        Text.literal("Dwarven Overlay"),
+        Text.literal("Enables the dwarven mines overlay"),
+        false
+    ).withHudElement(new DwarvenMinesOverlay());
+    public BooleanOption currentFetchurItem = new BooleanOption(
+        Text.literal("Fetchur solver"),
+        Text.literal("Show next fetchur item"),
+        false
+    ).withHudElement(new FetchurHud());
+    public BooleanOption showDrillFuelBar = new BooleanOption(
+        Text.literal("Drill fuel bar"),
+        Text.literal("Shows your remaining drill fuel in a bar"),
+        false
+    ).withHudElement(new FuelBarHud());
 
     @Override
     public Text getName() {

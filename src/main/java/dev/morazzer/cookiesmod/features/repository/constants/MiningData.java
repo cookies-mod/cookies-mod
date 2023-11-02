@@ -3,15 +3,17 @@ package dev.morazzer.cookiesmod.features.repository.constants;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
-import lombok.Getter;
-import net.minecraft.util.Identifier;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Getter;
+import net.minecraft.util.Identifier;
 
+/**
+ * All mining related data in object form.
+ */
 @Getter
 public class MiningData {
 
@@ -22,7 +24,7 @@ public class MiningData {
 
     public MiningData() {
         Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/drills"))
-                .ifPresent(this::parseDrillsAndParts);
+            .ifPresent(this::parseDrillsAndParts);
     }
 
     /**
@@ -38,7 +40,9 @@ public class MiningData {
      * @param jsonElements The json object.
      */
     private void parseDrillsAndParts(JsonElement jsonElements) {
-        if (!jsonElements.isJsonObject()) return;
+        if (!jsonElements.isJsonObject()) {
+            return;
+        }
 
         JsonObject jsonObject = jsonElements.getAsJsonObject();
         this.drills.clear();

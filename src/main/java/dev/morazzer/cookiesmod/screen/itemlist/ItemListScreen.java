@@ -9,6 +9,10 @@ import dev.morazzer.cookiesmod.features.repository.items.item.attributes.Tier;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.screen.widgets.EnumCycleWidget;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -26,11 +30,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Predicate;
-
+/**
+ * GUI element to render all skyblock items in the inventory.
+ */
 @LoadModule("itemlist")
 public class ItemListScreen implements Module {
 
@@ -40,7 +42,7 @@ public class ItemListScreen implements Module {
     private ButtonWidget rightButton;
     private int itemListStartX;
     private int itemListStartY;
-    private int itemListXOffset;
+    private int itemListOffsetX;
     private int itemListWidth;
     private int itemListHeight;
     private int itemsPerRow;
@@ -72,7 +74,7 @@ public class ItemListScreen implements Module {
      */
     public void sort() {
         this.items.sort(this.sortRarity.getValue()
-                .thenComparing(this.sortAlphabetical.getValue())
+            .thenComparing(this.sortAlphabetical.getValue())
         );
     }
 
@@ -83,9 +85,9 @@ public class ItemListScreen implements Module {
         this.items.clear();
         this.items.addAll(RepositoryItemManager.getAllItems());
         this.items.removeIf(Predicate.not(this.filterRarity.getValue())
-                .or(Predicate.not(this::search))
-                .or(Predicate.not(this.filterCategory.getValue()))
-                .or(Predicate.not(this.filterMuseum.getValue())));
+            .or(Predicate.not(this::search))
+            .or(Predicate.not(this.filterCategory.getValue()))
+            .or(Predicate.not(this.filterMuseum.getValue())));
         this.pageCount = this.items.size() / Math.max(this.itemsOnPage, 1);
     }
 
@@ -97,7 +99,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Draws the background of the item list
+     * Draws the background of the item list.
      *
      * @param context The current draw context.
      * @param screen  The current screen.
@@ -113,11 +115,11 @@ public class ItemListScreen implements Module {
      */
     public void drawPageText(DrawContext context) {
         context.drawCenteredTextWithShadow(
-                MinecraftClient.getInstance().textRenderer,
-                "Page %s of %s".formatted(this.page + 1, this.pageCount + 1),
-                this.pageNumberX,
-                this.pageNumberY,
-                ~0
+            MinecraftClient.getInstance().textRenderer,
+            "Page %s of %s".formatted(this.page + 1, this.pageCount + 1),
+            this.pageNumberX,
+            this.pageNumberY,
+            ~0
         );
     }
 
@@ -133,20 +135,18 @@ public class ItemListScreen implements Module {
         for (int x = 0; x < this.itemListWidth / this.itemSize; x++) {
             for (int y = 0; y < this.itemListHeight / this.itemSize; y++) {
 
-                int itemX = this.itemListXOffset + this.itemListStartX + x * this.itemSize;
+                int itemX = this.itemListOffsetX + this.itemListStartX + x * this.itemSize;
                 int itemY = this.itemListStartY + y * this.itemSize;
 
                 int itemIndex = this.itemsOnPage * this.page + this.itemsPerRow * y + x;
 
                 if (itemIndex > this.items.size() - 1) {
-                    //context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, 0xFFFF << 16);
                     continue;
                 }
 
-                //context.fill(itemX, itemY, itemX + this.itemSize, itemY + this.itemSize, (x % 2 ^ y % 2) == 0 ? 0x55FFFFFF : 0x55 << 24);
-
                 ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack();
-                if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY && mouseY < itemY + this.itemSize) {
+                if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY
+                    && mouseY < itemY + this.itemSize) {
                     this.drawItemTooltip(screen, context, value, mouseX, mouseY);
                 }
 
@@ -168,11 +168,11 @@ public class ItemListScreen implements Module {
         context.getMatrices().push();
         context.getMatrices().translate(0.0F, 0.0F, 234.0F);
         context.drawTooltip(
-                screen.textRenderer,
-                Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemStack),
-                Optional.empty(),
-                mouseX,
-                mouseY
+            screen.textRenderer,
+            Screen.getTooltipFromItem(MinecraftClient.getInstance(), itemStack),
+            Optional.empty(),
+            mouseX,
+            mouseY
         );
         context.getMatrices().pop();
     }
@@ -208,13 +208,13 @@ public class ItemListScreen implements Module {
             }
 
             this.textFieldWidget = new TextFieldWidget(
-                    MinecraftClient.getInstance().textRenderer,
-                    0,
-                    0,
-                    20,
-                    20,
-                    this.textFieldWidget,
-                    Text.empty()
+                MinecraftClient.getInstance().textRenderer,
+                0,
+                0,
+                20,
+                20,
+                this.textFieldWidget,
+                Text.empty()
             );
             this.textFieldWidget.setChangedListener(o -> this.filterAndSort());
             this.items = new CopyOnWriteArrayList<>(RepositoryItemManager.getAllItems());
@@ -224,109 +224,119 @@ public class ItemListScreen implements Module {
             ScreenMouseEvents.afterMouseClick(screen).register(this::mouseClick);
             ScreenKeyboardEvents.allowKeyPress(screen).register(this::keyPress);
 
-            if (config.sort.enableAlphabeticalSort.getValue()) this.sortAlphabetical.setEnumIndex(0);
-            if (config.sort.enableItemRaritySort.getValue()) this.sortRarity.setEnumIndex(0);
-            if (config.filters.enableRarityFilter.getValue()) this.sortRarity.setEnumIndex(0);
-            if (config.filters.enableCategoryFilter.getValue()) this.filterCategory.setEnumIndex(0);
-            if (config.filters.enableMuseumFilter.getValue()) this.filterMuseum.setEnumIndex(0);
+            if (config.sort.enableAlphabeticalSort.getValue()) {
+                this.sortAlphabetical.setEnumIndex(0);
+            }
+            if (config.sort.enableItemRaritySort.getValue()) {
+                this.sortRarity.setEnumIndex(0);
+            }
+            if (config.filters.enableRarityFilter.getValue()) {
+                this.sortRarity.setEnumIndex(0);
+            }
+            if (config.filters.enableCategoryFilter.getValue()) {
+                this.filterCategory.setEnumIndex(0);
+            }
+            if (config.filters.enableMuseumFilter.getValue()) {
+                this.filterMuseum.setEnumIndex(0);
+            }
         });
 
         this.sortAlphabetical = new EnumCycleWidget<>(
-                0,
-                0,
-                this.itemSize + 2,
-                this.itemSize + 2,
-                AlphabeticalSort.values(),
-                AlphabeticalSort::getIdentifier,
-                AlphabeticalSort::getText,
-                EnumCycleWidget.OnClick.identity(this::sort),
-                alphabeticalSort -> switch (alphabeticalSort) {
-                    case NORMAL -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
-                            .getItemNameAlphanumerical());
-                    case REVERSED -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
-                            .getItemNameAlphanumerical()).reversed();
-                }
+            0,
+            0,
+            this.itemSize + 2,
+            this.itemSize + 2,
+            AlphabeticalSort.values(),
+            AlphabeticalSort::getIdentifier,
+            AlphabeticalSort::getText,
+            EnumCycleWidget.OnClick.identity(this::sort),
+            alphabeticalSort -> switch (alphabeticalSort) {
+                case NORMAL -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
+                    .getItemNameAlphanumerical());
+                case REVERSED -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
+                    .getItemNameAlphanumerical()).reversed();
+            }
         );
 
         this.sortRarity = new EnumCycleWidget<>(
-                0,
-                0,
-                this.itemSize + 2,
-                this.itemSize + 2,
-                RaritySort.values(),
-                RaritySort::getIdentifier,
-                RaritySort::getText,
-                EnumCycleWidget.OnClick.identity(this::sort),
-                raritySort -> switch (raritySort) {
-                    case UNSORTED -> Comparator.comparingInt(value -> 0);
-                    case LOWEST_FIRST ->
-                            Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier()
-                                    .ordinal());
-                    case HIGHEST_FIRST ->
-                            Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier()
-                                    .ordinal()).reversed();
-                }
+            0,
+            0,
+            this.itemSize + 2,
+            this.itemSize + 2,
+            RaritySort.values(),
+            RaritySort::getIdentifier,
+            RaritySort::getText,
+            EnumCycleWidget.OnClick.identity(this::sort),
+            raritySort -> switch (raritySort) {
+                case UNSORTED -> Comparator.comparingInt(value -> 0);
+                case LOWEST_FIRST ->
+                    Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier()
+                        .ordinal());
+                case HIGHEST_FIRST ->
+                    Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier()
+                        .ordinal()).reversed();
+            }
         );
 
         this.filterRarity = new EnumCycleWidget<>(
-                0,
-                0,
-                this.itemSize + 2,
-                this.itemSize + 2,
-                RarityFilter.values(),
-                RarityFilter::getIdentifier,
-                RarityFilter::getText,
-                EnumCycleWidget.OnClick.identity(this::filterAndSort),
-                rarityFilter -> switch (rarityFilter) {
-                    case NO_FILTER -> i -> RepositoryItemManager.getItem(i).getTier() != Tier.UNOBTAINABLE;
-                    case COMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.COMMON;
-                    case UNCOMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNCOMMON;
-                    case RARE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.RARE;
-                    case EPIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.EPIC;
-                    case LEGENDARY -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.LEGENDARY;
-                    case MYTHIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.MYTHIC;
-                    case SPECIAL -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.SPECIAL
-                            || RepositoryItemManager.getItem(i).getTier() == Tier.VERY_SPECIAL;
-                    case ADMIN -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.ADMIN;
-                    case UNOBTAINABLE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNOBTAINABLE;
-                }
+            0,
+            0,
+            this.itemSize + 2,
+            this.itemSize + 2,
+            RarityFilter.values(),
+            RarityFilter::getIdentifier,
+            RarityFilter::getText,
+            EnumCycleWidget.OnClick.identity(this::filterAndSort),
+            rarityFilter -> switch (rarityFilter) {
+                case NO_FILTER -> i -> RepositoryItemManager.getItem(i).getTier() != Tier.UNOBTAINABLE;
+                case COMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.COMMON;
+                case UNCOMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNCOMMON;
+                case RARE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.RARE;
+                case EPIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.EPIC;
+                case LEGENDARY -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.LEGENDARY;
+                case MYTHIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.MYTHIC;
+                case SPECIAL -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.SPECIAL
+                    || RepositoryItemManager.getItem(i).getTier() == Tier.VERY_SPECIAL;
+                case ADMIN -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.ADMIN;
+                case UNOBTAINABLE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNOBTAINABLE;
+            }
         );
 
         this.filterCategory = new EnumCycleWidget<>(
-                0,
-                0,
-                this.itemSize + 2,
-                this.itemSize + 2,
-                CategoryFilter.values(),
-                CategoryFilter::getIdentifier,
-                CategoryFilter::getText,
-                EnumCycleWidget.OnClick.identity(this::filterAndSort),
-                CategoryFilter::getPredicate
+            0,
+            0,
+            this.itemSize + 2,
+            this.itemSize + 2,
+            CategoryFilter.values(),
+            CategoryFilter::getIdentifier,
+            CategoryFilter::getText,
+            EnumCycleWidget.OnClick.identity(this::filterAndSort),
+            CategoryFilter::getPredicate
         );
 
         this.filterMuseum = new EnumCycleWidget<>(
-                0,
-                0,
-                this.itemSize + 2,
-                this.itemSize + 2,
-                MuseumFilter.values(),
-                MuseumFilter::getIdentifier,
-                MuseumFilter::getText,
-                EnumCycleWidget.OnClick.identity(this::filterAndSort),
-                museumFilter -> switch (museumFilter) {
-                    case UNFILTERED -> identifier -> true;
-                    case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).canBeInMuseum();
-                    case NON_MUSEUM -> identifier -> !RepositoryItemManager.getItem(identifier).canBeInMuseum();
-                }
+            0,
+            0,
+            this.itemSize + 2,
+            this.itemSize + 2,
+            MuseumFilter.values(),
+            MuseumFilter::getIdentifier,
+            MuseumFilter::getText,
+            EnumCycleWidget.OnClick.identity(this::filterAndSort),
+            museumFilter -> switch (museumFilter) {
+                case UNFILTERED -> identifier -> true;
+                case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).canBeInMuseum();
+                case NON_MUSEUM -> identifier -> !RepositoryItemManager.getItem(identifier).canBeInMuseum();
+            }
         );
 
         this.leftButton = new ButtonWidget.Builder(Text.literal("<"), button -> this.page--).size(
-                this.itemSize,
-                this.itemSize
+            this.itemSize,
+            this.itemSize
         ).build();
         this.rightButton = new ButtonWidget.Builder(Text.literal(">"), button -> this.page++).size(
-                this.itemSize,
-                this.itemSize
+            this.itemSize,
+            this.itemSize
         ).build();
 
         RepositoryManager.addReloadCallback(this::filterAndSort);
@@ -374,7 +384,7 @@ public class ItemListScreen implements Module {
     }
 
     /**
-     * Checks if the identifier matches the identifier part
+     * Checks if the identifier matches the identifier part.
      *
      * @param identifier     The identifier to test.
      * @param identifierPart The part to match.
@@ -382,8 +392,8 @@ public class ItemListScreen implements Module {
      */
     private boolean identifierMatches(Identifier identifier, String identifierPart) {
         return identifier.getPath().startsWith(identifierPart)
-                || identifier.toString().startsWith(identifierPart)
-                || identifier.toString().contains(identifierPart);
+            || identifier.toString().startsWith(identifierPart)
+            || identifier.toString().contains(identifierPart);
     }
 
     /**
@@ -397,13 +407,13 @@ public class ItemListScreen implements Module {
      */
     private boolean keyPress(Screen screen, int keyCode, int scanCode, int modifiers) {
         if (keyCode == InputUtil.GLFW_KEY_ESCAPE
-                || (!this.textFieldWidget.isFocused() && MinecraftClient
-                .getInstance()
-                .options
-                .inventoryKey.matchesKey(
-                        keyCode,
-                        scanCode
-                ))) {
+            || (!this.textFieldWidget.isFocused() && MinecraftClient
+            .getInstance()
+            .options
+            .inventoryKey.matchesKey(
+                keyCode,
+                scanCode
+            ))) {
             return true;
         }
         boolean b = !this.textFieldWidget.keyPressed(keyCode, scanCode, modifiers);
@@ -426,11 +436,21 @@ public class ItemListScreen implements Module {
         this.leftButton.mouseClicked(mouseX, mouseY, button);
         this.rightButton.mouseClicked(mouseX, mouseY, button);
 
-        if (this.sortAlphabetical.visible) this.sortAlphabetical.mouseClicked(mouseX, mouseY, button);
-        if (this.sortRarity.visible) this.sortRarity.mouseClicked(mouseX, mouseY, button);
-        if (this.filterRarity.visible) this.filterRarity.mouseClicked(mouseX, mouseY, button);
-        if (this.filterCategory.visible) this.filterCategory.mouseClicked(mouseX, mouseY, button);
-        if (this.filterMuseum.visible) this.filterMuseum.mouseClicked(mouseX, mouseY, button);
+        if (this.sortAlphabetical.visible) {
+            this.sortAlphabetical.mouseClicked(mouseX, mouseY, button);
+        }
+        if (this.sortRarity.visible) {
+            this.sortRarity.mouseClicked(mouseX, mouseY, button);
+        }
+        if (this.filterRarity.visible) {
+            this.filterRarity.mouseClicked(mouseX, mouseY, button);
+        }
+        if (this.filterCategory.visible) {
+            this.filterCategory.mouseClicked(mouseX, mouseY, button);
+        }
+        if (this.filterMuseum.visible) {
+            this.filterMuseum.mouseClicked(mouseX, mouseY, button);
+        }
 
         this.textFieldWidget.setFocused(this.textFieldWidget.isMouseOver(mouseX, mouseY));
     }
@@ -448,7 +468,8 @@ public class ItemListScreen implements Module {
 
         this.itemListStartX = Math.max(screen.width / 2 + handledScreen.backgroundWidth / 2, screen.width - 300);
         this.itemListStartY = 6 + this.itemSize;
-        boolean hitsInventoryOnTheLeftSide = this.itemListStartX - 10 <= screen.width / 2 + handledScreen.backgroundWidth / 2;
+        boolean hitsInventoryOnTheLeftSide =
+            this.itemListStartX - 10 <= screen.width / 2 + handledScreen.backgroundWidth / 2;
         if (hitsInventoryOnTheLeftSide) {
             this.itemListStartX += 10;
         }
@@ -462,21 +483,22 @@ public class ItemListScreen implements Module {
         this.itemListHeight = tempY - itemListHeightMissing;
 
         this.itemListStartY += itemListHeightMissing / 2;
-        this.itemListXOffset = itemListWidthMissing / 2;
+        this.itemListOffsetX = itemListWidthMissing / 2;
 
         this.itemsPerRow = this.itemListWidth / this.itemSize;
         int itemsPerColumn = this.itemListHeight / this.itemSize;
         this.itemsOnPage = itemsPerColumn * this.itemsPerRow;
 
-        this.leftButton.setX(this.itemListStartX + this.itemListXOffset);
+        this.leftButton.setX(this.itemListStartX + this.itemListOffsetX);
         this.leftButton.setY(this.itemListStartY / 2 - this.itemSize / 2);
 
-        this.rightButton.setX(this.itemListStartX + this.itemListWidth - this.rightButton.getWidth() + this.itemListXOffset);
+        this.rightButton.setX(
+            this.itemListStartX + this.itemListWidth - this.rightButton.getWidth() + this.itemListOffsetX);
         this.rightButton.setY(this.itemListStartY / 2 - this.itemSize / 2);
 
         this.pageCount = this.items.size() / this.itemsOnPage;
 
-        this.pageNumberX = this.itemListStartX + this.itemListXOffset + this.itemListWidth / 2;
+        this.pageNumberX = this.itemListStartX + this.itemListOffsetX + this.itemListWidth / 2;
         this.pageNumberY = this.itemListStartY / 2 - this.itemSize / 2 + 5;
 
         int index = 0;
@@ -489,16 +511,16 @@ public class ItemListScreen implements Module {
         if (this.sortAlphabetical.visible) {
             //noinspection ConstantValue
             this.sortAlphabetical.setPosition(
-                    this.itemListStartX + this.itemListXOffset - 1 + (this.itemSize + 5) * index++,
-                    screen.height - 22
+                this.itemListStartX + this.itemListOffsetX - 1 + (this.itemSize + 5) * index++,
+                screen.height - 22
             );
         }
 
         if (this.sortRarity.visible) {
             //noinspection UnusedAssignment
             this.sortRarity.setPosition(
-                    this.itemListStartX + this.itemListXOffset - 1 + (this.itemSize + 5) * index++,
-                    screen.height - 22
+                this.itemListStartX + this.itemListOffsetX - 1 + (this.itemSize + 5) * index++,
+                screen.height - 22
             );
         }
 
@@ -510,21 +532,21 @@ public class ItemListScreen implements Module {
         if (this.filterRarity.visible) {
             //noinspection ConstantValue
             this.filterRarity.setPosition(
-                    screen.width - this.itemSize - 5 - (this.itemSize + 5) * index++,
-                    screen.height - 22
+                screen.width - this.itemSize - 5 - (this.itemSize + 5) * index++,
+                screen.height - 22
             );
         }
         if (this.filterCategory.visible) {
             this.filterCategory.setPosition(
-                    screen.width - this.itemSize - 5 - (this.itemSize + 5) * index++,
-                    screen.height - 22
+                screen.width - this.itemSize - 5 - (this.itemSize + 5) * index++,
+                screen.height - 22
             );
         }
         if (this.filterMuseum.visible) {
             //noinspection UnusedAssignment - easier to just keep it in case something changes about the sorting
             this.filterMuseum.setPosition(
-                    screen.width - this.itemSize - 5 - (this.itemSize + 5) * index++,
-                    screen.height - 22
+                screen.width - this.itemSize - 5 - (this.itemSize + 5) * index++,
+                screen.height - 22
             );
         }
 

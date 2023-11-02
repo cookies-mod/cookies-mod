@@ -6,15 +6,13 @@ import dev.morazzer.cookiesmod.data.profile.mining.HeartOfTheMountainData;
 import dev.morazzer.cookiesmod.utils.general.ScoreboardUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import dev.morazzer.cookiesmod.utils.json.Save;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 /**
- * The data associated with a profile of a player.
- * Note that the same profile on different accounts has different data.
+ * The data associated with a profile of a player. Note that the same profile on different accounts has different data.
  */
 @Getter
 @Setter
@@ -62,9 +60,9 @@ public class ProfileData {
      */
     public boolean isActive() {
         return PlayerStorage.getCurrentPlayer().map(uuid -> uuid.equals(this.playerUuid)).orElse(false) && SkyblockUtils
-                .getLastProfileId()
-                .map(uuid -> uuid.equals(this.profileUuid))
-                .orElse(false);
+            .getLastProfileId()
+            .map(uuid -> uuid.equals(this.profileUuid))
+            .orElse(false);
     }
 
     /**
@@ -74,10 +72,10 @@ public class ProfileData {
      */
     @Override
     public String toString() {
-        return "ProfileData{" +
-                "playerUuid=" + playerUuid +
-                ", profileUuid=" + profileUuid +
-                '}';
+        return "ProfileData{"
+            + "playerUuid=" + playerUuid
+            + ", profileUuid=" + profileUuid
+            + '}';
     }
 
 }

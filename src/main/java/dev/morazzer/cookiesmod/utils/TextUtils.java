@@ -11,6 +11,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Various methods for manipulating strings.
+ */
 public class TextUtils {
 
     /**
@@ -66,7 +69,7 @@ public class TextUtils {
         } else if (jsonElement instanceof JsonPrimitive jsonPrimitive) {
             if (jsonPrimitive.isBoolean()) {
                 return Text.literal(jsonPrimitive.getAsString())
-                        .formatted(jsonPrimitive.getAsBoolean() ? Formatting.GREEN : Formatting.RED);
+                    .formatted(jsonPrimitive.getAsBoolean() ? Formatting.GREEN : Formatting.RED);
             } else if (jsonPrimitive.isNumber()) {
                 return Text.literal(jsonPrimitive.getAsString()).formatted(Formatting.DARK_PURPLE);
             } else if (jsonPrimitive.isJsonNull()) {

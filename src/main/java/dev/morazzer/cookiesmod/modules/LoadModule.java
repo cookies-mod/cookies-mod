@@ -14,6 +14,7 @@ public @interface LoadModule {
 
     /**
      * The identifier of the method to filter if it should be loaded or not.
+     *
      * @return The identifier.
      */
     String value();

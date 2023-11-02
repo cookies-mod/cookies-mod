@@ -21,11 +21,11 @@ public class CrimsonIsleReputationRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(String.valueOf(reputation))
-                .append(" ")
-                .append(StringUtils.capitalize(faction.name().toLowerCase()))
-                .append(" Reputation.");
+            .getRequirementString()
+            .append(String.valueOf(reputation))
+            .append(" ")
+            .append(StringUtils.capitalize(faction.name().toLowerCase()))
+            .append(" Reputation.");
     }
 
 }

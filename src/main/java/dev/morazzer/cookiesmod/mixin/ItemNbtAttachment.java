@@ -1,11 +1,13 @@
 package dev.morazzer.cookiesmod.mixin;
 
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
+/**
+ * Accessor to allow storing nbt directly in an item without modifying the original nbt.
+ */
 public interface ItemNbtAttachment {
 
     static NbtCompound getCookiesNbt(ItemStack itemStack) {

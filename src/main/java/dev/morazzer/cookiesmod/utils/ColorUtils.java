@@ -8,6 +8,9 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Various constants and methods related to colors.
+ */
 public class ColorUtils {
 
     public static final int mainColor = 0xFFE99DBE;
@@ -15,7 +18,7 @@ public class ColorUtils {
     public static final int successColor = 0xFF77DD77;
 
     private static final Identifier showStacktraceOnGradientHover = DevUtils.createIdentifier(
-            "show_stacktrace_on_gradient_hover");
+        "show_stacktrace_on_gradient_hover");
 
     /**
      * Gets a text with an applied gradient.
@@ -26,7 +29,9 @@ public class ColorUtils {
      * @return The text with an applied gradient.
      */
     public static MutableText literalWithGradient(@NotNull String text, int startColor, int endColor) {
-        if (startColor == endColor) return Text.literal(text).setStyle(Style.EMPTY.withColor(startColor));
+        if (startColor == endColor) {
+            return Text.literal(text).setStyle(Style.EMPTY.withColor(startColor));
+        }
 
         int redStart = (startColor >> 16) & 0xFF;
         int greenStart = (startColor >> 8) & 0xFF;
@@ -47,8 +52,8 @@ public class ColorUtils {
         HoverEvent hoverEvent = null;
         if (DevUtils.isEnabled(showStacktraceOnGradientHover)) {
             hoverEvent = new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT,
-                    Text.literal(ExceptionHandler.getStacktrace(new Throwable())).formatted(Formatting.RED)
+                HoverEvent.Action.SHOW_TEXT,
+                Text.literal(ExceptionHandler.getStacktrace(new Throwable())).formatted(Formatting.RED)
             );
         }
 
@@ -59,8 +64,8 @@ public class ColorUtils {
             color |= ((blueStart + blue * i) & 0xFF);
 
             MutableText mutableText = Text
-                    .literal(String.valueOf(text.charAt(i)))
-                    .setStyle(Style.EMPTY.withColor(color));
+                .literal(String.valueOf(text.charAt(i)))
+                .setStyle(Style.EMPTY.withColor(color));
 
             if (DevUtils.isEnabled(showStacktraceOnGradientHover)) {
                 mutableText.setStyle(mutableText.getStyle().withHoverEvent(hoverEvent));

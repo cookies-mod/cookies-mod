@@ -8,14 +8,13 @@ import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.general.CookiesUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Storage for the {@linkplain dev.morazzer.cookiesmod.data.profile.ProfileData} to always get the correct instance.
@@ -24,7 +23,7 @@ public class ProfileStorage {
 
     private static final Path PROFILE_DATA_FOLDER = Path.of("config/cookiesmod/profiles");
     private static final Identifier SHOW_LOADING_SAVING_MESSAGES = DevUtils.createIdentifier(
-            "storage/profiles/show_load_save");
+        "storage/profiles/show_load_save");
     private static ProfileData profileData;
 
     static {
@@ -57,11 +56,11 @@ public class ProfileStorage {
         JsonObject jsonObject = JsonUtils.toJsonObject(profileData);
         ProfileDataMigrations.writeLatest(jsonObject);
         ExceptionHandler.removeThrows(() -> Files.writeString(
-                profileFile,
-                JsonUtils.CLEAN_GSON.toJson(jsonObject),
-                StandardCharsets.UTF_8,
-                StandardOpenOption.TRUNCATE_EXISTING,
-                StandardOpenOption.CREATE
+            profileFile,
+            JsonUtils.CLEAN_GSON.toJson(jsonObject),
+            StandardCharsets.UTF_8,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.CREATE
         ));
     }
 
@@ -82,22 +81,22 @@ public class ProfileStorage {
 
         if (!Files.exists(profileFile)) {
             profileData = new ProfileData(
-                    PlayerStorage.getCurrentPlayer().get(),
-                    SkyblockUtils.getLastProfileId().get()
+                PlayerStorage.getCurrentPlayer().get(),
+                SkyblockUtils.getLastProfileId().get()
             );
             saveCurrentProfile();
             return;
         }
 
         JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
-                profileFile,
-                StandardCharsets.UTF_8
+            profileFile,
+            StandardCharsets.UTF_8
         )), JsonObject.class);
         ProfileDataMigrations.migrate(jsonObject);
 
         profileData = JsonUtils.fromJson(new ProfileData(
-                PlayerStorage.getCurrentPlayer().get(),
-                SkyblockUtils.getLastProfileId().get()
+            PlayerStorage.getCurrentPlayer().get(),
+            SkyblockUtils.getLastProfileId().get()
         ), jsonObject);
     }
 

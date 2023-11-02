@@ -12,8 +12,10 @@ import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.TextUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import java.util.Base64;
+import java.util.Objects;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,12 +24,10 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Base64;
-import java.util.Objects;
-
 /**
- * Subcommand to execute various operations related to the {@linkplain dev.morazzer.cookiesmod.features.repository.RepositoryManager}. <br>
- * These include the following: {@code reload}, {@code give item}, {@code get texture}.
+ * Subcommand to execute various operations related to the
+ * {@linkplain dev.morazzer.cookiesmod.features.repository.RepositoryManager}. <br> These include the following:
+ * {@code reload}, {@code give item}, {@code get texture}.
  */
 @DevSubcommand
 public class RepoSubcommand extends ClientCommand {
@@ -38,103 +38,103 @@ public class RepoSubcommand extends ClientCommand {
         return literal("repo").then(literal("reload").executes(context -> {
             long start = System.currentTimeMillis();
             context
-                    .getSource()
-                    .sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor).append("Reloading repository"));
+                .getSource()
+                .sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor).append("Reloading repository"));
             RepositoryManager.reload();
             context
-                    .getSource()
-                    .sendFeedback(CookiesMod
-                            .createPrefix(ColorUtils.successColor)
-                            .append("Reloaded repository in %sms".formatted(System.currentTimeMillis() - start)));
+                .getSource()
+                .sendFeedback(CookiesMod
+                    .createPrefix(ColorUtils.successColor)
+                    .append("Reloaded repository in %sms".formatted(System.currentTimeMillis() - start)));
 
             return 1;
         })).then(literal("items")
-                .then(literal("create_from_api").executes(context -> {
-                    ConcurrentUtils.execute(() -> {
-                        boolean succeeded = RepositoryItemManager.loadOfficialItemList();
-                        if (!succeeded) {
-                            context
-                                    .getSource()
-                                    .sendError(CookiesMod
-                                            .createPrefix(ColorUtils.failColor)
-                                            .append("Failed to export default items"));
-                            return;
-                        }
-
+            .then(literal("create_from_api").executes(context -> {
+                ConcurrentUtils.execute(() -> {
+                    boolean succeeded = RepositoryItemManager.loadOfficialItemList();
+                    if (!succeeded) {
                         context
-                                .getSource()
-                                .sendFeedback(CookiesMod
-                                        .createPrefix(ColorUtils.successColor)
-                                        .append("Successfully exported default items"));
-
-                    });
-
-                    return Command.SINGLE_SUCCESS;
-                }))
-                .then(literal("give").then(argument(
-                        "item",
-                        new RealIdentifierArgument(RepositoryItemManager.getAllItems(), "skyblock", "items/")
-                ).executes(context -> {
-                    if (context.getSource().getEntity() instanceof PlayerEntity player && !player.isCreative()) {
-                        context
-                                .getSource()
-                                .sendError(CookiesMod
-                                        .createPrefix(ColorUtils.failColor)
-                                        .append("You have to be in creative to use this command"));
-                        return 0;
+                            .getSource()
+                            .sendError(CookiesMod
+                                .createPrefix(ColorUtils.failColor)
+                                .append("Failed to export default items"));
+                        return;
                     }
-
-                    SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
-
-                    ItemStack itemStack = item.getItemStack().copy();
 
                     context
-                            .getSource()
-                            .sendFeedback(CookiesMod
-                                    .createPrefix(ColorUtils.successColor)
-                                    .append("Gave 1 [")
-                                    .append(itemStack
-                                            .getName()
-                                            .copy()
-                                            .styled(style -> style.withHoverEvent(new HoverEvent(
-                                                    HoverEvent.Action.SHOW_ITEM,
-                                                    new HoverEvent.ItemStackContent(itemStack)
-                                            ))))
-                                    .append("] to %s".formatted(context.getSource().getEntity().getEntityName())));
+                        .getSource()
+                        .sendFeedback(CookiesMod
+                            .createPrefix(ColorUtils.successColor)
+                            .append("Successfully exported default items"));
 
-                    Objects.requireNonNull(MinecraftClient.getInstance().player).giveItemStack(itemStack);
+                });
+
+                return Command.SINGLE_SUCCESS;
+            }))
+            .then(literal("give").then(argument(
+                "item",
+                new RealIdentifierArgument(RepositoryItemManager.getAllItems(), "skyblock", "items/")
+            ).executes(context -> {
+                if (context.getSource().getEntity() instanceof PlayerEntity player && !player.isCreative()) {
+                    context
+                        .getSource()
+                        .sendError(CookiesMod
+                            .createPrefix(ColorUtils.failColor)
+                            .append("You have to be in creative to use this command"));
+                    return 0;
+                }
+
+                SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+
+                ItemStack itemStack = item.getItemStack().copy();
+
+                context
+                    .getSource()
+                    .sendFeedback(CookiesMod
+                        .createPrefix(ColorUtils.successColor)
+                        .append("Gave 1 [")
+                        .append(itemStack
+                            .getName()
+                            .copy()
+                            .styled(style -> style.withHoverEvent(new HoverEvent(
+                                HoverEvent.Action.SHOW_ITEM,
+                                new HoverEvent.ItemStackContent(itemStack)
+                            ))))
+                        .append("] to %s".formatted(context.getSource().getEntity().getEntityName())));
+
+                Objects.requireNonNull(MinecraftClient.getInstance().player).giveItemStack(itemStack);
 
 
-                    return Command.SINGLE_SUCCESS;
-                })))
-                .then(literal("get_skull_texture").then(argument(
-                        "item",
-                        new RealIdentifierArgument(RepositoryItemManager.getAllItems(), "skyblock", "items/")
-                ).executes(context -> {
-                    if (context.getSource().getEntity() instanceof PlayerEntity player && !player.isCreative()) {
-                        context
-                                .getSource()
-                                .sendError(CookiesMod
-                                        .createPrefix(ColorUtils.failColor)
-                                        .append("You have to be in creative to use this command"));
-                        return 0;
-                    }
+                return Command.SINGLE_SUCCESS;
+            })))
+            .then(literal("get_skull_texture").then(argument(
+                "item",
+                new RealIdentifierArgument(RepositoryItemManager.getAllItems(), "skyblock", "items/")
+            ).executes(context -> {
+                if (context.getSource().getEntity() instanceof PlayerEntity player && !player.isCreative()) {
+                    context
+                        .getSource()
+                        .sendError(CookiesMod
+                            .createPrefix(ColorUtils.failColor)
+                            .append("You have to be in creative to use this command"));
+                    return 0;
+                }
 
-                    SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
-                    if (item.getSkin().isPresent()) {
-                        String s = new String(Base64.getDecoder().decode(item.getSkin().get()));
-                        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
-                        context.getSource().sendFeedback(TextUtils.prettyPrintJson(jsonObject));
-                    } else {
-                        context
-                                .getSource()
-                                .sendFeedback(CookiesMod
-                                        .createPrefix(ColorUtils.failColor)
-                                        .append("Item does not have a skin"));
-                    }
+                SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+                if (item.getSkin().isPresent()) {
+                    String s = new String(Base64.getDecoder().decode(item.getSkin().get()));
+                    JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
+                    context.getSource().sendFeedback(TextUtils.prettyPrintJson(jsonObject));
+                } else {
+                    context
+                        .getSource()
+                        .sendFeedback(CookiesMod
+                            .createPrefix(ColorUtils.failColor)
+                            .append("Item does not have a skin"));
+                }
 
-                    return Command.SINGLE_SUCCESS;
-                })))).requires(context -> ConfigManager.getConfig().devCategory.displayRepoOption.getValue());
+                return Command.SINGLE_SUCCESS;
+            })))).requires(context -> ConfigManager.getConfig().devCategory.displayRepoOption.getValue());
     }
 
 }

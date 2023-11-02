@@ -3,9 +3,9 @@
   "package": "dev.morazzer.cookiesmod.mixin.render",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "SkyblockIdModelData",
     "ModelOverrideListMixin",
-    "ModelOverrideMixin"
+    "ModelOverrideMixin",
+    "SkyblockIdModelDataMixin"
   ],
   "injectors": {
     "defaultRequire": 1

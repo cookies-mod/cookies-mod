@@ -3,10 +3,9 @@ package dev.morazzer.cookiesmod.config.system;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import net.minecraft.text.Text;
-
 import java.lang.reflect.Field;
 import java.util.Optional;
+import net.minecraft.text.Text;
 
 /**
  * A category in the config.
@@ -44,9 +43,9 @@ public abstract class Category {
                 }
                 o.load(jsonObject.getAsJsonObject().get(declaredField.getName()));
             } else if (Optional
-                    .ofNullable(declaredField.getType().getSuperclass())
-                    .map(Foldable.class::equals)
-                    .orElse(false)) {
+                .ofNullable(declaredField.getType().getSuperclass())
+                .map(Foldable.class::equals)
+                .orElse(false)) {
                 Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> declaredField.get(this));
                 if (!jsonObject.getAsJsonObject().has(declaredField.getName())) {
                     continue;
@@ -72,9 +71,9 @@ public abstract class Category {
 
                 jsonObject.add(declaredField.getName(), o.save());
             } else if (Optional
-                    .ofNullable(declaredField.getType().getSuperclass())
-                    .map(Foldable.class::equals)
-                    .orElse(false)) {
+                .ofNullable(declaredField.getType().getSuperclass())
+                .map(Foldable.class::equals)
+                .orElse(false)) {
                 Foldable foldable = (Foldable) ExceptionHandler.removeThrows(() -> declaredField.get(this));
                 jsonObject.add(declaredField.getName(), foldable.save());
             }

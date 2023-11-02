@@ -23,16 +23,16 @@ public class SlayerRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return Text
-                .literal("\u2620")
-                .formatted(Formatting.DARK_RED)
-                .append(" Requires ")
-                .formatted(Formatting.RED)
-                .append(Text
-                        .empty()
-                        .append(StringUtils.capitalize(slayerBossType.name().toLowerCase()))
-                        .append(" Slayer ")
-                        .append(level + ".")
-                        .formatted(Formatting.DARK_PURPLE));
+            .literal("☠")
+            .formatted(Formatting.DARK_RED)
+            .append(" Requires ")
+            .formatted(Formatting.RED)
+            .append(Text
+                .empty()
+                .append(StringUtils.capitalize(slayerBossType.name().toLowerCase()))
+                .append(" Slayer ")
+                .append(level + ".")
+                .formatted(Formatting.DARK_PURPLE));
     }
 
 }

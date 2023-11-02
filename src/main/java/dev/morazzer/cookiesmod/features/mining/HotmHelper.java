@@ -15,6 +15,13 @@ import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.NumberFormat;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
@@ -26,14 +33,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Helper to display the powder required in the heart of the mountain menu.
  */
@@ -41,7 +40,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HotmHelper implements Module {
 
     final Map<String, List<Integer>> perks = new LinkedHashMap<>();
-    final Map<ItemStack, NbtCompound> items = new ConcurrentHashMap<>() {};
+    final Map<ItemStack, NbtCompound> items = new ConcurrentHashMap<>() {
+    };
     final List<String> gemstonePowder = new LinkedList<>();
 
     /**
@@ -49,7 +49,9 @@ public class HotmHelper implements Module {
      */
     public void update() {
         JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/hotm_perks");
-        if (file == null || !file.isJsonObject()) return;
+        if (file == null || !file.isJsonObject()) {
+            return;
+        }
         JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(file.getAsJsonObject(), JsonObject.class);
         this.gemstonePowder.clear();
         this.perks.clear();
@@ -63,10 +65,13 @@ public class HotmHelper implements Module {
             }
 
             JsonElement jsonElement = jsonObject.get(key);
-            if (!jsonElement.isJsonArray()) return;
+            if (!jsonElement.isJsonArray()) {
+                return;
+            }
             this.perks.put(
-                    key,
-                    JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {}.getType())
+                key,
+                JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {
+                }.getType())
             );
         }
     }
@@ -82,25 +87,35 @@ public class HotmHelper implements Module {
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             this.items.clear();
-            if (!(screen instanceof HandledScreen<?> handledScreen)) return;
+            if (!(screen instanceof HandledScreen<?> handledScreen)) {
+                return;
+            }
 
             ScreenHandler screenHandler = handledScreen.getScreenHandler();
             if (lastSyncId.get() == screenHandler.syncId) {
                 return;
             }
-            if (!handledScreen.getTitle().getString().equals("Heart of the Mountain")) return;
+            if (!handledScreen.getTitle().getString().equals("Heart of the Mountain")) {
+                return;
+            }
             lastSyncId.set(screenHandler.syncId);
             InventoryContentUpdateEvent.register(screenHandler, ExceptionHandler.wrap(this::updateSlot));
 
         });
         ItemTooltipCallback.EVENT.register((stack, context, lines) -> {
             if (!ConfigManager.getConfig().miningCategory.heartOfTheMountain.showTotalPowder.getValue()
-                    && !ConfigManager.getConfig().miningCategory.heartOfTheMountain.showNextTenPowder.getValue()) {
+                && !ConfigManager.getConfig().miningCategory.heartOfTheMountain.showNextTenPowder.getValue()) {
                 return;
             }
-            if (!stack.hasNbt()) return;
-            if (!ItemNbtAttachment.getOrCreateCookiesNbt(stack).contains("type")) return;
-            if (!ItemNbtAttachment.getCookiesNbt(stack).getString("type").equals("hotm")) return;
+            if (!stack.hasNbt()) {
+                return;
+            }
+            if (!ItemNbtAttachment.getOrCreateCookiesNbt(stack).contains("type")) {
+                return;
+            }
+            if (!ItemNbtAttachment.getCookiesNbt(stack).getString("type").equals("hotm")) {
+                return;
+            }
             NbtCompound cookies = ItemNbtAttachment.getOrCreateCookiesNbt(stack);
             boolean gemstone = cookies.getBoolean("gemstone");
             String powder = gemstone ? " Gemstone " : " Mithril ";
@@ -110,25 +125,27 @@ public class HotmHelper implements Module {
             for (int i = 0; i < lines.size(); i++) {
                 Text line = lines.get(i);
                 String literal = line.getString();
-                if (!literal.equals("Cost")) continue;
+                if (!literal.equals("Cost")) {
+                    continue;
+                }
 
                 i += 2;
                 if (ConfigManager.getConfig().miningCategory.heartOfTheMountain.showNextTenPowder.getValue()) {
                     lines.add(i++, Text.empty());
                     lines.add(i++, Text.literal("Cost for next 10").formatted(Formatting.GRAY));
                     lines.add(
-                            i++,
-                            Text.literal(NumberFormat.toFormattedString(next10)).append(powder).append("Powder")
-                                    .formatted(formatting)
+                        i++,
+                        Text.literal(NumberFormat.toFormattedString(next10)).append(powder).append("Powder")
+                            .formatted(formatting)
                     );
                 }
                 if (ConfigManager.getConfig().miningCategory.heartOfTheMountain.showTotalPowder.getValue()) {
                     lines.add(i++, Text.empty());
                     lines.add(i++, Text.literal("Total cost").formatted(Formatting.GRAY));
                     lines.add(
-                            i,
-                            Text.literal(NumberFormat.toFormattedString(total)).append(powder).append("Powder")
-                                    .formatted(formatting)
+                        i,
+                        Text.literal(NumberFormat.toFormattedString(total)).append(powder).append("Powder")
+                            .formatted(formatting)
                     );
                 }
                 return;
@@ -148,19 +165,23 @@ public class HotmHelper implements Module {
      * @param itemStack The item stack to update.
      */
     private void updateSlot(int slot, ItemStack itemStack) {
-        if (slot > 53) return;
-        if (!itemStack.hasCustomName()) return;
+        if (slot > 53) {
+            return;
+        }
+        if (!itemStack.hasCustomName()) {
+            return;
+        }
         String name = itemStack.getName().getString();
 
         if (name.equals("Peak of the Mountain")) {
             boolean unlocked = itemStack
-                    .getTooltip(null, TooltipContext.BASIC)
-                    .stream()
-                    .noneMatch(text -> text.getString().equals("Requires Tier 5"));
+                .getTooltip(null, TooltipContext.BASIC)
+                .stream()
+                .noneMatch(text -> text.getString().equals("Requires Tier 5"));
 
             ProfileStorage
-                    .getCurrentProfile()
-                    .ifPresent(profileData -> profileData.getHeartOfTheMountainData().setPotm(unlocked));
+                .getCurrentProfile()
+                .ifPresent(profileData -> profileData.getHeartOfTheMountainData().setPotm(unlocked));
             itemStack.setCustomName(Text.literal(String.valueOf(unlocked)));
             return;
         }
@@ -171,7 +192,9 @@ public class HotmHelper implements Module {
             return;
         }
         List<Text> lore = itemStack.getTooltip(MinecraftClient.getInstance().player, TooltipContext.BASIC);
-        if (lore.size() == 1) return;
+        if (lore.size() == 1) {
+            return;
+        }
         String levelLine = lore.get(1).getString();
         int level = Integer.parseInt(levelLine.replaceAll("[^\\d/]", "").split("/")[0]);
 

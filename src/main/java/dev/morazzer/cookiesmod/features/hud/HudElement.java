@@ -9,8 +9,8 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
 /**
- * A hud element that can be rendered on the screen.
- * For this to be rendered, you have to register it with an option in the config.
+ * A hud element that can be rendered on the screen. For this to be rendered, you have to register it with an option in
+ * the config.
  */
 @Getter
 public abstract class HudElement {
@@ -19,8 +19,10 @@ public abstract class HudElement {
     private static final Identifier SHOW_AVERAGED_TIMINGS = DevUtils.createIdentifier("hud/show_averaged_timings");
 
     private static final Identifier HUD_NAMESPACE = new Identifier("cookiesmod", "hud/");
+    private final long[] lastTimings = new long[10];
     private Position position;
     private boolean enabled;
+    private TimeUtils.Timer timer = null;
 
     /**
      * Creates a new hud element that will not be registered.
@@ -34,19 +36,26 @@ public abstract class HudElement {
     /**
      * Called once the config has finished loading, put all the logic that depends on it here.
      */
-    public void init() {}
+    public void init() {
+    }
 
     /**
+     * Gets the width.
+     *
      * @return The width.
      */
     public abstract int getWidth();
 
     /**
+     * Gets the height.
+     *
      * @return The height.
      */
     public abstract int getHeight();
 
     /**
+     * Gets the identifier.
+     *
      * @return The identifier.
      */
     public abstract String getIdentifierPath();
@@ -77,7 +86,8 @@ public abstract class HudElement {
     }
 
     /**
-     * Gets the {@linkplain dev.morazzer.cookiesmod.features.hud.HudElement#getIdentifierPath()} as {@linkplain net.minecraft.util.Identifier} with a namespace.
+     * Gets the {@linkplain dev.morazzer.cookiesmod.features.hud.HudElement#getIdentifierPath()} as
+     * {@linkplain net.minecraft.util.Identifier} with a namespace.
      *
      * @return The identifier.
      */
@@ -100,9 +110,6 @@ public abstract class HudElement {
         render(drawContext, tickDelta);
         MinecraftClient.getInstance().getProfiler().pop();
     }
-
-    private final long[] lastTimings = new long[10];
-    private TimeUtils.Timer timer = null;
 
     /**
      * Renders the element without extra checks.
@@ -127,12 +134,12 @@ public abstract class HudElement {
             timer.stop();
             if (DevUtils.isEnabled(SHOW_RENDER_TIMINGS)) {
                 drawContext.drawText(
-                        MinecraftClient.getInstance().textRenderer,
-                        timer.elapsed(),
-                        0,
-                        getHeight() + 10,
-                        -1,
-                        true
+                    MinecraftClient.getInstance().textRenderer,
+                    timer.elapsed(),
+                    0,
+                    getHeight() + 10,
+                    -1,
+                    true
                 );
             }
         }
@@ -146,7 +153,8 @@ public abstract class HudElement {
      * @return If the hud is being edited.
      */
     public boolean isCurrentlyEditing() {
-        return MinecraftClient.getInstance().currentScreen != null && MinecraftClient.getInstance().currentScreen instanceof HudEditor;
+        return MinecraftClient.getInstance().currentScreen != null
+            && MinecraftClient.getInstance().currentScreen instanceof HudEditor;
     }
 
     /**
@@ -159,6 +167,8 @@ public abstract class HudElement {
     }
 
     /**
+     * Sets the position.
+     *
      * @param position The new position.
      */
     public void setPosition(Position position) {

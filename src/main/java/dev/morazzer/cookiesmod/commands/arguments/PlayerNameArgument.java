@@ -9,27 +9,26 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-
 /**
- * Used to read a player's name as an argument for commands and disallow everything else.
- * This includes all valid player names matching the regex [a-zA-z0-9_]{1,16}.
+ * Used to read a player's name as an argument for commands and disallow everything else. This includes all valid player
+ * names matching the regex [a-zA-z0-9_]{1,16}.
  */
 public class PlayerNameArgument implements ArgumentType<String> {
 
     private static final int PLAYER_NAME_LENGTH = 16;
 
     private static final DynamicCommandExceptionType COMMAND_EXCEPTION = new DynamicCommandExceptionType(o -> CookiesMod
-            .createPrefix(ColorUtils.failColor)
-            .append("Player name \"")
-            .append(Objects.toString(o))
-            .append("\" is not a valid username"));
+        .createPrefix(ColorUtils.failColor)
+        .append("Player name \"")
+        .append(Objects.toString(o))
+        .append("\" is not a valid username"));
 
     /**
      * Static constructor to fit the style of all {@link com.mojang.brigadier.arguments.ArgumentType} types.
@@ -69,15 +68,19 @@ public class PlayerNameArgument implements ArgumentType<String> {
     /**
      * Suggestions for the player names.
      *
-     * @param context The {@linkplain com.mojang.brigadier.context.CommandContext} provided by the {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
-     * @param builder A {@linkplain com.mojang.brigadier.suggestion.SuggestionsBuilder} which is also provided by the {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)} method.
+     * @param context The {@linkplain com.mojang.brigadier.context.CommandContext} provided by the
+     *                {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)}
+     *                method.
+     * @param builder A {@linkplain com.mojang.brigadier.suggestion.SuggestionsBuilder} which is also provided by the
+     *                {@linkplain com.mojang.brigadier.builder.ArgumentBuilder#executes(com.mojang.brigadier.Command)}
+     *                method.
      * @param <S>     The {@linkplain net.minecraft.command.CommandSource} type.
      * @return A future that will resolve to the suggestions.
      */
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(
-            @NotNull CommandContext<S> context,
-            @NotNull SuggestionsBuilder builder
+        @NotNull CommandContext<S> context,
+        @NotNull SuggestionsBuilder builder
     ) {
         if (context.getSource() instanceof FabricClientCommandSource commandSource) {
             Collection<String> playerNames = commandSource.getPlayerNames();

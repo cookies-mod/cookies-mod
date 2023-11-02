@@ -9,6 +9,7 @@ public class NpcRecipe extends RepositoryRecipe {
 
     /**
      * Creates a npc recipe from a {@linkplain com.google.gson.JsonObject}.
+     *
      * @param jsonObject The json object.
      */
     public NpcRecipe(JsonObject jsonObject) {

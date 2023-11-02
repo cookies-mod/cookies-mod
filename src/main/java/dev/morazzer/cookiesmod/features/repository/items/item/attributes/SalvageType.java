@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 @SuppressWarnings({"unused", "InstantiationOfUtilityClass"})
 public class SalvageType<T> {
 
-    public final static SalvageType<EssenceType> ESSENCE = new SalvageType<>();
-    public final static SalvageType<Identifier> ITEM = new SalvageType<>();
+    public static final SalvageType<EssenceType> ESSENCE = new SalvageType<>();
+    public static final SalvageType<Identifier> ITEM = new SalvageType<>();
 
 }

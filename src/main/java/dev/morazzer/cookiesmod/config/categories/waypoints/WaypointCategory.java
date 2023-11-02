@@ -11,10 +11,10 @@ import net.minecraft.util.Formatting;
 public class WaypointCategory extends Category {
 
     public BooleanOption enableWaypoints = new BooleanOption(
-            Text.literal("Enable Waypoints"),
-            Text.literal("Enable or disable ").append(Text.literal("all").formatted(Formatting.BOLD))
-                    .append(" waypoints"),
-            true
+        Text.literal("Enable Waypoints"),
+        Text.literal("Enable or disable ").append(Text.literal("all").formatted(Formatting.BOLD))
+            .append(" waypoints"),
+        true
     );
 
     public WaypointOption waypointOption = new WaypointOption().withTags("waypoint", "waypoints");

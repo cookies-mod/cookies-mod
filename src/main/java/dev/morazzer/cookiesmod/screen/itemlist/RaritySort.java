@@ -13,16 +13,16 @@ import net.minecraft.util.Identifier;
 public enum RaritySort {
 
     LOWEST_FIRST(
-            Identifier.of("cookiesmod", "gui/itemlist/rarity_sort_common.png"),
-            Text.literal("> Common first").formatted(Formatting.GREEN)
+        Identifier.of("cookiesmod", "gui/itemlist/rarity_sort_common.png"),
+        Text.literal("> Common first").formatted(Formatting.GREEN)
     ),
     HIGHEST_FIRST(
-            Identifier.of("cookiesmod", "gui/itemlist/rarity_sort_rare.png"),
-            Text.literal("> Rarest first").formatted(Formatting.GREEN)
+        Identifier.of("cookiesmod", "gui/itemlist/rarity_sort_rare.png"),
+        Text.literal("> Rarest first").formatted(Formatting.GREEN)
     ),
     UNSORTED(
-            Identifier.of("cookiesmod", "gui/itemlist/rarity_sort_unsorted.png"),
-            Text.literal("> Unsorted").formatted(Formatting.GREEN)
+        Identifier.of("cookiesmod", "gui/itemlist/rarity_sort_unsorted.png"),
+        Text.literal("> Unsorted").formatted(Formatting.GREEN)
     );
 
     private final Identifier identifier;

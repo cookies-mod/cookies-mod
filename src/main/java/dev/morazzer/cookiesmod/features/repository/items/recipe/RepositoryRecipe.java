@@ -26,8 +26,8 @@ public abstract class RepositoryRecipe {
     public abstract Ingredient getOutput();
 
     /**
-     * Gets the {@linkplain dev.morazzer.cookiesmod.features.repository.items.recipe.RecipeType}
-     * associated with the recipe.
+     * Gets the {@linkplain dev.morazzer.cookiesmod.features.repository.items.recipe.RecipeType} associated with the
+     * recipe.
      *
      * @return The type.
      */

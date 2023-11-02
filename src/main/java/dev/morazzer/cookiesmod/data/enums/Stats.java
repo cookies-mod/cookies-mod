@@ -1,10 +1,9 @@
 package dev.morazzer.cookiesmod.data.enums;
 
+import java.util.Objects;
 import lombok.Getter;
 import net.minecraft.util.Formatting;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Objects;
 
 /**
  * All stats that can be on an item.
@@ -83,8 +82,8 @@ public enum Stats {
     Stats(Formatting color, String displayName, String formatting, boolean hidden) {
         this.color = color;
         this.displayName = Objects.requireNonNullElse(
-                displayName,
-                StringUtils.capitalize(name().toLowerCase().replace("_", " "))
+            displayName,
+            StringUtils.capitalize(name().toLowerCase().replace("_", " "))
         );
         this.formatting = Objects.requireNonNullElse(formatting, "+##.###;-##.###");
         this.hidden = hidden;

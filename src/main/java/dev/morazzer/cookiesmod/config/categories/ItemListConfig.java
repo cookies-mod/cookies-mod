@@ -13,9 +13,9 @@ public class ItemListConfig extends Category {
 
     @Expose
     public final BooleanOption enableItemList = new BooleanOption(
-            Text.literal("Enable Item List"),
-            Text.literal("Enables the item list"),
-            true
+        Text.literal("Enable Item List"),
+        Text.literal("Enables the item list"),
+        true
     ).withTags("item list", "toggle items", "toggle list");
     @Expose
     public final Filters filters = new Filters();
@@ -32,27 +32,30 @@ public class ItemListConfig extends Category {
         return Text.literal("Settings related to the item list");
     }
 
+    /**
+     * Foldable for various filter related settings.
+     */
     public static class Filters extends Foldable {
 
         @Expose
         public final BooleanOption enableMuseumFilter = new BooleanOption(
-                Text.literal("Enable Museum Filter"),
-                Text.literal("Shows or hides the museum filter"),
-                true
+            Text.literal("Enable Museum Filter"),
+            Text.literal("Shows or hides the museum filter"),
+            true
         );
 
         @Expose
         public final BooleanOption enableCategoryFilter = new BooleanOption(
-                Text.literal("Enable Category Filter"),
-                Text.literal("Shows or hides the category filter"),
-                true
+            Text.literal("Enable Category Filter"),
+            Text.literal("Shows or hides the category filter"),
+            true
         ).withTag("type");
 
         @Expose
         public final BooleanOption enableRarityFilter = new BooleanOption(
-                Text.literal("Enable Rarity Filter"),
-                Text.literal("Shows or hides the item rarity filter"),
-                true
+            Text.literal("Enable Rarity Filter"),
+            Text.literal("Shows or hides the item rarity filter"),
+            true
         ).withTag("tier");
 
         @Override
@@ -62,20 +65,23 @@ public class ItemListConfig extends Category {
 
     }
 
+    /**
+     * Foldable for various sort related settings.
+     */
     public static class Sort extends Foldable {
 
         @Expose
         public final BooleanOption enableAlphabeticalSort = new BooleanOption(
-                Text.literal("Enable Alphabetical Sort"),
-                Text.literal("Shows or hides the alphabetic sort button"),
-                true
+            Text.literal("Enable Alphabetical Sort"),
+            Text.literal("Shows or hides the alphabetic sort button"),
+            true
         );
 
         @Expose
         public final BooleanOption enableItemRaritySort = new BooleanOption(
-                Text.literal("Enable Item Rarity Sort"),
-                Text.literal("Shows or hides the item rarity sort button"),
-                true
+            Text.literal("Enable Item Rarity Sort"),
+            Text.literal("Shows or hides the item rarity sort button"),
+            true
         ).withTag("type");
 
         @Override

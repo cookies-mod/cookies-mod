@@ -11,10 +11,10 @@ import net.minecraft.client.MinecraftClient;
  * @param centeredY If the origin is the center ot the top.
  */
 public record Position(
-        double x,
-        double y,
-        boolean centeredX,
-        boolean centeredY
+    double x,
+    double y,
+    boolean centeredX,
+    boolean centeredY
 ) {
 
     /**

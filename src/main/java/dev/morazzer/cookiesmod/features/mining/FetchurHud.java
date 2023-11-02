@@ -11,6 +11,10 @@ import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
 import dev.morazzer.cookiesmod.utils.NpcUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -18,11 +22,6 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Renders the current fetchur item as a hud element.
@@ -35,6 +34,9 @@ public class FetchurHud extends HudElement {
     Ingredient currentItem = new Ingredient("skyblock:items/stained_glass_4:20");
     private PlayerEntity entity;
 
+    /**
+     * Creates a new instance.
+     */
     public FetchurHud() {
         super(new Position(0, 0));
         RepositoryManager.addReloadCallback(this::updateItems);
@@ -67,8 +69,8 @@ public class FetchurHud extends HudElement {
     protected void renderOverlay(DrawContext drawContext, float delta) {
         if (this.entity == null) {
             this.entity = NpcUtils.createRenderableNpc(
-                    "Fetchur",
-                    "ewogICJ0aW1lc3RhbXAiIDogMTYwODMxMzQwOTk1NSwKICAicHJvZmlsZUlkIiA6ICI0MWQzYWJjMmQ3NDk0MDBjOTA5MGQ1NDM0ZDAzODMxYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJNZWdha2xvb24iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTdiMzU1MmM1YWYyYWIyZGM0ZTFmODRkNzhjYTRjNGQ2NzZkZWMwNjgxNTcyMjVhM2MyNjc0ZTU1NzRkMjM0OCIKICAgIH0KICB9Cn0="
+                "Fetchur",
+                "ewogICJ0aW1lc3RhbXAiIDogMTYwODMxMzQwOTk1NSwKICAicHJvZmlsZUlkIiA6ICI0MWQzYWJjMmQ3NDk0MDBjOTA5MGQ1NDM0ZDAzODMxYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJNZWdha2xvb24iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTdiMzU1MmM1YWYyYWIyZGM0ZTFmODRkNzhjYTRjNGQ2NzZkZWMwNjgxNTcyMjVhM2MyNjc0ZTU1NzRkMjM0OCIKICAgIH0KICB9Cn0="
             );
         }
         if (this.lastUpdate < System.currentTimeMillis()) {
@@ -81,36 +83,38 @@ public class FetchurHud extends HudElement {
         SkyblockItem item = RepositoryItemManager.getItem(this.currentItem);
         if (item == null) {
             drawContext.drawText(MinecraftClient.getInstance().textRenderer, Text.literal("Item not found!").formatted(
-                    Formatting.RED), 0, 0, -1, true);
+                Formatting.RED), 0, 0, -1, true);
             return;
         }
 
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
         entityRenderDispatcher.setRenderShadows(false);
 
-        if (entityRenderDispatcher.getRenderer(entity) == null) return;
+        if (entityRenderDispatcher.getRenderer(entity) == null) {
+            return;
+        }
         entity.getInventory().setStack(entity.getInventory().selectedSlot, item.getItemStack());
         drawContext.getMatrices().pop();
         InventoryScreen.drawEntity(
-                drawContext,
-                getX(),
-                getY(),
-                getX() + 40,
-                getY() + 40,
-                15,
-                0.0625f,
-                getX() + 20,
-                getY() + 20,
-                entity
+            drawContext,
+            getX(),
+            getY(),
+            getX() + 40,
+            getY() + 40,
+            15,
+            0.0625f,
+            getX() + 20,
+            getY() + 20,
+            entity
         );
         RenderUtils.renderTextWithMaxWidth(
-                drawContext,
-                Text.literal(String.valueOf(this.currentItem.getAmount())).append(" ").append(item.getName()),
-                40,
-                getX(),
-                getY() + 40,
-                -1,
-                false
+            drawContext,
+            Text.literal(String.valueOf(this.currentItem.getAmount())).append(" ").append(item.getName()),
+            40,
+            getX(),
+            getY() + 40,
+            -1,
+            false
         );
         drawContext.getMatrices().push();
     }
@@ -121,7 +125,9 @@ public class FetchurHud extends HudElement {
     private void updateItems() {
         this.items.clear();
         JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/fetchur_items");
-        if (file == null || !file.isJsonArray()) return;
+        if (file == null || !file.isJsonArray()) {
+            return;
+        }
         JsonArray jsonElements = file.getAsJsonArray();
         for (JsonElement jsonElement : jsonElements) {
             if (!jsonElement.isJsonPrimitive()) {

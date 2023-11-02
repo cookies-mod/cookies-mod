@@ -45,7 +45,7 @@ public class HudEditor extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         for (HudElement element : HudManager.getInstance().getElements()) {
             if (mouseX >= element.getX() && mouseX < element.getX() + element.getWidth()
-                    && mouseY >= element.getY() && mouseY < element.getY() + element.getHeight()) {
+                && mouseY >= element.getY() && mouseY < element.getY() + element.getHeight()) {
                 this.selected = element;
                 return true;
             }
@@ -64,8 +64,8 @@ public class HudEditor extends Screen {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.selected != null) {
             this.selected.setPosition(this.selected.getPosition().add(
-                    deltaX,
-                    deltaY
+                deltaX,
+                deltaY
             ));
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);

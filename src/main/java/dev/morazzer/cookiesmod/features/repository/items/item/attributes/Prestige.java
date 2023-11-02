@@ -1,8 +1,7 @@
 package dev.morazzer.cookiesmod.features.repository.items.item.attributes;
 
-import net.minecraft.util.Identifier;
-
 import java.util.List;
+import net.minecraft.util.Identifier;
 
 /**
  * Representing the prestige levels for crimson armours.
@@ -11,6 +10,7 @@ import java.util.List;
  * @param costs  The cost to upgrade it.
  */
 public record Prestige(
-        Identifier itemId,
-        List<SalvageUpgrade<?>> costs
-) {}
+    Identifier itemId,
+    List<SalvageUpgrade<?>> costs
+) {
+}

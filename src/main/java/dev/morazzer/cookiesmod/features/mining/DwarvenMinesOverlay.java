@@ -15,6 +15,16 @@ import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockDateTime;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TimeZone;
+import java.util.function.Predicate;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -27,17 +37,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.profiler.Profiler;
 
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.TimeZone;
-import java.util.function.Predicate;
-
+/**
+ * Overlay for all dwarven mines related things.
+ */
 public class DwarvenMinesOverlay extends HudElement {
 
     private final List<Text> currentCommissions = new LinkedList<>();
@@ -51,39 +53,55 @@ public class DwarvenMinesOverlay extends HudElement {
     private int currentWidth = 40;
     private int lastWidth = 40;
 
+    /**
+     * Creats a new dwarven mines overlay.
+     */
     public DwarvenMinesOverlay() {
         super(new Position(0, 0));
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (overlay) return;
-            if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
-            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) return;
+            if (overlay) {
+                return;
+            }
+            if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+                return;
+            }
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) {
+                return;
+            }
             boolean handled = true;
             switch (message.getString()) {
-                case "\u00A7e[NPC] Fetchur\u00A7f: thanks thats probably what i needed", "\u00A7e[NPC] Fetchur\u00A7f: take some gifts!" ->
-                        ProfileStorage.getCurrentProfile()
-                                .ifPresent(profileData -> profileData
-                                        .getDwarvenMinesData()
-                                        .setLastFetchurTime(System.currentTimeMillis()));
-                case "\u00A7e[NPC] \u00A7dPuzzler\u00A7f: \u00A7a\u270C\u2713", "\u00A7e[NPC] \u00A7dPuzzler\u00A7f: \u25B6\u25B6Nice!  \u25B2Here, \u25C0have \u25BCsome\u25C0 \u25B6Mithril Powder!\u25B2" ->
-                        ProfileStorage.getCurrentProfile()
-                                .ifPresent(profileData -> profileData
-                                        .getDwarvenMinesData()
-                                        .setLastPuzzlerTime(System.currentTimeMillis()));
+                case "§e[NPC] Fetchur§f: thanks thats probably what i needed", "§e[NPC] Fetchur§f: take some gifts!" ->
+                    ProfileStorage.getCurrentProfile()
+                        .ifPresent(profileData -> profileData
+                            .getDwarvenMinesData()
+                            .setLastFetchurTime(System.currentTimeMillis()));
+                case "§e[NPC] §dPuzzler§f: §a✌✓",
+                    "§e[NPC] §dPuzzler§f: ▶▶Nice!  ▲Here, ◀have ▼some◀ ▶Mithril Powder!▲" ->
+                    ProfileStorage.getCurrentProfile()
+                        .ifPresent(profileData -> profileData
+                            .getDwarvenMinesData()
+                            .setLastPuzzlerTime(System.currentTimeMillis()));
                 default -> handled = false;
             }
-            if (handled) return;
+            if (handled) {
+                return;
+            }
             String messageLiteral = message.getString();
             if (messageLiteral.matches("You used your .* Pickaxe Ability!")) {
                 Optional<ItemStack> mainHand = ItemUtils.getMainHand();
-                if (mainHand.isEmpty()) return;
+                if (mainHand.isEmpty()) {
+                    return;
+                }
                 ItemStack itemStack = mainHand.get();
                 int cooldownInSec = 120;
                 List<Text> tooltip = itemStack.getTooltip(null, TooltipContext.BASIC);
                 for (Text text : tooltip) {
                     if (text.getString().startsWith("Cooldown: ")) {
                         String s = text.getString().replaceAll("[^0-9]", "");
-                        if (s.isEmpty()) continue;
+                        if (s.isEmpty()) {
+                            continue;
+                        }
                         cooldownInSec = Integer.parseInt(s);
                         break;
                     }
@@ -92,27 +110,37 @@ public class DwarvenMinesOverlay extends HudElement {
                 this.abilityCooldownEnd = System.currentTimeMillis() + cooldownInSec * 1000L;
             } else if (messageLiteral.matches("This ability is on cooldown for \\d+s\\.")) {
                 if (ItemUtils.hasSkyblockItemInMainHand() && ItemUtils
-                        .getMainHand()
-                        .flatMap(ItemUtils::getSkyblockIdAsIdentifier)
-                        .map(MiningData.getInstance().getDrills()::contains)
-                        .orElse(false)) {
+                    .getMainHand()
+                    .flatMap(ItemUtils::getSkyblockIdAsIdentifier)
+                    .map(MiningData.getInstance().getDrills()::contains)
+                    .orElse(false)) {
                     String s = messageLiteral.replaceAll("[^0-9]", "");
-                    if (s.isEmpty()) return;
+                    if (s.isEmpty()) {
+                        return;
+                    }
                     this.abilityCooldownEnd = System.currentTimeMillis() + Integer.parseInt(s) * 1000L;
                 }
             }
         });
 
         PlayerListUpdateEvent.UPDATE_NAME.register(currentEntry -> {
-            if (!SkyblockUtils.isCurrentlyInSkyblock()) return;
-            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES && SkyblockUtils.getLastServerSwap() + 5000 < System.currentTimeMillis()) {
+            if (!SkyblockUtils.isCurrentlyInSkyblock()) {
+                return;
+            }
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES
+                && SkyblockUtils.getLastServerSwap() + 5000 < System.currentTimeMillis()) {
                 return;
             }
 
-            if (TabUtils.getColumn(currentEntry) != 2) return;
+            if (TabUtils.getColumn(currentEntry) != 2) {
+                return;
+            }
             switch (TabUtils.getRow(currentEntry)) {
                 case 6 -> this.handleMithrilPowder(currentEntry);
                 case 10, 11, 12, 13 -> this.handleCommission(currentEntry);
+                default -> {
+                    // not handled
+                }
             }
         });
     }
@@ -166,8 +194,9 @@ public class DwarvenMinesOverlay extends HudElement {
         }
         String commissionName = split[0];
         String commissionKey = CommissionManager.instance.getCommissionKey(commissionName.trim());
-        if (commissionKey == null) return;
-        int commissionAmount = CommissionManager.instance.getCommissionAmount(commissionKey);
+        if (commissionKey == null) {
+            return;
+        }
 
         int index = TabUtils.getRow(currentEntry) - 10;
         if (currentCommissions.size() - 1 >= index) {
@@ -176,17 +205,19 @@ public class DwarvenMinesOverlay extends HudElement {
 
         MutableText commission = Text.empty();
         commission.append(Text.literal(commissionName.trim()))
-                .append(": ");
+            .append(": ");
         float percentage;
         if (split[1].trim().equals("DONE")) {
             percentage = 1f;
         } else {
             percentage = Float.parseFloat(split[1].replaceAll("[^0-9.]", ""));
         }
+
+        int commissionAmount = CommissionManager.instance.getCommissionAmount(commissionKey);
         int amountDone = (int) (commissionAmount * (percentage / 100f));
 
         commission.append(Text.literal(String.valueOf(amountDone)).append("/")
-                .append(String.valueOf(commissionAmount)));
+            .append(String.valueOf(commissionAmount)));
 
 
         if (currentCommissions.size() >= index - 1) {
@@ -198,11 +229,11 @@ public class DwarvenMinesOverlay extends HudElement {
 
     private void handleMithrilPowder(PlayerListEntry currentEntry) {
         int powder = Integer.parseInt(Optional.ofNullable(currentEntry.getDisplayName()).map(Text::getString)
-                .map(string -> string.replaceAll("[^0-9]", ""))
-                .filter(Predicate.not(String::isBlank))
-                .orElse("0"));
+            .map(string -> string.replaceAll("[^0-9]", ""))
+            .filter(Predicate.not(String::isBlank))
+            .orElse("0"));
         this.powderAmount = Text.literal("Mithril Powder: ")
-                .append(Text.literal(NumberFormat.toFormattedString(powder)).formatted(Formatting.DARK_GREEN));
+            .append(Text.literal(NumberFormat.toFormattedString(powder)).formatted(Formatting.DARK_GREEN));
     }
 
     private void renderFetchurTimer(DrawContext drawContext) {
@@ -218,7 +249,7 @@ public class DwarvenMinesOverlay extends HudElement {
         }
 
         long lastFetchurTime = ProfileStorage.getCurrentProfile().map(ProfileData::getDwarvenMinesData)
-                .map(DwarvenMinesData::getLastFetchurTime).orElse(-1L);
+            .map(DwarvenMinesData::getLastFetchurTime).orElse(-1L);
 
         MutableText fetchur = Text.literal("Fetchur: ").formatted(Formatting.DARK_GREEN);
         long timeDelta = this.nextFetchur - System.currentTimeMillis();
@@ -229,32 +260,32 @@ public class DwarvenMinesOverlay extends HudElement {
             fetchur.append(Text.literal("Ready").formatted(Formatting.GREEN));
         } else {
             fetchur.append(TimeUtils.toFormattedTimeText(timeDelta / 1000)
-                    .setStyle(Style.EMPTY.withColor(getColor(timeDelta / 1000))));
+                .setStyle(Style.EMPTY.withColor(getColor(timeDelta / 1000))));
         }
 
         this.currentWidth = Math.max(this.currentWidth, MinecraftClient.getInstance().textRenderer.getWidth(fetchur));
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                fetchur,
-                0,
-                10 * this.index++,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            fetchur,
+            0,
+            10 * this.index++,
+            -1,
+            true
         );
     }
 
     private void renderPowder(DrawContext drawContext) {
         this.currentWidth = Math.max(
-                this.currentWidth,
-                MinecraftClient.getInstance().textRenderer.getWidth(this.powderAmount)
+            this.currentWidth,
+            MinecraftClient.getInstance().textRenderer.getWidth(this.powderAmount)
         );
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                this.powderAmount,
-                0,
-                10 * this.index++,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            this.powderAmount,
+            0,
+            10 * this.index++,
+            -1,
+            true
         );
     }
 
@@ -266,34 +297,34 @@ public class DwarvenMinesOverlay extends HudElement {
             cooldown.append(Text.literal("Ready").formatted(Formatting.GREEN));
         } else {
             cooldown.append(TimeUtils
-                    .toFormattedTimeText(timeDelta)
-                    .setStyle(Style.EMPTY.withColor(getColor(timeDelta, 120f))));
+                .toFormattedTimeText(timeDelta)
+                .setStyle(Style.EMPTY.withColor(getColor(timeDelta, 120f))));
         }
 
         this.currentWidth = Math.max(this.currentWidth, MinecraftClient.getInstance().textRenderer.getWidth(cooldown));
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                cooldown,
-                0,
-                10 * this.index++,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            cooldown,
+            0,
+            10 * this.index++,
+            -1,
+            true
         );
     }
 
     private void renderCommissions(DrawContext drawContext) {
         for (Text currentCommission : this.currentCommissions) {
             this.currentWidth = Math.max(
-                    this.currentWidth,
-                    MinecraftClient.getInstance().textRenderer.getWidth(currentCommission)
+                this.currentWidth,
+                MinecraftClient.getInstance().textRenderer.getWidth(currentCommission)
             );
             drawContext.drawText(
-                    MinecraftClient.getInstance().textRenderer,
-                    currentCommission,
-                    0,
-                    10 * this.index++,
-                    -1,
-                    true
+                MinecraftClient.getInstance().textRenderer,
+                currentCommission,
+                0,
+                10 * this.index++,
+                -1,
+                true
             );
         }
     }
@@ -335,13 +366,14 @@ public class DwarvenMinesOverlay extends HudElement {
         Profiler profiler = MinecraftClient.getInstance().getProfiler();
         profiler.push("data");
         long lastPuzzlerTime = ProfileStorage
-                .getCurrentProfile()
-                .map(ProfileData::getDwarvenMinesData)
-                .map(DwarvenMinesData::getLastPuzzlerTime)
-                .orElse(-1L);
+            .getCurrentProfile()
+            .map(ProfileData::getDwarvenMinesData)
+            .map(DwarvenMinesData::getLastPuzzlerTime)
+            .orElse(-1L);
         profiler.swap("math");
         MutableText puzzler = Text.literal("Puzzler: ").formatted(Formatting.DARK_PURPLE);
-        long timeDelta = ChronoUnit.DAYS.getDuration().getSeconds() - ((System.currentTimeMillis() - lastPuzzlerTime) / 1000);
+        long timeDelta =
+            ChronoUnit.DAYS.getDuration().getSeconds() - ((System.currentTimeMillis() - lastPuzzlerTime) / 1000);
 
         profiler.swap("string");
         if (lastPuzzlerTime == -1) {
@@ -350,26 +382,26 @@ public class DwarvenMinesOverlay extends HudElement {
             puzzler.append(Text.literal("Ready").formatted(Formatting.GREEN));
         } else {
             puzzler.append(TimeUtils.toFormattedTimeText(timeDelta)
-                    .setStyle(Style.EMPTY.withColor(getColor(timeDelta))));
+                .setStyle(Style.EMPTY.withColor(getColor(timeDelta))));
         }
         profiler.swap("render");
 
         this.currentWidth = Math.max(this.currentWidth, MinecraftClient.getInstance().textRenderer.getWidth(puzzler));
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                puzzler,
-                0,
-                10 * this.index++,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            puzzler,
+            0,
+            10 * this.index++,
+            -1,
+            true
         );
         profiler.pop();
     }
 
     private void renderStarCultTime(DrawContext drawContext) {
         if (this.nextStarCult == null || this.nextStarCult.isInPast() || this.starCultEnd
-                .getInstant()
-                .getEpochSecond() < System.currentTimeMillis() / 1000) {
+            .getInstant()
+            .getEpochSecond() < System.currentTimeMillis() / 1000) {
             this.nextStarCult = SkyblockDateTime.now().getNext(SkyblockDateTime.SkyblockEvents.STAR_CULT);
             this.starCultEnd = new SkyblockDateTime(this.nextStarCult.getInstant().plus(50 * 6, ChronoUnit.SECONDS));
         }
@@ -385,12 +417,12 @@ public class DwarvenMinesOverlay extends HudElement {
 
         this.currentWidth = Math.max(this.currentWidth, MinecraftClient.getInstance().textRenderer.getWidth(starCult));
         drawContext.drawText(
-                MinecraftClient.getInstance().textRenderer,
-                starCult,
-                0,
-                10 * this.index++,
-                -1,
-                true
+            MinecraftClient.getInstance().textRenderer,
+            starCult,
+            0,
+            10 * this.index++,
+            -1,
+            true
         );
     }
 

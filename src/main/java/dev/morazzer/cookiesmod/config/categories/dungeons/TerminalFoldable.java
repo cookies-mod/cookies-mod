@@ -10,15 +10,15 @@ import net.minecraft.text.Text;
 public class TerminalFoldable extends Foldable {
 
     public final BooleanOption clickAllStartingWith = new BooleanOption(
-            Text.literal("Click all starting"),
-            Text.literal("Enable the click all items starting with solver"),
-            false
+        Text.literal("Click all starting"),
+        Text.literal("Enable the click all items starting with solver"),
+        false
     );
 
     public final BooleanOption clickAllColors = new BooleanOption(
-            Text.literal("Click all colors"),
-            Text.literal("Enable the click all items with the color solver"),
-            false
+        Text.literal("Click all colors"),
+        Text.literal("Enable the click all items with the color solver"),
+        false
     );
 
     @Override

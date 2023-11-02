@@ -20,12 +20,12 @@ public class HeartOfTheMountainRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(Text
-                        .empty()
-                        .append(" Heart Of The Mountain Tier ")
-                        .append(tier + ".")
-                        .formatted(Formatting.DARK_PURPLE));
+            .getRequirementString()
+            .append(Text
+                .empty()
+                .append(" Heart Of The Mountain Tier ")
+                .append(tier + ".")
+                .formatted(Formatting.DARK_PURPLE));
     }
 
 }

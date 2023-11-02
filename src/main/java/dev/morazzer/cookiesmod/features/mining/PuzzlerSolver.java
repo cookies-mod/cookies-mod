@@ -6,13 +6,12 @@ import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
+import java.awt.Color;
 import lombok.RequiredArgsConstructor;
 import me.x150.renderer.render.Renderer3d;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.util.math.Vec3d;
-
-import java.awt.Color;
 
 /**
  * Helper to show the correct puzzler block.
@@ -27,9 +26,15 @@ public class PuzzlerSolver implements Module {
     public void load() {
         ServerSwapEvent.SERVER_SWAP.register(() -> position = null);
         ClientReceiveMessageEvents.GAME.register(ExceptionHandler.wrap((message, overlay) -> {
-            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) return;
-            if (!ConfigManager.getConfig().miningCategory.showPuzzlerSolution.getValue()) return;
-            if (overlay) return;
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) {
+                return;
+            }
+            if (!ConfigManager.getConfig().miningCategory.showPuzzlerSolution.getValue()) {
+                return;
+            }
+            if (overlay) {
+                return;
+            }
 
             String literalContent = message.getString();
             if (!literalContent.startsWith("§e[NPC] §dPuzzler§f: ")) {
@@ -57,8 +62,12 @@ public class PuzzlerSolver implements Module {
             this.position = solution;
         }));
         WorldRenderEvents.AFTER_TRANSLUCENT.register(ExceptionHandler.wrap(context -> {
-            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) return;
-            if (!ConfigManager.getConfig().miningCategory.showPuzzlerSolution.getValue()) return;
+            if (LocationUtils.getCurrentIsland() != LocationUtils.Islands.DWARVEN_MINES) {
+                return;
+            }
+            if (!ConfigManager.getConfig().miningCategory.showPuzzlerSolution.getValue()) {
+                return;
+            }
             if (position == null) {
                 return;
             }

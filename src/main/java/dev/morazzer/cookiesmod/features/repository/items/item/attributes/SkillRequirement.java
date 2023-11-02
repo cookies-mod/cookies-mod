@@ -23,13 +23,13 @@ public class SkillRequirement extends Requirement {
     @Override
     public MutableText getRequirementString() {
         return super
-                .getRequirementString()
-                .append(Text
-                        .empty()
-                        .append(StringUtils.capitalize(skill.name().toLowerCase()))
-                        .append(" Skill ")
-                        .append(level + "."))
-                .formatted(Formatting.GREEN);
+            .getRequirementString()
+            .append(Text
+                .empty()
+                .append(StringUtils.capitalize(skill.name().toLowerCase()))
+                .append(" Skill ")
+                .append(level + "."))
+            .formatted(Formatting.GREEN);
     }
 
 }

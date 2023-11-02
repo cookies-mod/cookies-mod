@@ -2,6 +2,7 @@ package dev.morazzer.cookiesmod.config.system.editor;
 
 import dev.morazzer.cookiesmod.config.system.options.ColorOption;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
+import java.awt.Color;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
@@ -9,8 +10,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.Color;
 
 /**
  * Editor to select a color value.
@@ -23,16 +22,22 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
     private static final Identifier COLOR_SATURATION = Identifier.of("cookiesmod", "gui/config/color_saturation.png");
     int clickedComponent = -1;
     private boolean renderOverlay = false;
-    private int overlayX = 0, overlayY = 0;
+    private int overlayX = 0;
+    private int overlayY = 0;
     private int overlayWidth = 104;
     private TextFieldWidget textFieldWidget;
     private float wheelAngle = 0;
     private float wheelRadius = 0;
     private float[] hsb;
 
+    /**
+     * TODO.
+     */
     public ColorEditor(ColorOption option) {
         super(option);
-        if (!option.isAllowAlpha()) overlayWidth -= 15;
+        if (!option.isAllowAlpha()) {
+            overlayWidth -= 15;
+        }
         this.recalculateHsb();
     }
 
@@ -45,7 +50,7 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
         this.textFieldWidget.setRenderTextProvider((textFieldString, integer) -> {
             String s = StringUtils.leftPad("", 6 - textFieldString.length(), '0');
             return Text.literal("#").append(s).append(Text.literal(textFieldString).formatted(Formatting.WHITE))
-                    .formatted(Formatting.WHITE).asOrderedText();
+                .formatted(Formatting.WHITE).asOrderedText();
         });
     }
 
@@ -62,10 +67,10 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button, int optionWidth) {
         if (this.renderOverlay
-                && (mouseX >= this.overlayX) && (mouseX < this.overlayX + this.overlayWidth)
-                && (mouseY >= this.overlayY) && (mouseY < this.overlayY + 89)) {
+            && (mouseX >= this.overlayX) && (mouseX < this.overlayX + this.overlayWidth)
+            && (mouseY >= this.overlayY) && (mouseY < this.overlayY + 89)) {
             if ((mouseX >= (overlayX + 75)) && (mouseX < (overlayX + 85))
-                    && (mouseY >= (overlayY + 5)) && (mouseY < (overlayY + 69))) {
+                && (mouseY >= (overlayY + 5)) && (mouseY < (overlayY + 69))) {
                 this.clickedComponent = 1;
             }
 
@@ -76,7 +81,7 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
         int buttonLeft = optionWidth / 6 - 24;
         int buttonTop = this.getHeight() - 21;
         if ((mouseX > buttonLeft) && (mouseX < (buttonLeft + 48))
-                && (mouseY > buttonTop) && (mouseY < (buttonTop + 16))) {
+            && (mouseY > buttonTop) && (mouseY < (buttonTop + 16))) {
             this.renderOverlay = true;
             this.overlayX = (int) mouseX;
             this.overlayY = (int) mouseY;
@@ -104,12 +109,12 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
         if (this.option.isAllowAlpha()) {
             drawContext.setShaderColor(value.getRed() / 255f, value.getGreen() / 255f, value.getBlue() / 255f, 1);
             drawContext.fillGradient(
-                    overlayX + 90,
-                    overlayY + 6,
-                    overlayX + 100,
-                    overlayY + 69,
-                    0xFFFFFFFF,
-                    0x00FFFFFF
+                overlayX + 90,
+                overlayY + 6,
+                overlayX + 100,
+                overlayY + 69,
+                0xFFFFFFFF,
+                0x00FFFFFF
             );
             drawContext.fill(overlayX + 91, overlayY + 5, overlayX + 98, overlayY + 7, 0xFFFFFFFF);
         }
@@ -126,25 +131,25 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
         drawContext.setShaderColor(1, 1, 1, 1);
 
         RenderUtils.renderCenteredTextWithMaxWidth(
-                drawContext,
-                Text.literal(String.valueOf(Math.round(hsb[2] * 100)).formatted(Formatting.GRAY)),
-                13,
-                overlayX + 83,
-                overlayY + 79,
-                -1,
-                true
+            drawContext,
+            Text.literal(String.valueOf(Math.round(hsb[2] * 100)).formatted(Formatting.GRAY)),
+            13,
+            overlayX + 83,
+            overlayY + 79,
+            -1,
+            true
         );
 
         if (this.option.isAllowAlpha()) {
             RenderUtils.renderCenteredTextWithMaxWidth(
-                    drawContext,
-                    Text.literal(String.valueOf((int) (this.option.getValue().getAlpha() / 255F) * 100))
-                            .formatted(Formatting.GRAY),
-                    13,
-                    overlayX + 98,
-                    overlayY + 79,
-                    -1,
-                    true
+                drawContext,
+                Text.literal(String.valueOf((int) (this.option.getValue().getAlpha() / 255F) * 100))
+                    .formatted(Formatting.GRAY),
+                13,
+                overlayX + 98,
+                overlayY + 79,
+                -1,
+                true
             );
         }
         if (!this.textFieldWidget.isFocused()) {
@@ -175,6 +180,7 @@ public class ColorEditor extends ConfigOptionEditor<Color, ColorOption> {
      * @param optionWidth The width the option is rendered at.
      */
     @SuppressWarnings("EmptyMethod")
-    private void handleClickOrDragged(double mouseX, double mouseY, int button, int optionWidth) {}
+    private void handleClickOrDragged(double mouseX, double mouseY, int button, int optionWidth) {
+    }
 
 }

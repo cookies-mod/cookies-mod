@@ -3,7 +3,9 @@ package dev.morazzer.cookiesmod.utils;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
-@SuppressWarnings("unused")
+/**
+ * Various methods related to time and timing.
+ */
 public class TimeUtils {
 
     /**
@@ -100,6 +102,12 @@ public class TimeUtils {
         return new TimeResult<>(timer, result, null);
     }
 
+    /**
+     * Time the execution time of a runnable.
+     *
+     * @param runnable The runnable to time.
+     * @return The result.
+     */
     public static TimeResult<Void> time(Runnable runnable) {
         return time(() -> {
             runnable.run();
@@ -107,6 +115,11 @@ public class TimeUtils {
         });
     }
 
+    /**
+     * Functional interface to time the execution of a function.
+     *
+     * @param <T> The return type.
+     */
     @FunctionalInterface
     public interface Timeable<T> {
 
@@ -114,12 +127,24 @@ public class TimeUtils {
 
     }
 
+    /**
+     * The result of a timer.
+     *
+     * @param timer     The timer the result is from.
+     * @param result    The return value of the function.
+     * @param throwable The throwable if any.
+     * @param <T>       The type of the return value.
+     */
     public record TimeResult<T>(
-            Timer timer,
-            T result,
-            Throwable throwable
-    ) {}
+        Timer timer,
+        T result,
+        Throwable throwable
+    ) {
+    }
 
+    /**
+     * Class to create timings and format them as string.
+     */
     public static class Timer {
 
         private long start;
@@ -158,28 +183,28 @@ public class TimeUtils {
         }
 
         /**
-         * @return The nano time elapsed.
+         * Returns the nano time elapsed.
          */
         public long getNanoTime() {
             return this.end - this.start;
         }
 
         /**
-         * @return The micro time elapsed.
+         * Returns the micro time elapsed.
          */
         public long getMicroTime() {
             return this.getNanoTime() / 1000L;
         }
 
         /**
-         * @return The milli time elapsed.
+         * Returns the milli time elapsed.
          */
         public long getMillisTime() {
             return this.getNanoTime() / 1000000L;
         }
 
         /**
-         * @return The seconds elapsed.
+         * Returns the seconds elapsed.
          */
         public long getSecondsTime() {
             return this.getNanoTime() / 1000000000L;

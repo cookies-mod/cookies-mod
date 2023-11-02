@@ -1,8 +1,7 @@
 package dev.morazzer.cookiesmod.config.categories.about.credits;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Record to describe all aspects of the credits.
@@ -15,10 +14,11 @@ import java.util.List;
  * @param descriptions Descriptions on how to be listed for each respective category.
  */
 public record Credits(
-        @NotNull List<Person> maintainers,
-        @NotNull List<Library> libraries,
-        @NotNull List<Person> discordStaff,
-        @NotNull Contributors contributors,
-        @NotNull List<Person> ideas,
-        @NotNull Descriptions descriptions
-) {}
+    @NotNull List<Person> maintainers,
+    @NotNull List<Library> libraries,
+    @NotNull List<Person> discordStaff,
+    @NotNull Contributors contributors,
+    @NotNull List<Person> ideas,
+    @NotNull Descriptions descriptions
+) {
+}

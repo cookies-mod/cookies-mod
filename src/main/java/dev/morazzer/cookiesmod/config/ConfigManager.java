@@ -6,14 +6,13 @@ import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.config.system.parsed.ConfigProcessor;
 import dev.morazzer.cookiesmod.config.system.parsed.ConfigReader;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Config manager to handle saving and loading the config.
@@ -23,11 +22,11 @@ public class ConfigManager {
 
     @Getter
     private static final Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .excludeFieldsWithoutExposeAnnotation()
-            .serializeSpecialFloatingPointValues()
-            .enableComplexMapKeySerialization()
-            .create();
+        .setPrettyPrinting()
+        .excludeFieldsWithoutExposeAnnotation()
+        .serializeSpecialFloatingPointValues()
+        .enableComplexMapKeySerialization()
+        .create();
 
     @Getter
     private static final Path configFolder = Path.of("config/cookiesmod");
@@ -67,9 +66,9 @@ public class ConfigManager {
         if (createBackup) {
             try {
                 Files.copy(
-                        configFile,
-                        configFile.resolveSibling("config.backup.json"),
-                        StandardCopyOption.REPLACE_EXISTING
+                    configFile,
+                    configFile.resolveSibling("config.backup.json"),
+                    StandardCopyOption.REPLACE_EXISTING
                 );
             } catch (IOException e) {
                 ExceptionHandler.handleException(e);
@@ -78,10 +77,10 @@ public class ConfigManager {
 
         try {
             Files.writeString(
-                    configFile,
-                    gson.toJson(config.save()),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING
+                configFile,
+                gson.toJson(config.save()),
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
             );
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
@@ -104,8 +103,8 @@ public class ConfigManager {
     private static JsonObject loadConfig() {
         if (Files.exists(configFile)) {
             return gson.fromJson(
-                    ExceptionHandler.removeThrows(() -> Files.readString(configFile), "{}"),
-                    JsonObject.class
+                ExceptionHandler.removeThrows(() -> Files.readString(configFile), "{}"),
+                JsonObject.class
             );
         } else {
             saveConfig(false, "first-save");

@@ -21,22 +21,22 @@ public class EnableToolsSubcommand extends ClientCommand {
     @NotNull
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         return literal("enable").then(argument(
-                "tool",
-                new RealIdentifierArgument(DevUtils.getDisabledTools(), "cookiesmod", "dev/")
+            "tool",
+            new RealIdentifierArgument(DevUtils.getDisabledTools(), "cookiesmod", "dev/")
         ).executes(context -> {
             Identifier identifier = context.getArgument("tool", Identifier.class);
             boolean enable = DevUtils.enable(identifier);
             if (!enable) {
                 context.getSource()
-                        .sendError(CookiesMod.createPrefix(ColorUtils.failColor)
-                                .append("No devtool found with name ")
-                                .append(identifier.toString()));
+                    .sendError(CookiesMod.createPrefix(ColorUtils.failColor)
+                        .append("No devtool found with name ")
+                        .append(identifier.toString()));
                 return 0;
             }
 
             context.getSource().sendFeedback(CookiesMod.createPrefix(ColorUtils.successColor)
-                    .append("Enabled devtool ")
-                    .append(identifier.toString()));
+                .append("Enabled devtool ")
+                .append(identifier.toString()));
             return Command.SINGLE_SUCCESS;
         }));
     }

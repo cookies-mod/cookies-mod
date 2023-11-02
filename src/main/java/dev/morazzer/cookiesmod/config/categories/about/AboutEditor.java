@@ -15,6 +15,12 @@ import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
+import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
@@ -29,13 +35,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 /**
  * Editor to render the {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Credits}.
@@ -54,64 +53,64 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
         super(option);
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
-                .registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-                    @Override
-                    public Identifier getFabricId() {
-                        return new Identifier("cookiesmod", "credits");
+            .registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+                @Override
+                public Identifier getFabricId() {
+                    return new Identifier("cookiesmod", "credits");
+                }
+
+                @Override
+                public void reload(ResourceManager manager) {
+                    List<Resource> cookiesmodCredits = MinecraftClient.getInstance().getResourceManager()
+                        .getAllResources(new Identifier("cookiesmod", "credits.json"));
+                    if (cookiesmodCredits.isEmpty()) {
+                        return;
+                    }
+                    Optional<Resource> fabric = cookiesmodCredits.stream()
+                        .filter(resource -> resource.getPack().getName().equals("cookiesmod")).findFirst();
+
+                    if (fabric.isEmpty()) {
+                        return;
                     }
 
-                    @Override
-                    public void reload(ResourceManager manager) {
-                        List<Resource> cookiesmodCredits = MinecraftClient.getInstance().getResourceManager()
-                                .getAllResources(new Identifier("cookiesmod", "credits.json"));
-                        if (cookiesmodCredits.isEmpty()) {
-                            return;
-                        }
-                        Optional<Resource> fabric = cookiesmodCredits.stream()
-                                .filter(resource -> resource.getPack().getName().equals("cookiesmod")).findFirst();
-
-                        if (fabric.isEmpty()) {
-                            return;
-                        }
-
-                        Resource resource = fabric.get();
-                        byte[] bytes = ExceptionHandler.removeThrows(() -> resource.getInputStream().readAllBytes());
-                        if (bytes == null) {
-                            return;
-                        }
-
-                        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
-                                new String(bytes, StandardCharsets.UTF_8),
-                                JsonObject.class
-                        );
-
-                        List<Person> maintainers = createPersons(jsonObject.getAsJsonArray("maintainers"));
-                        List<Library> libraries = createLibraries(jsonObject.getAsJsonArray("used_libraries"));
-                        List<Person> discordStaff = createPersons(jsonObject.getAsJsonArray("discord_staff"));
-                        discordStaff.sort(Comparator.comparingLong(o -> o.getUuid().getMostSignificantBits()));
-                        discordStaff = Lists.reverse(discordStaff);
-                        List<Person> contributorsCoding = createPersons(jsonObject.getAsJsonObject("contributors")
-                                .getAsJsonArray("coding"));
-                        contributorsCoding.sort(Comparator.comparingInt(Person::getNumber));
-                        List<Person> contributorsArt = createPersons(jsonObject.getAsJsonObject("contributors")
-                                .getAsJsonArray("art"));
-                        Contributors contributors = new Contributors(contributorsCoding, contributorsArt);
-                        List<Person> ideas = createPersons(jsonObject.getAsJsonArray("ideas"));
-                        ideas.sort(Comparator.comparingInt(Person::getNumber));
-
-                        JsonObject descriptionsObject = jsonObject.getAsJsonObject("descriptions");
-                        Descriptions descriptions = new Descriptions(
-                                getText(descriptionsObject.getAsJsonArray("maintainers")),
-                                getText(descriptionsObject.getAsJsonArray("discord_staff")),
-                                getText(descriptionsObject.getAsJsonArray("contributors_coding")),
-                                getText(descriptionsObject.getAsJsonArray("contributors_art")),
-                                getText(descriptionsObject.getAsJsonArray("ideas")),
-                                getText(descriptionsObject.getAsJsonArray("libraries"))
-                        );
-
-                        credits = new Credits(maintainers, libraries, discordStaff, contributors, ideas, descriptions);
+                    Resource resource = fabric.get();
+                    byte[] bytes = ExceptionHandler.removeThrows(() -> resource.getInputStream().readAllBytes());
+                    if (bytes == null) {
+                        return;
                     }
-                });
+
+                    JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
+                        new String(bytes, StandardCharsets.UTF_8),
+                        JsonObject.class
+                    );
+
+                    List<Person> discordStaff = createPersons(jsonObject.getAsJsonArray("discord_staff"));
+                    discordStaff.sort(Comparator.comparingLong(o -> o.getUuid().getMostSignificantBits()));
+                    discordStaff = Lists.reverse(discordStaff);
+                    List<Person> contributorsCoding = createPersons(jsonObject.getAsJsonObject("contributors")
+                        .getAsJsonArray("coding"));
+                    contributorsCoding.sort(Comparator.comparingInt(Person::getNumber));
+                    List<Person> contributorsArt = createPersons(jsonObject.getAsJsonObject("contributors")
+                        .getAsJsonArray("art"));
+                    Contributors contributors = new Contributors(contributorsCoding, contributorsArt);
+                    List<Person> ideas = createPersons(jsonObject.getAsJsonArray("ideas"));
+                    ideas.sort(Comparator.comparingInt(Person::getNumber));
+
+                    JsonObject descriptionsObject = jsonObject.getAsJsonObject("descriptions");
+                    Descriptions descriptions = new Descriptions(
+                        getText(descriptionsObject.getAsJsonArray("maintainers")),
+                        getText(descriptionsObject.getAsJsonArray("discord_staff")),
+                        getText(descriptionsObject.getAsJsonArray("contributors_coding")),
+                        getText(descriptionsObject.getAsJsonArray("contributors_art")),
+                        getText(descriptionsObject.getAsJsonArray("ideas")),
+                        getText(descriptionsObject.getAsJsonArray("libraries"))
+                    );
+
+                    List<Person> maintainers = createPersons(jsonObject.getAsJsonArray("maintainers"));
+                    List<Library> libraries = createLibraries(jsonObject.getAsJsonArray("used_libraries"));
+                    credits = new Credits(maintainers, libraries, discordStaff, contributors, ideas, descriptions);
+                }
+            });
     }
 
     @Override
@@ -129,71 +128,71 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
         super.render(drawContext, mouseX, mouseY, tickDelta, optionWidth);
         int currentY = 0;
         RenderUtils.renderTextCenteredScaled(
-                drawContext,
-                CookiesMod.createColor().append("Cookies Mod"),
-                3,
-                optionWidth / 2,
-                currentY + 15,
-                -1
+            drawContext,
+            CookiesMod.createColor().append("Cookies Mod"),
+            3,
+            optionWidth / 2,
+            currentY + 15,
+            -1
         );
 
         currentY += 40;
         currentY = renderGroup(
-                drawContext,
-                CookiesMod.createColor().append("Maintainers"),
-                this.credits.maintainers(),
-                currentY,
-                optionWidth
+            drawContext,
+            CookiesMod.createColor().append("Maintainers"),
+            this.credits.maintainers(),
+            currentY,
+            optionWidth
         );
         currentY = renderGroup(
-                drawContext,
-                CookiesMod.createColor().append("Discord Staff"),
-                this.credits.discordStaff(),
-                currentY,
-                optionWidth
+            drawContext,
+            CookiesMod.createColor().append("Discord Staff"),
+            this.credits.discordStaff(),
+            currentY,
+            optionWidth
         );
         currentY = renderGroup(
-                drawContext,
-                CookiesMod.createColor().append("Contributors - Development"),
-                this.credits.contributors().code(),
-                currentY,
-                optionWidth
+            drawContext,
+            CookiesMod.createColor().append("Contributors - Development"),
+            this.credits.contributors().code(),
+            currentY,
+            optionWidth
         );
         currentY = renderGroup(
-                drawContext,
-                CookiesMod.createColor().append("Contributors - Art"),
-                this.credits.contributors().art(),
-                currentY,
-                optionWidth
+            drawContext,
+            CookiesMod.createColor().append("Contributors - Art"),
+            this.credits.contributors().art(),
+            currentY,
+            optionWidth
         );
         currentY = renderGroup(
-                drawContext,
-                CookiesMod.createColor().append("Ideas"),
-                this.credits.ideas(),
-                currentY,
-                optionWidth
+            drawContext,
+            CookiesMod.createColor().append("Ideas"),
+            this.credits.ideas(),
+            currentY,
+            optionWidth
         );
 
         RenderUtils.renderTextCenteredScaled(
-                drawContext,
-                Text.literal("Used Libraries").setStyle(Style.EMPTY.withColor(ColorUtils.successColor)),
-                2,
-                optionWidth / 2,
-                currentY + 15,
-                -1
+            drawContext,
+            Text.literal("Used Libraries").setStyle(Style.EMPTY.withColor(ColorUtils.successColor)),
+            2,
+            optionWidth / 2,
+            currentY + 15,
+            -1
         );
 
         currentY += 45;
 
         for (Library library : this.credits.libraries()) {
             RenderUtils.renderTextScaled(
-                    drawContext,
-                    Text.literal(library.name()).formatted(Formatting.UNDERLINE, Formatting.BLUE),
-                    1.2f,
-                    14,
-                    currentY,
-                    -1,
-                    true
+                drawContext,
+                Text.literal(library.name()).formatted(Formatting.UNDERLINE, Formatting.BLUE),
+                1.2f,
+                14,
+                currentY,
+                -1,
+                true
             );
             currentY += 12;
         }
@@ -225,75 +224,75 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
 
     @Override
     public void renderOverlay(DrawContext drawContext, int mouseX, int mouseY, float tickDelta, int optionWidth) {
-        ScreenRect peek = drawContext.scissorStack.stack.peek();
+        final ScreenRect peek = drawContext.scissorStack.stack.peek();
         drawContext.disableScissor();
         int currentY = 40;
         currentY = renderGroupOverlay(
-                drawContext,
-                this.credits.maintainers(),
-                this.credits.descriptions().maintainer(),
-                mouseX,
-                mouseY,
-                currentY,
-                optionWidth
+            drawContext,
+            this.credits.maintainers(),
+            this.credits.descriptions().maintainer(),
+            mouseX,
+            mouseY,
+            currentY,
+            optionWidth
         );
         currentY = renderGroupOverlay(
-                drawContext,
-                this.credits.discordStaff(),
-                this.credits.descriptions().discordStaff(),
-                mouseX,
-                mouseY,
-                currentY,
-                optionWidth
+            drawContext,
+            this.credits.discordStaff(),
+            this.credits.descriptions().discordStaff(),
+            mouseX,
+            mouseY,
+            currentY,
+            optionWidth
         );
         currentY = renderGroupOverlay(
-                drawContext,
-                this.credits.contributors().code(),
-                this.credits.descriptions().contributionCode(), mouseX,
-                mouseY,
-                currentY,
-                optionWidth
+            drawContext,
+            this.credits.contributors().code(),
+            this.credits.descriptions().contributionCode(), mouseX,
+            mouseY,
+            currentY,
+            optionWidth
         );
         currentY = renderGroupOverlay(
-                drawContext,
-                this.credits.contributors().art(),
-                this.credits.descriptions().contributionsArt(), mouseX,
-                mouseY,
-                currentY,
-                optionWidth
+            drawContext,
+            this.credits.contributors().art(),
+            this.credits.descriptions().contributionsArt(), mouseX,
+            mouseY,
+            currentY,
+            optionWidth
         );
         currentY = renderGroupOverlay(
-                drawContext,
-                this.credits.ideas(),
-                this.credits.descriptions().ideas(),
-                mouseX,
-                mouseY,
-                currentY,
-                optionWidth
+            drawContext,
+            this.credits.ideas(),
+            this.credits.descriptions().ideas(),
+            mouseX,
+            mouseY,
+            currentY,
+            optionWidth
         );
         if (mouseY >= currentY && mouseY < currentY + 45
-                && mouseX > 0 && mouseX < optionWidth) {
+            && mouseX > 0 && mouseX < optionWidth) {
             drawContext.drawTooltip(
-                    getTextRenderer(),
-                    Lists.transform(credits.descriptions().libraries(), Text::asOrderedText),
-                    AboutTooltipPositioner.INSTANCE,
-                    mouseX,
-                    mouseY
+                getTextRenderer(),
+                Lists.transform(credits.descriptions().libraries(), Text::asOrderedText),
+                AboutTooltipPositioner.INSTANCE,
+                mouseX,
+                mouseY
             );
         }
         currentY += 45;
         for (Library library : this.credits.libraries()) {
             if (mouseX > 14
-                    && mouseX < getTextRenderer().getWidth(library.name()) * 1.2f
-                    && mouseY > currentY
-                    && mouseY < currentY + 12
+                && mouseX < getTextRenderer().getWidth(library.name()) * 1.2f
+                && mouseY > currentY
+                && mouseY < currentY + 12
             ) {
                 drawContext.drawTooltip(
-                        getTextRenderer(),
-                        Lists.transform(library.description(), Text::asOrderedText),
-                        AboutTooltipPositioner.INSTANCE,
-                        mouseX,
-                        mouseY
+                    getTextRenderer(),
+                    Lists.transform(library.description(), Text::asOrderedText),
+                    AboutTooltipPositioner.INSTANCE,
+                    mouseX,
+                    mouseY
                 );
             }
             currentY += 12;
@@ -303,8 +302,8 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     }
 
     /**
-     * Helper method
-     * to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Person} from a {@linkplain com.google.gson.JsonArray}.
+     * Helper method to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Person}
+     * from a {@linkplain com.google.gson.JsonArray}.
      *
      * @param jsonArray A json array containing people.
      * @return A list of people.
@@ -325,8 +324,8 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     }
 
     /**
-     * Helper method
-     * to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Library} from a {@linkplain com.google.gson.JsonArray}.
+     * Helper method to create a list of {@linkplain dev.morazzer.cookiesmod.config.categories.about.credits.Library}
+     * from a {@linkplain com.google.gson.JsonArray}.
      *
      * @param jsonArray A json array containing libraries.
      * @return A list of libraries.
@@ -343,10 +342,10 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             String name = jsonObject.get("name").getAsString();
             List<Text> description = StreamSupport.stream(
-                            jsonObject.getAsJsonArray("description").spliterator(),
-                            false
-                    )
-                    .map(Text.Serializer::fromJson).map(Text.class::cast).toList();
+                    jsonObject.getAsJsonArray("description").spliterator(),
+                    false
+                )
+                .map(Text.Serializer::fromJson).map(Text.class::cast).toList();
             String url = jsonObject.get("url").getAsString();
 
             list.add(new Library(name, description, url));
@@ -356,18 +355,18 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
     }
 
     /**
-     * Helper method
-     * to parse a {@linkplain com.google.gson.JsonArray} into a list of {@linkplain net.minecraft.text.Text}.
+     * Helper method to parse a {@linkplain com.google.gson.JsonArray} into a list of
+     * {@linkplain net.minecraft.text.Text}.
      *
      * @param jsonArray A json array with text.
      * @return A list of text.
      */
     private List<Text> getText(JsonArray jsonArray) {
         return StreamSupport.stream(
-                        jsonArray.spliterator(),
-                        false
-                )
-                .map(Text.Serializer::fromJson).map(Text.class::cast).toList();
+                jsonArray.spliterator(),
+                false
+            )
+            .map(Text.Serializer::fromJson).map(Text.class::cast).toList();
     }
 
     /**
@@ -383,22 +382,22 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
      * @return The height that was used.
      */
     private int renderGroupOverlay(
-            DrawContext drawContext,
-            List<Person> people,
-            List<Text> description,
-            int mouseX,
-            int mouseY,
-            int currentY,
-            int optionWidth
+        DrawContext drawContext,
+        List<Person> people,
+        List<Text> description,
+        int mouseX,
+        int mouseY,
+        int currentY,
+        int optionWidth
     ) {
         if (mouseY > currentY && mouseY < currentY + 45
-                && mouseX > 0 && mouseX < optionWidth) {
+            && mouseX > 0 && mouseX < optionWidth) {
             drawContext.drawTooltip(
-                    getTextRenderer(),
-                    Lists.transform(description, Text::asOrderedText),
-                    AboutTooltipPositioner.INSTANCE,
-                    mouseX,
-                    mouseY
+                getTextRenderer(),
+                Lists.transform(description, Text::asOrderedText),
+                AboutTooltipPositioner.INSTANCE,
+                mouseX,
+                mouseY
             );
         }
         currentY += 45;
@@ -411,11 +410,11 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
 
             if (mouseX > x && mouseX < x + 40 && mouseY > currentY && mouseY < currentY + 40) {
                 drawContext.drawTooltip(
-                        getTextRenderer(),
-                        Lists.transform(person.getDescription(), Text::asOrderedText),
-                        AboutTooltipPositioner.INSTANCE,
-                        mouseX,
-                        mouseY
+                    getTextRenderer(),
+                    Lists.transform(person.getDescription(), Text::asOrderedText),
+                    AboutTooltipPositioner.INSTANCE,
+                    mouseX,
+                    mouseY
                 );
             }
 
@@ -452,13 +451,13 @@ public class AboutEditor extends ConfigOptionEditor<Object, AboutOption> {
             drawContext.drawItem(person.getItemStack(), (14 + columnIndex * 40) / 2, (currentY) / 2, 0, 10);
             drawContext.getMatrices().pop();
             RenderUtils.renderCenteredTextWithMaxWidth(
-                    drawContext,
-                    person.getName(),
-                    40,
-                    14 + 20 + columnIndex * 40,
-                    currentY + 36,
-                    -1,
-                    true
+                drawContext,
+                person.getName(),
+                40,
+                14 + 20 + columnIndex * 40,
+                currentY + 36,
+                -1,
+                true
             );
             columnIndex++;
             if (columnIndex > peopleInOneRow) {

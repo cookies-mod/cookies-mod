@@ -9,7 +9,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Helper methods to create client sided {@linkplain com.mojang.brigadier.builder.LiteralArgumentBuilder} and {@linkplain com.mojang.brigadier.builder.RequiredArgumentBuilder} arguments.
+ * Helper methods to create client sided {@linkplain com.mojang.brigadier.builder.LiteralArgumentBuilder} and
+ * {@linkplain com.mojang.brigadier.builder.RequiredArgumentBuilder} arguments.
  */
 public interface Helper {
 
@@ -26,8 +27,8 @@ public interface Helper {
     }
 
     /**
-     * Helper method to create a {@code required} argument for a client-sided command,
-     * despite it's name these arguments can also be optional.
+     * Helper method to create a {@code required} argument for a client-sided command, despite it's name these arguments
+     * can also be optional.
      *
      * @param name         The name of the argument.
      * @param argumentType An argument type instance.
@@ -37,8 +38,8 @@ public interface Helper {
     @NotNull
     @Contract(pure = true)
     default <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(
-            @NotNull @NotBlank String name,
-            @NotNull ArgumentType<T> argumentType
+        @NotNull @NotBlank String name,
+        @NotNull ArgumentType<T> argumentType
     ) {
         return RequiredArgumentBuilder.argument(name, argumentType);
     }

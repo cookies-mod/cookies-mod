@@ -4,12 +4,15 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+/**
+ * Methods to format numbers.
+ */
 public class NumberFormat {
 
     private static final DecimalFormat numberFormatter = new DecimalFormat(
-            "###,###.###",
-            DecimalFormatSymbols.getInstance(
-                    Locale.ENGLISH)
+        "###,###.###",
+        DecimalFormatSymbols.getInstance(
+            Locale.ENGLISH)
     );
 
     /**
