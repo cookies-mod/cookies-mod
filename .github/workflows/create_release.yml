@@ -27,9 +27,9 @@ jobs:
           echo "version=$(cat version)" >> "$GITHUB_OUTPUT"
       - name: Build Mod
         run: ./gradlew remapJar
-      - name: Rename jars
+      - name: Rename Jars
         run: mv ./build/libs/cookies-mod-*-remapped.jar ./build/libs/cookies-mod-${{steps.get_version.outputs.version}}.jar | echo
-      - name: Hash jars
+      - name: Hash Jars
         run: ./gradlew hashLibraries
       - name: Generate Changelog
         run: |

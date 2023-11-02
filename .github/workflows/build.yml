@@ -3,7 +3,7 @@ on:
 
 jobs:
   build:
-    name: build
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,9 +19,9 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build Mod
         run: ./gradlew remapJar
-      - name: Hash jars
+      - name: Hash Jars
         run: ./gradlew hashLibraries
-      - name: Upload build mod
+      - name: Create Artifact
         uses: actions/upload-artifact@v3
         with:
           name: build
