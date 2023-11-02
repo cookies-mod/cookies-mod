@@ -2,16 +2,15 @@ package dev.morazzer.cookiesmod.features.repository.constants;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import lombok.Getter;
 import net.minecraft.util.Identifier;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Getter
 public class MiningData {
@@ -22,7 +21,8 @@ public class MiningData {
     private final Map<Identifier, Integer> parts = new HashMap<>();
 
     public MiningData() {
-        RepositoryManager.getResource("constants/drills.json").ifPresent(this::parseDrillsAndParts);
+        Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/drills"))
+                .ifPresent(this::parseDrillsAndParts);
     }
 
     /**
@@ -35,13 +35,12 @@ public class MiningData {
     /**
      * Loads the drill and drill parts from a {@linkplain com.google.gson.JsonObject} formatted as byte[].
      *
-     * @param bytes The json object as a byte array.
+     * @param jsonElements The json object.
      */
-    private void parseDrillsAndParts(byte[] bytes) {
-        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
-                new String(bytes, StandardCharsets.UTF_8),
-                JsonObject.class
-        );
+    private void parseDrillsAndParts(JsonElement jsonElements) {
+        if (!jsonElements.isJsonObject()) return;
+
+        JsonObject jsonObject = jsonElements.getAsJsonObject();
         this.drills.clear();
 
         for (JsonElement jsonElement : jsonObject.getAsJsonArray("drill_ids")) {

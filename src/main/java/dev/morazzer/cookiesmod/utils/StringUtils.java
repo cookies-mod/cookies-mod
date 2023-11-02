@@ -23,4 +23,18 @@ public class StringUtils {
         return escaped.toString();
     }
 
+    /**
+     * Returns the bytes as a hex string with lowercase characters.
+     *
+     * @param bytes The bytes to convert.
+     * @return The string.
+     */
+    public static String hex(byte[] bytes) {
+        StringBuilder result = new StringBuilder();
+        for (byte aByte : bytes) {
+            result.append(String.format("%02x", aByte));
+        }
+        return result.toString();
+    }
+
 }

@@ -1,9 +1,11 @@
 package dev.morazzer.cookiesmod.features.mining.commissions;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.features.waypoints.Waypoint;
 import dev.morazzer.cookiesmod.features.waypoints.WaypointGroup;
 import dev.morazzer.cookiesmod.features.waypoints.WaypointManager;
@@ -16,9 +18,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.Color;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @LoadModule("mining/commissions")
@@ -73,27 +75,25 @@ public class CommissionManager implements Module {
     }
 
     private void loadRepo() {
-        RepositoryManager.getResource("constants/dwarven_locations_to_coordinates.json").ifPresent(this::loadLocations);
-        RepositoryManager.getResource("constants/commissions.json").ifPresent(this::loadCommissions);
+        Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/dwarven_locations_to_coordinates"))
+                .ifPresent(this::loadLocations);
+        Optional.ofNullable(RepositoryFileAccessor.getInstance().getFile("constants/commissions"))
+                .ifPresent(this::loadCommissions);
     }
 
-    private void loadCommissions(byte[] bytes) {
+    private void loadCommissions(JsonElement jsonElement) {
+        if (!jsonElement.isJsonObject()) return;
         this.commissions.clear();
-        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
-                new String(bytes, StandardCharsets.UTF_8),
-                JsonObject.class
-        );
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
 
         this.commissions.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("values"), new TypeToken<>() {}));
         this.namesToValue.putAll(JsonUtils.CLEAN_GSON.fromJson(jsonObject.get("name_to_value"), new TypeToken<>() {}));
     }
 
-    private void loadLocations(byte[] bytes) {
+    private void loadLocations(JsonElement jsonElement) {
+        if (!jsonElement.isJsonObject()) return;
         this.locations.clear();
-        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(
-                new String(bytes, StandardCharsets.UTF_8),
-                JsonObject.class
-        );
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
         WaypointManager.clearCodingGroup(this.waypointGroup);
 
         for (String key : jsonObject.keySet()) {

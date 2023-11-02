@@ -1,14 +1,13 @@
 package dev.morazzer.cookiesmod.features.repository.items.recipe;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import net.minecraft.util.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,40 +18,31 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * Manger to handle all recipes in the repository.
+ * Manager to handle all recipes in the repository.
  */
 public class RepositoryRecipeManager {
 
-    private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> map = new ConcurrentHashMap<>();
-    static final Path recipes = RepositoryManager.getRepoRoot().resolve("recipes");
+    private static final Logger LOGGER = LoggerFactory.getLogger("cookies-mod-repository-recipes");
+    private static final Path RECIPES = RepositoryManager.getRepoRoot().resolve("recipes");
+    private static final ConcurrentHashMap<Identifier, List<RepositoryRecipe>> MAP = new ConcurrentHashMap<>();
 
     /**
      * Loads all recipes from the repository.
      */
     public static void loadRecipes() {
-        try (Stream<Path> list = Files.list(recipes)) {
-            list.forEach(path -> {
-                try {
-                    JsonObject jsonObject = JsonUtils.GSON.fromJson(
-                            Files.readString(path, StandardCharsets.UTF_8),
-                            JsonObject.class
-                    );
-                    RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
-                    RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
+        for (JsonElement element : RepositoryFileAccessor.getInstance().getDirectory(RECIPES)) {
+            if (!element.isJsonObject()) {
+                return;
+            }
+            JsonObject jsonObject = element.getAsJsonObject();
+            RecipeType type = RecipeType.valueOf(jsonObject.get("type").getAsString().toUpperCase());
+            RepositoryRecipe repositoryRecipe = type.getConstructor().create(jsonObject);
 
-                    map
-                            .computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>())
-                            .add(repositoryRecipe);
-                } catch (IOException e) {
-                    ExceptionHandler.handleException(e);
-                }
-            });
-        } catch (IOException e) {
-            ExceptionHandler.handleException(e);
+            MAP.computeIfAbsent(repositoryRecipe.getOutput(), identifier -> new ArrayList<>()).add(repositoryRecipe);
         }
+        LOGGER.info("Loaded {} recipes", MAP.size());
     }
 
     /**
@@ -107,8 +97,7 @@ public class RepositoryRecipeManager {
     public static List<Ingredient> getIngredientListSorted(Identifier identifier) {
         Optional<RepositoryRecipe> recipe = getRecipe(identifier, RecipeType.CRAFTING);
 
-        return recipe
-                .map(repositoryRecipe -> Ingredient
+        return recipe.map(repositoryRecipe -> Ingredient
                         .mergeIngredients(Arrays.asList(repositoryRecipe.getIngredients()), Collectors.toList())
                         .stream()
                         .filter(Predicate.not(Ingredient::isAir))
@@ -126,8 +115,7 @@ public class RepositoryRecipeManager {
      */
     @SuppressWarnings("unused")
     public static Optional<RepositoryRecipe> getRecipe(Identifier identifier) {
-        return map
-                .getOrDefault(identifier, Collections.emptyList())
+        return MAP.getOrDefault(identifier, Collections.emptyList())
                 .stream()
                 .findFirst();
     }
@@ -140,8 +128,7 @@ public class RepositoryRecipeManager {
      * @return The recipe.
      */
     public static Optional<RepositoryRecipe> getRecipe(Identifier identifier, RecipeType type) {
-        return map
-                .getOrDefault(identifier, Collections.emptyList())
+        return MAP.getOrDefault(identifier, Collections.emptyList())
                 .stream()
                 .filter(repositoryRecipe -> repositoryRecipe.getType() == type)
                 .findFirst();
@@ -156,7 +143,7 @@ public class RepositoryRecipeManager {
      */
     @SuppressWarnings("unused")
     public static List<RepositoryRecipe> getRecipes(Identifier identifier, RecipeType type) {
-        return map
+        return MAP
                 .getOrDefault(identifier, Collections.emptyList())
                 .stream()
                 .filter(repositoryRecipe -> repositoryRecipe.getType() == type)

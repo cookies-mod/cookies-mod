@@ -4,10 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import dev.morazzer.cookiesmod.features.hud.HudElement;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import dev.morazzer.cookiesmod.utils.NpcUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
@@ -23,7 +23,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Renders the current fetchur item as a hud element.
@@ -121,12 +120,9 @@ public class FetchurHud extends HudElement {
      */
     private void updateItems() {
         this.items.clear();
-        Optional<byte[]> resource = RepositoryManager.getResource("constants/fetchur_items.json");
-        if (resource.isEmpty()) {
-            return;
-        }
-        String path = new String(resource.get());
-        JsonArray jsonElements = JsonUtils.CLEAN_GSON.fromJson(path, JsonArray.class);
+        JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/fetchur_items");
+        if (file == null || !file.isJsonArray()) return;
+        JsonArray jsonElements = file.getAsJsonArray();
         for (JsonElement jsonElement : jsonElements) {
             if (!jsonElement.isJsonPrimitive()) {
                 continue;
