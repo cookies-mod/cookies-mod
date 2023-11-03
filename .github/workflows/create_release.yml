@@ -36,14 +36,25 @@ jobs:
         run: |
           ./gradlew generateChangelog
       - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: true
-          prerelease: ${{ !endsWith(steps.get_version.outputs.version, 'snapshot') }}
-          tag_name: ${{ steps.get_version.outputs.version }}
-          name: ${{ steps.get_version.outputs.version }}
-          body_path: CHANGELOG.md
-          files: |
-            ./build/libs/cookies-mod-${{ steps.get_version.outputs.version }}.jar
-            ./build/libs/cookies-mod-${{ steps.get_version.outputs.version }}.jar.sha256
-          token: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ !endsWith(steps.get_version.outputs.version, 'snapshot') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.get_version.outputs.version }}" \
+            --draft \
+            --notes-file CHANGELOG.md \
+            --title "${{ steps.get_version.outputs.version }}" \
+            ./build/libs/cookies-mod-${{steps.get_version.outputs.version}}.jar \
+            ./build/libs/cookies-mod-${{steps.get_version.outputs.version}}.jar.sha256
+      - name: Create Pre-Release
+        if: ${{ endsWith(steps.get_version.outputs.version, 'snapshot') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.get_version.outputs.version }}" \
+            --draft \
+            --notes-file CHANGELOG.md \
+            --prerelease \
+            --title "${{ steps.get_version.outputs.version }}" \
+            ./build/libs/cookies-mod-${{steps.get_version.outputs.version}}.jar \
+            ./build/libs/cookies-mod-${{steps.get_version.outputs.version}}.jar.sha256
