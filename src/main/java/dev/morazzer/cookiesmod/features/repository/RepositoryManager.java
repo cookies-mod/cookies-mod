@@ -62,7 +62,7 @@ public class RepositoryManager {
             GitHub gitHub = new GitHubBuilder().build();
             GHRepository repository = gitHub.getRepository("cookies-mod/cookies-mod-repo");
             if (!Files.exists(repoRoot)) {
-                Files.createDirectory(repoRoot);
+                Files.createDirectories(repoRoot);
                 List<GHAsset> list = repository.getLatestRelease().listAssets().toList();
                 for (GHAsset ghAsset : list) {
                     if (ghAsset.getName().endsWith(".sha256")) {
