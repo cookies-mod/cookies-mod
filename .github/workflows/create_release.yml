@@ -40,9 +40,10 @@ jobs:
         with:
           draft: true
           prerelease: ${{ !endsWith(steps.get_version.outputs.version, 'snapshot') }}
-          tag_name: $version
-          name: $version
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: ${{ steps.get_version.outputs.version }}
           body_path: CHANGELOG.md
           files: |
             ./build/libs/cookies-mod-${{ steps.get_version.outputs.version }}.jar
             ./build/libs/cookies-mod-${{ steps.get_version.outputs.version }}.jar.sha256
+          token: ${{ secrets.GITHUB_TOKEN }}
