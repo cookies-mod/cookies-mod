@@ -33,7 +33,7 @@ public enum Tier {
      */
     public static Tier byName(String name) {
         for (Tier value : values()) {
-            if (value.name().equals(name)) {
+            if (value.name().equalsIgnoreCase(name)) {
                 return value;
             }
         }

@@ -10,12 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 public enum Crop {
     WHEAT(new Identifier("skyblock:items/wheat")),
-    CARROT(new Identifier("skyblock:items/carrot_item")),
+    CARROT(new Identifier("skyblock:items/carrot")),
     POTATO(new Identifier("skyblock:items/potato_item")),
     NETHER_WART(new Identifier("skyblock:items/nether_stalk")),
     PUMPKIN(new Identifier("skyblock:items/pumpkin")),
     MELON(new Identifier("skyblock:items/melon")),
-    COCOA_BEANS(new Identifier("skyblock:items/ink_sack_3")),
+    COCOA_BEANS(new Identifier("skyblock:items/cocoa_beans")),
     SUGAR_CANE(new Identifier("skyblock:items/sugar_cane")),
     CACTUS(new Identifier("skyblock:items/cactus")),
     MUSHROOM(new Identifier("skyblock:items/huge_mushroom_2"));

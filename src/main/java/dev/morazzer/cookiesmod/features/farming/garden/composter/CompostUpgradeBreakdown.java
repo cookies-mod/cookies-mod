@@ -15,6 +15,7 @@ import dev.morazzer.cookiesmod.utils.RomanNumerals;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.client.item.TooltipContext;
@@ -137,14 +138,14 @@ public class CompostUpgradeBreakdown implements Module {
 
                 stream.forEach(ingredient -> {
                     MutableText entry = Text.literal("  ");
-                    SkyblockItem item = RepositoryItemManager.getItem(ingredient);
-                    if (item == null) {
+                    Optional<SkyblockItem> item = RepositoryItemManager.getItem(ingredient);
+                    if (item.isEmpty()) {
                         list.add(Text.literal("Can't find item %s".formatted(ingredient.toString())));
                         return;
                     }
                     entry.append(Text.literal(String.valueOf(ingredient.getAmount())).append("x ")
                         .formatted(Formatting.DARK_GRAY));
-                    entry.append(item.getName());
+                    entry.append(item.get().getName());
                     list.add(entry);
                 });
                 int sum = subList.stream().mapToInt(CompostUpgradeCost.CompostUpgrade::copper).sum();

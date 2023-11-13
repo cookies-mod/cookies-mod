@@ -1,6 +1,7 @@
 package dev.morazzer.cookiesmod.screen.itemlist;
 
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.item.attributes.Category;
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -159,12 +160,13 @@ public enum CategoryFilter {
             case SPADE -> i -> shouldBeFiltered(i, Category.SPADE);
             case WAND -> i -> shouldBeFiltered(i, Category.WAND);
             case POWER_STONE -> i -> shouldBeFiltered(i, Category.POWER_STONE);
-            case MINION -> i -> RepositoryItemManager.getItem(i).getGenerator().isPresent();
+            case MINION -> i -> RepositoryItemManager.getItem(i).flatMap(SkyblockItem::getGenerator).isPresent();
             case PET -> i -> true; // TODO: ADD PETS
         };
     }
 
     private static boolean shouldBeFiltered(Identifier identifier, Category... categories) {
-        return Arrays.asList(categories).contains(RepositoryItemManager.getItem(identifier).getCategory());
+        return Arrays.asList(categories).contains(
+            RepositoryItemManager.getItem(identifier).map(SkyblockItem::getCategory).orElse(Category.UNKNOWN));
     }
 }
