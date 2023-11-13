@@ -18,5 +18,9 @@ public class DwarvenMinesData {
      * The last recorded time the user has finished the fetchur quest.
      */
     private long lastFetchurTime = -1;
+    /**
+     * The last recorded time the user has bought the crystal hollows pass.
+     */
+    private long crystalHollowsPassBoughtTime = -1;
 
 }

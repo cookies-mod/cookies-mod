@@ -7,6 +7,7 @@ import dev.morazzer.cookiesmod.events.api.PlayerListUpdateEvent;
 import dev.morazzer.cookiesmod.features.hud.HudElement;
 import dev.morazzer.cookiesmod.features.mining.commissions.CommissionManager;
 import dev.morazzer.cookiesmod.features.repository.constants.MiningData;
+import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.LocationUtils;
 import dev.morazzer.cookiesmod.utils.NumberFormat;
 import dev.morazzer.cookiesmod.utils.TabUtils;
@@ -188,6 +189,9 @@ public class DwarvenMinesOverlay extends HudElement {
     }
 
     private void handleCommission(PlayerListEntry currentEntry) {
+        if (currentEntry == null || currentEntry.getDisplayName() == null) {
+            return;
+        }
         String[] split = Objects.requireNonNull(currentEntry.getDisplayName()).getString().split(":");
         if (split.length != 2) {
             return;
@@ -260,7 +264,7 @@ public class DwarvenMinesOverlay extends HudElement {
             fetchur.append(Text.literal("Ready").formatted(Formatting.GREEN));
         } else {
             fetchur.append(TimeUtils.toFormattedTimeText(timeDelta / 1000)
-                .setStyle(Style.EMPTY.withColor(getColor(timeDelta / 1000))));
+                .setStyle(Style.EMPTY.withColor(ColorUtils.getColor(timeDelta / 1000))));
         }
 
         this.currentWidth = Math.max(this.currentWidth, MinecraftClient.getInstance().textRenderer.getWidth(fetchur));
@@ -298,7 +302,7 @@ public class DwarvenMinesOverlay extends HudElement {
         } else {
             cooldown.append(TimeUtils
                 .toFormattedTimeText(timeDelta)
-                .setStyle(Style.EMPTY.withColor(getColor(timeDelta, 120f))));
+                .setStyle(Style.EMPTY.withColor(ColorUtils.getColor(timeDelta, 120f))));
         }
 
         this.currentWidth = Math.max(this.currentWidth, MinecraftClient.getInstance().textRenderer.getWidth(cooldown));
@@ -329,39 +333,6 @@ public class DwarvenMinesOverlay extends HudElement {
         }
     }
 
-    /**
-     * Gets a color between red and green based on the time. The default timespan is one day.
-     *
-     * @param seconds The missing seconds.
-     * @return The color as rgb int.
-     */
-    private int getColor(long seconds) {
-        return getColor(seconds, ChronoUnit.DAYS.getDuration().getSeconds());
-    }
-
-    /**
-     * Gets a color between red and green based on the time.
-     *
-     * @param seconds   The missing seconds.
-     * @param maxAmount The total time.
-     * @return The color as rgb int.
-     */
-    private int getColor(long seconds, float maxAmount) {
-        float percentage = seconds / maxAmount;
-        int g = 0x8DF3B1;
-        int r = 0xFF5757;
-
-        int redStart = (g >> 16) & 0xFF;
-        int greenStart = (g >> 8) & 0xFF;
-        int blueStart = (g) & 0xFF;
-
-        int red = (int) ((((r >> 16) & 0xFF) - redStart) * percentage);
-        int green = (int) ((((r >> 8) & 0xFF) - greenStart) * percentage);
-        int blue = (int) ((((r) & 0xFF) - blueStart) * percentage);
-
-        return (redStart + red) << 16 | (greenStart + green) << 8 | (blueStart + blue);
-    }
-
     private void renderPuzzlerTimers(DrawContext drawContext) {
         Profiler profiler = MinecraftClient.getInstance().getProfiler();
         profiler.push("data");
@@ -382,7 +353,7 @@ public class DwarvenMinesOverlay extends HudElement {
             puzzler.append(Text.literal("Ready").formatted(Formatting.GREEN));
         } else {
             puzzler.append(TimeUtils.toFormattedTimeText(timeDelta)
-                .setStyle(Style.EMPTY.withColor(getColor(timeDelta))));
+                .setStyle(Style.EMPTY.withColor(ColorUtils.getColor(timeDelta))));
         }
         profiler.swap("render");
 

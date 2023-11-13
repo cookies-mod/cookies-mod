@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.utils;
 
+import java.time.temporal.ChronoUnit;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -19,6 +20,52 @@ public class ColorUtils {
 
     private static final Identifier showStacktraceOnGradientHover = DevUtils.createIdentifier(
         "show_stacktrace_on_gradient_hover");
+
+
+    /**
+     * Gets a color between red and green based on the time. The default timespan is one day.
+     *
+     * @param seconds The missing seconds.
+     * @return The color as rgb int.
+     */
+    public static int getColor(long seconds) {
+        return getColor(seconds, ChronoUnit.DAYS.getDuration().getSeconds());
+    }
+
+    /**
+     * Gets a color between red and green based on the time.
+     *
+     * @param seconds   The missing seconds.
+     * @param maxAmount The total time.
+     * @return The color as rgb int.
+     */
+    public static int getColor(long seconds, float maxAmount) {
+        return getColor(seconds, maxAmount, 0xFF5757, 0x8DF3B1);
+    }
+
+    /**
+     * Gets a color between two supplied colors based on the time.
+     *
+     * @param seconds    The missing seconds.
+     * @param maxAmount  The total time.
+     * @param startColor The start color of the time.
+     * @param endColor   The end color of the time.
+     * @return The color as rgb int.
+     */
+    public static int getColor(long seconds, float maxAmount, int startColor, int endColor) {
+        float percentage = seconds / maxAmount;
+
+        int redStart = (startColor >> 16) & 0xFF;
+        int greenStart = (startColor >> 8) & 0xFF;
+        int blueStart = (startColor) & 0xFF;
+
+        int red = (int) ((((endColor >> 16) & 0xFF) - redStart) * percentage);
+        int green = (int) ((((endColor >> 8) & 0xFF) - greenStart) * percentage);
+        int blue = (int) ((((endColor) & 0xFF) - blueStart) * percentage);
+
+        return (redStart + red) << 16 | (greenStart + green) << 8 | (blueStart + blue);
+    }
+
 
     /**
      * Gets a text with an applied gradient.
