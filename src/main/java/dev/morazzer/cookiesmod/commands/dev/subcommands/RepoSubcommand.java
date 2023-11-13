@@ -11,11 +11,11 @@ import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
-import dev.morazzer.cookiesmod.utils.ConcurrentUtils;
 import dev.morazzer.cookiesmod.utils.TextUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,28 +49,6 @@ public class RepoSubcommand extends ClientCommand {
 
             return 1;
         })).then(literal("items")
-            .then(literal("create_from_api").executes(context -> {
-                ConcurrentUtils.execute(() -> {
-                    boolean succeeded = RepositoryItemManager.loadOfficialItemList();
-                    if (!succeeded) {
-                        context
-                            .getSource()
-                            .sendError(CookiesMod
-                                .createPrefix(ColorUtils.failColor)
-                                .append("Failed to export default items"));
-                        return;
-                    }
-
-                    context
-                        .getSource()
-                        .sendFeedback(CookiesMod
-                            .createPrefix(ColorUtils.successColor)
-                            .append("Successfully exported default items"));
-
-                });
-
-                return Command.SINGLE_SUCCESS;
-            }))
             .then(literal("give").then(argument(
                 "item",
                 new RealIdentifierArgument(RepositoryItemManager.getAllItems(), "skyblock", "items/")
@@ -84,9 +62,18 @@ public class RepoSubcommand extends ClientCommand {
                     return 0;
                 }
 
-                SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+                Optional<SkyblockItem> item =
+                    RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+                if (item.isEmpty()) {
+                    context
+                        .getSource()
+                        .sendError(CookiesMod
+                            .createPrefix(ColorUtils.failColor)
+                            .append("Could not find item"));
+                    return 0;
+                }
 
-                ItemStack itemStack = item.getItemStack().copy();
+                ItemStack itemStack = item.get().getItemStack().copy();
 
                 context
                     .getSource()
@@ -120,9 +107,17 @@ public class RepoSubcommand extends ClientCommand {
                     return 0;
                 }
 
-                SkyblockItem item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
-                if (item.getSkin().isPresent()) {
-                    String s = new String(Base64.getDecoder().decode(item.getSkin().get()));
+                var item = RepositoryItemManager.getItem(context.getArgument("item", Identifier.class));
+                if (item.isEmpty()) {
+                    context
+                        .getSource()
+                        .sendError(CookiesMod
+                            .createPrefix(ColorUtils.failColor)
+                            .append("Could not find item"));
+                    return 0;
+                }
+                if (item.get().getSkin().isPresent()) {
+                    String s = new String(Base64.getDecoder().decode(item.get().getSkin().get()));
                     JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
                     context.getSource().sendFeedback(TextUtils.prettyPrintJson(jsonObject));
                 } else {

@@ -7,11 +7,13 @@ import dev.morazzer.cookiesmod.features.farming.Crop;
 import dev.morazzer.cookiesmod.features.farming.garden.Garden;
 import dev.morazzer.cookiesmod.features.hud.HudElement;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
+import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.TimeUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import dev.morazzer.cookiesmod.utils.render.Position;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -84,8 +86,12 @@ public class NextJacobContestHud extends HudElement {
             .getNextNumberOfContestsActiveOrFuture(this.amountToDisplay)) {
             int cropIndex = 0;
             for (Crop crop : contest.crops()) {
+                Optional<SkyblockItem> item = RepositoryItemManager.getItem(crop.getIdentifier());
+                if (item.isEmpty()) {
+                    continue;
+                }
                 drawContext.drawItem(
-                    RepositoryItemManager.getItem(crop.getIdentifier()).getItemStack(),
+                    item.get().getItemStack(),
                     cropIndex * 16,
                     row * 16
                 );

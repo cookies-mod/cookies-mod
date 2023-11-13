@@ -1,6 +1,7 @@
 package dev.morazzer.cookiesmod.features.farming.garden;
 
 import dev.morazzer.cookiesmod.config.ConfigManager;
+import dev.morazzer.cookiesmod.features.farming.Crop;
 import dev.morazzer.cookiesmod.features.farming.garden.speed.Speeds;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
@@ -10,8 +11,10 @@ import dev.morazzer.cookiesmod.utils.DevUtils;
 import dev.morazzer.cookiesmod.utils.general.SkyblockUtils;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -36,18 +39,8 @@ public class RancherBootsOverlay implements Module {
     private static final Identifier SKIP_RANCHER_BOOTS_CHECK = DevUtils.createIdentifier(
         "garden/rancher_boots/disable_boots_check");
 
-    private final Set<Identifier> crops = Set.of(
-        new Identifier("skyblock:items/wheat"),
-        new Identifier("skyblock:items/carrot_item"),
-        new Identifier("skyblock:items/potato_item"),
-        new Identifier("skyblock:items/nether_stalk"),
-        new Identifier("skyblock:items/pumpkin"),
-        new Identifier("skyblock:items/melon"),
-        new Identifier("skyblock:items/ink_sack_3"),
-        new Identifier("skyblock:items/sugar_cane"),
-        new Identifier("skyblock:items/cactus"),
-        new Identifier("skyblock:items/huge_mushroom_2")
-    );
+    private final Set<Identifier> crops = Arrays.stream(Crop.values())
+        .map(Crop::getIdentifier).collect(Collectors.toSet());
 
     private List<SpeedEntry> entries;
 
@@ -113,7 +106,8 @@ public class RancherBootsOverlay implements Module {
             ).add(integerIdentifierSimpleEntry.getValue()));
             tempMap.forEach((integer, identifiers) -> {
                 Text text = createText(
-                    identifiers.stream().map(RepositoryItemManager::getItem).map(SkyblockItem::getName)
+                    identifiers.stream().map(RepositoryItemManager::getItem).filter(Optional::isPresent)
+                        .map(Optional::get).map(SkyblockItem::getName)
                         .map(MutableText::getString).collect(Collectors.joining(", ")),
                     integer
                 );
@@ -121,7 +115,11 @@ public class RancherBootsOverlay implements Module {
             });
         } else {
             for (AbstractMap.SimpleEntry<Integer, Identifier> integerIdentifierSimpleEntry : list) {
-                Text text = createText(RepositoryItemManager.getItem(integerIdentifierSimpleEntry.getValue()).getName()
+                Optional<SkyblockItem> item = RepositoryItemManager.getItem(integerIdentifierSimpleEntry.getValue());
+                if (item.isEmpty()) {
+                    continue;
+                }
+                Text text = createText(item.get().getName()
                     .getString(), integerIdentifierSimpleEntry.getKey());
                 this.entries.add(new SpeedEntry(
                     List.of(integerIdentifierSimpleEntry.getValue()),
@@ -186,7 +184,11 @@ public class RancherBootsOverlay implements Module {
             SpeedEntry entry = this.entries.get(i);
             int items = 0;
             for (Identifier identifier : entry.identifiers) {
-                context.drawItem(RepositoryItemManager.getItem(identifier).getItemStack(), items * 16, i * 16);
+                Optional<SkyblockItem> item = RepositoryItemManager.getItem(identifier);
+                if (item.isEmpty()) {
+                    continue;
+                }
+                context.drawItem(item.get().getItemStack(), items * 16, i * 16);
                 items++;
             }
 

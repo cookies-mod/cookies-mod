@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -31,7 +32,7 @@ public class FetchurHud extends HudElement {
     final List<Ingredient> items = new LinkedList<>();
 
     long lastUpdate = System.currentTimeMillis();
-    Ingredient currentItem = new Ingredient("skyblock:items/stained_glass_4:20");
+    Ingredient currentItem = new Ingredient("skyblock:items/yellow_stained_glass:20");
     private PlayerEntity entity;
 
     /**
@@ -80,8 +81,8 @@ public class FetchurHud extends HudElement {
         this.entity.setCustomName(Text.literal("test"));
         this.entity.setCustomNameVisible(true);
 
-        SkyblockItem item = RepositoryItemManager.getItem(this.currentItem);
-        if (item == null) {
+        Optional<SkyblockItem> item = RepositoryItemManager.getItem(this.currentItem);
+        if (item.isEmpty()) {
             drawContext.drawText(MinecraftClient.getInstance().textRenderer, Text.literal("Item not found!").formatted(
                 Formatting.RED), 0, 0, -1, true);
             return;
@@ -93,7 +94,7 @@ public class FetchurHud extends HudElement {
         if (entityRenderDispatcher.getRenderer(entity) == null) {
             return;
         }
-        entity.getInventory().setStack(entity.getInventory().selectedSlot, item.getItemStack());
+        entity.getInventory().setStack(entity.getInventory().selectedSlot, item.get().getItemStack());
         drawContext.getMatrices().pop();
         InventoryScreen.drawEntity(
             drawContext,
@@ -109,7 +110,7 @@ public class FetchurHud extends HudElement {
         );
         RenderUtils.renderTextWithMaxWidth(
             drawContext,
-            Text.literal(String.valueOf(this.currentItem.getAmount())).append(" ").append(item.getName()),
+            Text.literal(String.valueOf(this.currentItem.getAmount())).append(" ").append(item.get().getName()),
             40,
             getX(),
             getY() + 40,

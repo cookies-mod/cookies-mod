@@ -106,13 +106,13 @@ public class CookiesMod implements ModInitializer {
             LoggerContext context = (LoggerContext) LogManager.getContext(false);
             for (LoggerConfig value : context.getConfiguration().getLoggers().values()) {
                 value.addFilter(new StringMatchFilter.Builder().setMatchString(
-                        "Ignoring player info update for unknown player").setOnMismatch(Filter.Result.ACCEPT)
+                        "Ignoring player info update for unknown player").setOnMismatch(Filter.Result.NEUTRAL)
                     .setOnMatch(Filter.Result.DENY).build());
                 value.addFilter(new StringMatchFilter.Builder().setMatchString(
-                        "Signature is missing from Property textures").setOnMismatch(Filter.Result.ACCEPT)
+                        "Signature is missing from Property textures").setOnMismatch(Filter.Result.NEUTRAL)
                     .setOnMatch(Filter.Result.DENY).build());
                 value.addFilter(new StringMatchFilter.Builder().setMatchString("Received packet for unknown team ")
-                    .setOnMismatch(Filter.Result.ACCEPT).setOnMatch(Filter.Result.DENY).build());
+                    .setOnMismatch(Filter.Result.NEUTRAL).setOnMatch(Filter.Result.DENY).build());
             }
         }
     }
