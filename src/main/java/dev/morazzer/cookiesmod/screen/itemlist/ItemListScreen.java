@@ -291,50 +291,14 @@ public class ItemListScreen implements Module {
             RarityFilter::getIdentifier,
             RarityFilter::getText,
             EnumCycleWidget.OnClick.identity(this::filterAndSort),
-            rarityFilter -> switch (rarityFilter) {
-                case NO_FILTER -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) != Tier.UNOBTAINABLE;
-                case COMMON -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.COMMON;
-                case UNCOMMON -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.UNCOMMON;
-                case RARE -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.RARE;
-                case EPIC -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.EPIC;
-                case LEGENDARY -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.LEGENDARY;
-                case MYTHIC -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.MYTHIC;
-                case SPECIAL -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.SPECIAL
-                    || RepositoryItemManager.getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.VERY_SPECIAL;
-                case ADMIN -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.ADMIN;
-                case UNOBTAINABLE -> i -> RepositoryItemManager
-                    .getItem(i)
-                    .map(SkyblockItem::getTier)
-                    .orElse(Tier.COMMON) == Tier.UNOBTAINABLE;
+            rarityFilter -> identifier -> {
+                Tier tier = RepositoryItemManager.getItem(identifier).map(SkyblockItem::getTier).orElse(Tier.COMMON);
+
+                return switch (rarityFilter) {
+                    case NO_FILTER -> tier != Tier.UNOBTAINABLE;
+                    case SPECIAL -> tier == Tier.SPECIAL || tier == Tier.VERY_SPECIAL;
+                    default -> tier == Tier.valueOf(rarityFilter.name());
+                };
             }
         );
 
