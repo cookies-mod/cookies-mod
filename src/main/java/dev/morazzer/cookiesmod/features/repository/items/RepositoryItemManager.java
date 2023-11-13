@@ -1,18 +1,12 @@
 package dev.morazzer.cookiesmod.features.repository.items;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
 import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
-import dev.morazzer.cookiesmod.utils.HttpUtils;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,45 +26,6 @@ public class RepositoryItemManager {
     private static final Path items = RepositoryManager.getRepoRoot().resolve("items");
     private static final CopyOnWriteArrayList<Identifier> itemList = new CopyOnWriteArrayList<>();
 
-    /**
-     * Loads all items from the official item list.
-     *
-     * @return If the items where loaded successfully.
-     */
-    public static boolean loadOfficialItemList() {
-        JsonObject jsonObject = JsonUtils.GSON.fromJson(new String(HttpUtils.getResponseBody(URI.create(
-            "https://api.hypixel.net/resources/skyblock/items"))), JsonObject.class);
-
-        if (!jsonObject.get("success").getAsBoolean()) {
-            return false;
-        }
-
-        JsonArray items = jsonObject.get("items").getAsJsonArray();
-
-
-        for (JsonElement item : items) {
-            JsonObject itemObject = item.getAsJsonObject();
-            Path itemPath = RepositoryItemManager.items.resolve(itemObject
-                .get("id")
-                .getAsString()
-                .replace(":", "_") + ".json");
-            if (!ExceptionHandler.tryCatch(() -> Files.createDirectories(itemPath.getParent()))) {
-                continue;
-            }
-            boolean result = ExceptionHandler.tryCatch(() -> Files.write(
-                itemPath,
-                JsonUtils.GSON.toJson(itemObject).getBytes(),
-                StandardOpenOption.CREATE_NEW
-            ));
-            if (!result) {
-                log.warn("Failed saving {}", itemPath);
-                continue;
-            }
-            log.info("Successfully saved {}", itemPath);
-        }
-
-        return true;
-    }
 
     /**
      * Reloads all items from the local repository.
@@ -119,7 +74,10 @@ public class RepositoryItemManager {
     public static boolean loadItem(JsonObject jsonObject, Consumer<Identifier> consumer) {
         try {
             SkyblockItem repositoryItem = new SkyblockItem(jsonObject);
-            itemMap.put(repositoryItem.getSkyblockId(), repositoryItem);
+            SkyblockItem put = itemMap.put(repositoryItem.getSkyblockId(), repositoryItem);
+            if (put != null) {
+                log.error("Item was overridden {}", repositoryItem.getSkyblockId());
+            }
             consumer.accept(repositoryItem.getSkyblockId());
             return true;
         } catch (Exception exception) {
@@ -134,8 +92,8 @@ public class RepositoryItemManager {
      * @param identifier The item id.
      * @return The item.
      */
-    public static SkyblockItem getItem(Identifier identifier) {
-        return itemMap.get(identifier);
+    public static Optional<SkyblockItem> getItem(Identifier identifier) {
+        return Optional.ofNullable(itemMap.get(identifier));
     }
 
     /**

@@ -144,7 +144,11 @@ public class ItemListScreen implements Module {
                     continue;
                 }
 
-                ItemStack value = RepositoryItemManager.getItem(items.get(itemIndex)).getItemStack();
+                Optional<SkyblockItem> item = RepositoryItemManager.getItem(items.get(itemIndex));
+                if (item.isEmpty()) {
+                    continue;
+                }
+                ItemStack value = item.get().getItemStack();
                 if (mouseX >= itemX && mouseX < itemX + this.itemSize && mouseY >= itemY
                     && mouseY < itemY + this.itemSize) {
                     this.drawItemTooltip(screen, context, value, mouseX, mouseY);
@@ -252,9 +256,9 @@ public class ItemListScreen implements Module {
             EnumCycleWidget.OnClick.identity(this::sort),
             alphabeticalSort -> switch (alphabeticalSort) {
                 case NORMAL -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
-                    .getItemNameAlphanumerical());
+                    .map(SkyblockItem::getItemNameAlphanumerical).orElse(""));
                 case REVERSED -> Comparator.comparing((Identifier o) -> RepositoryItemManager.getItem(o)
-                    .getItemNameAlphanumerical()).reversed();
+                    .map(SkyblockItem::getItemNameAlphanumerical).orElse("")).reversed();
             }
         );
 
@@ -269,12 +273,12 @@ public class ItemListScreen implements Module {
             EnumCycleWidget.OnClick.identity(this::sort),
             raritySort -> switch (raritySort) {
                 case UNSORTED -> Comparator.comparingInt(value -> 0);
-                case LOWEST_FIRST ->
-                    Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier()
-                        .ordinal());
-                case HIGHEST_FIRST ->
-                    Comparator.comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).getTier()
-                        .ordinal()).reversed();
+                case LOWEST_FIRST -> Comparator
+                    .comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).map(SkyblockItem::getTier)
+                        .orElse(Tier.COMMON).ordinal());
+                case HIGHEST_FIRST -> Comparator
+                    .comparingInt((Identifier o) -> RepositoryItemManager.getItem(o).map(SkyblockItem::getTier)
+                        .orElse(Tier.COMMON).ordinal()).reversed();
             }
         );
 
@@ -288,17 +292,49 @@ public class ItemListScreen implements Module {
             RarityFilter::getText,
             EnumCycleWidget.OnClick.identity(this::filterAndSort),
             rarityFilter -> switch (rarityFilter) {
-                case NO_FILTER -> i -> RepositoryItemManager.getItem(i).getTier() != Tier.UNOBTAINABLE;
-                case COMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.COMMON;
-                case UNCOMMON -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNCOMMON;
-                case RARE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.RARE;
-                case EPIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.EPIC;
-                case LEGENDARY -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.LEGENDARY;
-                case MYTHIC -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.MYTHIC;
-                case SPECIAL -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.SPECIAL
-                    || RepositoryItemManager.getItem(i).getTier() == Tier.VERY_SPECIAL;
-                case ADMIN -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.ADMIN;
-                case UNOBTAINABLE -> i -> RepositoryItemManager.getItem(i).getTier() == Tier.UNOBTAINABLE;
+                case NO_FILTER -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) != Tier.UNOBTAINABLE;
+                case COMMON -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.COMMON;
+                case UNCOMMON -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.UNCOMMON;
+                case RARE -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.RARE;
+                case EPIC -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.EPIC;
+                case LEGENDARY -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.LEGENDARY;
+                case MYTHIC -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.MYTHIC;
+                case SPECIAL -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.SPECIAL
+                    || RepositoryItemManager.getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.VERY_SPECIAL;
+                case ADMIN -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.ADMIN;
+                case UNOBTAINABLE -> i -> RepositoryItemManager
+                    .getItem(i)
+                    .map(SkyblockItem::getTier)
+                    .orElse(Tier.COMMON) == Tier.UNOBTAINABLE;
             }
         );
 
@@ -325,8 +361,11 @@ public class ItemListScreen implements Module {
             EnumCycleWidget.OnClick.identity(this::filterAndSort),
             museumFilter -> switch (museumFilter) {
                 case UNFILTERED -> identifier -> true;
-                case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).canBeInMuseum();
-                case NON_MUSEUM -> identifier -> !RepositoryItemManager.getItem(identifier).canBeInMuseum();
+                case MUSEUM -> identifier -> RepositoryItemManager.getItem(identifier).map(SkyblockItem::canBeInMuseum)
+                    .orElse(false);
+                case NON_MUSEUM ->
+                    identifier -> !RepositoryItemManager.getItem(identifier).map(SkyblockItem::canBeInMuseum)
+                        .orElse(false);
             }
         );
 
@@ -354,25 +393,29 @@ public class ItemListScreen implements Module {
      * @return If the item matcher.
      */
     private boolean search(Identifier identifier) {
-        SkyblockItem item = RepositoryItemManager.getItem(identifier);
+        Optional<SkyblockItem> itemOptional = RepositoryItemManager.getItem(identifier);
+        if (itemOptional.isEmpty()) {
+            return false;
+        }
+        SkyblockItem item = itemOptional.get();
         String content = this.textFieldWidget.getText();
 
         if (content.isBlank()) {
             return true;
         }
 
-        if (content.startsWith("type:")) {
-            String inputType = content.substring(5);
+        if (content.startsWith("type:") || content.startsWith("&")) {
+            String inputType = content.replaceFirst("type:|&", "");
             return this.identifierMatches(item.getMaterial(), inputType);
         }
 
-        if (content.startsWith("actual_type:")) {
-            String inputIdentifier = content.substring(12);
+        if (content.startsWith("actual_type:") || content.startsWith("!")) {
+            String inputIdentifier = content.replaceFirst("actual_type:|!", "");
             return this.identifierMatches(Registries.ITEM.getId(item.getItemStack().getItem()), inputIdentifier);
         }
 
-        if (content.startsWith("id:")) {
-            String inputId = content.substring(3);
+        if (content.startsWith("id:") || content.startsWith("#")) {
+            String inputId = content.replaceFirst("id:|#", "");
             return this.identifierMatches(item.getSkyblockId(), inputId);
         }
 

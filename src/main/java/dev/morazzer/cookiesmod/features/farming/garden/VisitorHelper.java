@@ -137,14 +137,15 @@ public class VisitorHelper implements Module {
 
         for (Ingredient ingredient : ingredientListSorted) {
             Ingredient finalIngredient = ingredient.withAmount(ingredient.getAmount() * rootIngredient.getAmount());
-            SkyblockItem item = RepositoryItemManager.getItem(finalIngredient);
+            Optional<SkyblockItem> item = RepositoryItemManager.getItem(finalIngredient);
+
 
             if (visited.contains(finalIngredient)) {
                 continue;
             }
             visited.add(finalIngredient);
 
-            if (item == null) {
+            if (item.isEmpty()) {
                 texts.add(Text.literal(StringUtils.leftPad("", deep)).append(" -> ")
                     .append(Text.literal("Can not find item with internal id " + finalIngredient)
                         .formatted(Formatting.RED)).formatted(Formatting.GRAY));
@@ -157,9 +158,9 @@ public class VisitorHelper implements Module {
             Text amount = Text.literal(numberFormatter.format(finalIngredient.getAmount()));
             Text name;
             if (ConfigManager.getConfig().gardenCategory.visitors.useItemRarityColor.getValue()) {
-                name = item.getName();
+                name = item.get().getName();
             } else {
-                name = Text.literal(item.getName().getString()).formatted(Formatting.GRAY);
+                name = Text.literal(item.get().getName().getString()).formatted(Formatting.GRAY);
             }
 
             if (ConfigManager.getConfig().gardenCategory.visitors.countPosition.getValue()

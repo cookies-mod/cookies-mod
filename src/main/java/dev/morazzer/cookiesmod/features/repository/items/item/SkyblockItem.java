@@ -26,9 +26,12 @@ import dev.morazzer.cookiesmod.features.repository.items.item.attributes.SwordTy
 import dev.morazzer.cookiesmod.features.repository.items.item.attributes.Tier;
 import dev.morazzer.cookiesmod.mixin.ItemStackTooltip;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
+import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.awt.Color;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +44,9 @@ import lombok.Getter;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
@@ -134,7 +139,8 @@ public class SkyblockItem {
      */
     public SkyblockItem(JsonObject jsonObject) {
         this.material = Optional
-            .ofNullable(Identifier.of("minecraft", jsonObject.get("material").getAsString().toLowerCase()))
+            .of(jsonObject.get("material").getAsString().toLowerCase())
+            .map(Identifier::tryParse)
             .orElseThrow();
         this.skyblockId = ItemUtils.skyblockIdToIdentifier(jsonObject.get("id").getAsString()).orElseThrow();
         this.realSkyblockId = jsonObject.get("id").getAsString();
@@ -146,6 +152,7 @@ public class SkyblockItem {
         this.skin = Optional
             .ofNullable(jsonObject.get("skin"))
             .map(jsonElement -> this.parseGenericString(jsonElement, "skin"))
+            .or(() -> Optional.ofNullable(jsonObject.get("skin_url")).map(this::parseSkinToValue))
             .orElse(null);
         this.name = Optional
             .ofNullable(jsonObject.get("name"))
@@ -164,7 +171,6 @@ public class SkyblockItem {
             .ofNullable(jsonObject.get("npc_sell_price"))
             .map(jsonElement -> this.parseGenericInteger(jsonElement, "npc_sell_price"))
             .orElse(-1);
-
         this.stats = Optional.ofNullable(jsonObject.get("stats")).map(this::parseStats).orElse(null);
         this.salvages = Optional.ofNullable(jsonObject.get("salvages")).map(this::parseSalvages).orElse(null);
         this.color = Optional.ofNullable(jsonObject.get("color")).map(this::parseColor).orElse(null);
@@ -291,6 +297,23 @@ public class SkyblockItem {
         this.itemStack = this.constructItemStack();
     }
 
+    private String parseSkinToValue(JsonElement jsonElement) {
+        if (JsonHelper.isString(jsonElement)) {
+            return Base64.getEncoder()
+                .encodeToString(
+                    "{\"textures\":{\"SKIN\":{\"url\":\"%s\"}}}".formatted(jsonElement.getAsString())
+                        .getBytes(StandardCharsets.UTF_8)
+                );
+        }
+
+        logger.warn(
+            "Expected boolean got {} for item {} at key 'skin_url'",
+            JsonHelper.getType(jsonElement),
+            this.skyblockId
+        );
+        return null;
+    }
+
     /**
      * Returns whether the item can be reforged.
      */
@@ -325,6 +348,11 @@ public class SkyblockItem {
      * @param itemStack The itemstack.
      */
     private void setColor(ItemStack itemStack) {
+        if (itemStack.isOf(Items.POTION) || itemStack.isOf(Items.LINGERING_POTION)
+            || itemStack.isOf(Items.SPLASH_POTION) || itemStack.isOf(Items.TIPPED_ARROW)) {
+            itemStack.setSubNbt("CustomPotionColor", NbtInt.of(this.color.getRGB()));
+            return;
+        }
         NbtCompound display = new NbtCompound();
         display.putInt("color", this.color.getRGB());
         itemStack.setSubNbt("display", display);
@@ -337,7 +365,9 @@ public class SkyblockItem {
      * @return The tooltip.
      */
     public List<Text> getTooltip(TooltipContext context) {
-        List<MutableText> texts = new ArrayList<>(this.description);
+        List<MutableText> texts = new ArrayList<>();
+        texts.add(this.getName().copy());
+        texts.addAll(this.description);
         if (context == TooltipContext.ADVANCED) {
             texts.add(Text.empty());
             texts.add(Text.literal(this.material.toString()).formatted(Formatting.DARK_GRAY));
@@ -468,12 +498,26 @@ public class SkyblockItem {
      */
     private void setSkin(ItemStack itemStack) {
         NbtCompound skullOwner = new NbtCompound();
+        var skin = JsonUtils.CLEAN_GSON.fromJson(new String(Base64.getDecoder().decode(this.skin)), JsonObject.class);
         skullOwner.putUuid("Id", UUID.randomUUID());
-        NbtCompound properties = new NbtCompound();
+
+        final String name;
+        if (skin.has("profileName")) {
+            name = skin.get("profileName").getAsString();
+        } else if (skin.has("timestamp")) {
+            name = skin.get("timestamp").getAsString();
+        } else {
+            name = skin.getAsJsonObject("textures")
+                .getAsJsonObject("SKIN").get("url").getAsString().substring(38, 54);
+        }
+
+        skullOwner.putString("Name", name);
         NbtList textures = new NbtList();
         NbtCompound texture = new NbtCompound();
         texture.putString("Value", this.skin);
         textures.add(texture);
+
+        NbtCompound properties = new NbtCompound();
         properties.put("textures", textures);
         skullOwner.put("Properties", properties);
         itemStack.setSubNbt("SkullOwner", skullOwner);
@@ -672,8 +716,15 @@ public class SkyblockItem {
      * @return The color or null.
      */
     private Color parseColor(JsonElement jsonElement) {
+        if (JsonHelper.isNumber(jsonElement)) {
+            return new Color(jsonElement.getAsInt());
+        }
         if (JsonHelper.isString(jsonElement)) {
             String[] split = jsonElement.getAsString().split(",", 3);
+            if (split.length == 1) {
+                logger.warn("Item {} uses a string for a numeric color value", this.skyblockId);
+                return new Color(Integer.parseInt(split[0]));
+            }
             int r = Integer.parseInt(split[0]);
             int g = Integer.parseInt(split[1]);
             int b = Integer.parseInt(split[2]);
@@ -681,7 +732,7 @@ public class SkyblockItem {
         }
 
         logger.warn(
-            "Expected string got {} for item {} at key 'color'",
+            "Expected string or string got {} for item {} at key 'color'",
             JsonHelper.getType(jsonElement),
             this.skyblockId
         );
@@ -1021,7 +1072,13 @@ public class SkyblockItem {
             .getOrEmpty(this.material)
             .orElse(Registries.ITEM.get(Identifier.tryParse("minecraft:barrier")));
         ItemStack itemStack = new ItemStack(item);
-        itemStack.setCustomName(this.name.setStyle(Style.EMPTY.withItalic(false).withColor(this.tier.getFormatting())));
+        MutableText name = this.name;
+        if (name.getStyle().getColor() == null) {
+            name.setStyle(Style.EMPTY.withItalic(false).withColor(this.tier.getFormatting()));
+        } else {
+            name.setStyle(name.getStyle().withItalic(false));
+        }
+        itemStack.setCustomName(name);
 
         ((ItemStackTooltip) (Object) itemStack).cookies$setSkyblockItem(this);
 

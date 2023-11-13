@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
 
 /**
@@ -133,10 +135,12 @@ public class ItemUtils {
         for (NbtElement texture : textures) {
             if (texture.getType() == NbtElement.COMPOUND_TYPE) {
                 NbtCompound textureValue = (NbtCompound) texture;
-
-                String s = new String(Base64.getDecoder().decode(textureValue.getString("Value")));
+                String string = textureValue.getString("Value");
+                String s = new String(Base64.getDecoder().decode(string));
                 JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(s, JsonObject.class);
-                CookiesUtils.sendMessage(TextUtils.prettyPrintJson(jsonObject));
+                CookiesUtils.sendMessage(
+                    TextUtils.prettyPrintJson(jsonObject).copy().setStyle(Style.EMPTY.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.COPY_TO_CLIPBOARD, string))));
             }
         }
     }
