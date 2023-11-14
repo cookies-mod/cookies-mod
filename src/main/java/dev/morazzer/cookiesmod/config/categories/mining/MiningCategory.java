@@ -5,6 +5,7 @@ import dev.morazzer.cookiesmod.config.system.options.BooleanOption;
 import dev.morazzer.cookiesmod.features.mining.DwarvenMinesOverlay;
 import dev.morazzer.cookiesmod.features.mining.FetchurHud;
 import dev.morazzer.cookiesmod.features.mining.FuelBarHud;
+import dev.morazzer.cookiesmod.features.mining.crystalhollows.hud.MiningPassDurationHud;
 import net.minecraft.text.Text;
 
 /**
@@ -43,6 +44,11 @@ public class MiningCategory extends Category {
         Text.literal("Shows your remaining drill fuel in a bar"),
         false
     ).withHudElement(new FuelBarHud());
+    public BooleanOption showPassTimer = new BooleanOption(
+        Text.literal("Pass timer"),
+        Text.literal("Shows the remaining time of your crystal hollows pass"),
+        false
+    ).withHudElement(new MiningPassDurationHud());
 
     @Override
     public Text getName() {
