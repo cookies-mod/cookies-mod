@@ -113,7 +113,7 @@ public class DwarvenMinesOverlay extends HudElement {
                 if (ItemUtils.hasSkyblockItemInMainHand() && ItemUtils
                     .getMainHand()
                     .flatMap(ItemUtils::getSkyblockIdAsIdentifier)
-                    .map(MiningData.getInstance().getDrills()::contains)
+                    .map(MiningData.getInstance().drills()::contains)
                     .orElse(false)) {
                     String s = messageLiteral.replaceAll("[^0-9]", "");
                     if (s.isEmpty()) {

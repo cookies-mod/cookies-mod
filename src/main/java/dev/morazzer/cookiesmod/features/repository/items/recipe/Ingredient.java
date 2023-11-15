@@ -1,5 +1,6 @@
 package dev.morazzer.cookiesmod.features.repository.items.recipe;
 
+import com.google.gson.JsonElement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 /**
  * An ingredient used in a crafting recipe or in a different type of recipe.
@@ -54,6 +56,26 @@ public class Ingredient extends Identifier {
     public Ingredient(Identifier identifier, int amount) {
         super(identifier.getNamespace(), identifier.getPath());
         this.amount = amount;
+    }
+
+    /**
+     * Creates an ingredient from a {@linkplain JsonElement}.
+     *
+     * @param jsonElement The json element.
+     * @return The ingredient.
+     */
+    public static Ingredient fromJson(JsonElement jsonElement) {
+        if (JsonHelper.isString(jsonElement)) {
+            return new Ingredient(jsonElement.getAsString());
+        }
+        if (jsonElement.isJsonObject()) {
+            return new Ingredient(
+                new Identifier(JsonHelper.getString(jsonElement.getAsJsonObject(), "item")),
+                JsonHelper.getInt(jsonElement.getAsJsonObject(), "amount")
+            );
+        }
+
+        throw new UnsupportedOperationException("Unable to deserialize ingredient");
     }
 
     /**

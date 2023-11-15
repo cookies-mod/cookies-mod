@@ -1,93 +1,37 @@
 package dev.morazzer.cookiesmod.features.repository.constants;
 
-import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
+import com.google.gson.annotations.SerializedName;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
-import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.LinkedList;
+import java.lang.reflect.Type;
 import java.util.List;
 import lombok.Getter;
+import net.minecraft.util.JsonHelper;
+import org.slf4j.LoggerFactory;
 
 /**
  * Repository item for compost upgrades.
  */
-@Getter
-public class CompostUpgradeCost {
+public record CompostUpgradeCost(@SerializedName("speed") List<CompostUpgrade> speed,
+                                 @SerializedName("multi_drop") List<CompostUpgrade> multiDrop,
+                                 @SerializedName("fuel_cap") List<CompostUpgrade> fuelCap,
+                                 @SerializedName("organic_matter_cap") List<CompostUpgrade> organicMatterCap,
+                                 @SerializedName("cost_reduction") List<CompostUpgrade> costReduction) {
 
     @Getter
     private static CompostUpgradeCost instance;
 
-    private final List<CompostUpgrade> speed;
-    private final List<CompostUpgrade> multiDrop;
-    private final List<CompostUpgrade> fuelCap;
-    private final List<CompostUpgrade> organicMatterCap;
-    private final List<CompostUpgrade> costReduction;
-
     /**
-     * Loads the compost data from a json object.
-     *
-     * @param jsonObject The json object.
+     * Loads the compost upgrades.
      */
-    public CompostUpgradeCost(JsonObject jsonObject) {
-        this.speed = getUpgrades(jsonObject.getAsJsonArray("speed"));
-        this.multiDrop = getUpgrades(jsonObject.getAsJsonArray("multi_drop"));
-        this.fuelCap = getUpgrades(jsonObject.getAsJsonArray("fuel_cap"));
-        this.organicMatterCap = getUpgrades(jsonObject.getAsJsonArray("organic_matter_cap"));
-        this.costReduction = getUpgrades(jsonObject.getAsJsonArray("cost_reduction"));
-    }
-
-    /**
-     * Whether the data was loaded, if not try to load it.
-     *
-     * @return Whether the data was successfully loaded.
-     */
-    public static boolean loaded() {
-        if (instance == null && Files.exists(RepositoryManager.getRepoRoot()
-            .resolve("constants/compost_upgrades.json"))) {
-            JsonObject jsonObject = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(
-                RepositoryManager.getRepoRoot()
-                    .resolve("constants/compost_upgrades.json"),
-                StandardCharsets.UTF_8
-            ), "{}"), JsonObject.class);
-
-            instance = new CompostUpgradeCost(jsonObject);
-        }
-        return instance != null;
-    }
-
-    /**
-     * Parse a {@linkplain com.google.gson.JsonArray} to a list of
-     * {@linkplain dev.morazzer.cookiesmod.features.repository.constants.CompostUpgradeCost.CompostUpgrade}.
-     *
-     * @param jsonElements The json array.
-     * @return The list of compost upgrades.
-     */
-    private List<CompostUpgrade> getUpgrades(JsonArray jsonElements) {
-        LinkedList<CompostUpgrade> list = new LinkedList<>();
-        for (JsonElement jsonElement : jsonElements) {
-            if (!jsonElement.isJsonObject()) {
-                continue;
-            }
-
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            int copper = jsonObject.get("copper").getAsInt();
-            LinkedList<Ingredient> upgradeList = new LinkedList<>();
-            JsonObject costObject = jsonObject.getAsJsonObject("cost");
-            for (String key : costObject.keySet()) {
-                upgradeList.add(new Ingredient("%s:%s".formatted(
-                    ItemUtils.withNamespace(key),
-                    costObject.get(key).getAsInt()
-                )));
-            }
-            list.add(new CompostUpgrade(copper, upgradeList));
-        }
-        return list;
+    public static void load() {
+        JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/compost_upgrades");
+        instance = JsonUtils.GSON.fromJson(file, CompostUpgradeCost.class);
     }
 
     /**
@@ -100,6 +44,29 @@ public class CompostUpgradeCost {
         int copper,
         List<Ingredient> cost
     ) {
+
+        /**
+         * Deserializes a compost upgrade.
+         *
+         * @param jsonElement The json element.
+         * @param typeOf      The type of the element.
+         * @param context     The context.
+         * @return The compost upgrade.
+         */
+        public static CompostUpgrade deserialize(JsonElement jsonElement, Type typeOf,
+                                                 JsonDeserializationContext context) {
+            if (jsonElement.isJsonObject()) {
+                JsonObject cost = JsonHelper.getObject(jsonElement.getAsJsonObject(), "cost");
+                return new CompostUpgrade(
+                    JsonHelper.getInt(jsonElement.getAsJsonObject(), "copper"),
+                    cost.keySet().stream().map(
+                        s -> new Ingredient(
+                            "%s:%s".formatted(ItemUtils.withNamespace(s), JsonHelper.getInt(cost, s)))).toList()
+                );
+            }
+            LoggerFactory.getLogger("cookiesmod-repository").error("Invalid compost upgrade: {}", jsonElement);
+            return null;
+        }
     }
 
 }
