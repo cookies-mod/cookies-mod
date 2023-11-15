@@ -10,7 +10,6 @@ import dev.morazzer.cookiesmod.utils.general.ItemUtils;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.List;
-import lombok.Getter;
 import net.minecraft.util.JsonHelper;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +22,11 @@ public record CompostUpgradeCost(@SerializedName("speed") List<CompostUpgrade> s
                                  @SerializedName("organic_matter_cap") List<CompostUpgrade> organicMatterCap,
                                  @SerializedName("cost_reduction") List<CompostUpgrade> costReduction) {
 
-    @Getter
     private static CompostUpgradeCost instance;
+
+    public static CompostUpgradeCost getInstance() {
+        return instance;
+    }
 
     /**
      * Loads the compost upgrades.

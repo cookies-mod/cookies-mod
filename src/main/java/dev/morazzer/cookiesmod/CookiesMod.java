@@ -27,9 +27,6 @@ import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.filter.StringMatchFilter;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,15 +87,10 @@ public class CookiesMod implements ModInitializer {
         ConfigManager.processConfig();
         ConcurrentUtils.execute(RepositoryManager::load);
 
-        Reflections reflections = new Reflections(new ConfigurationBuilder().forPackage("dev.morazzer.cookiesmod")
-            .setScanners(Scanners.TypesAnnotated));
-
-
         loadModules();
         HudManager.init();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> ClientCommand.loadCommands(
-            reflections,
             dispatcher
         ));
 

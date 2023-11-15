@@ -4,9 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.SingleRedirectModifier;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import dev.morazzer.cookiesmod.generated.LoadCommandLoader;
 import dev.morazzer.cookiesmod.utils.DevUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,7 +19,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
 
 /**
  * A client command is a command that will always only be available to the client itself. This class helps with creating
@@ -33,16 +34,11 @@ public abstract class ClientCommand implements Helper {
      * Loads all classes that extend {@linkplain dev.morazzer.cookiesmod.commands.helpers.ClientCommand} and are
      * annotated with {@linkplain dev.morazzer.cookiesmod.commands.helpers.LoadCommand} into the command registry.
      *
-     * @param reflections A {@linkplain org.reflections.Reflections} instance with predefined path to narrow in the
-     *                    scan.
      * @param dispatcher  The command dispatcher that is provided by the
      *                    {@linkplain net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback}.
      */
-    public static void loadCommands(
-        @NotNull Reflections reflections,
-        @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher
-    ) {
-        reflections.getTypesAnnotatedWith(LoadCommand.class).forEach(clazz -> {
+    public static void loadCommands(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        Arrays.stream(LoadCommandLoader.getClasses()).forEach(clazz -> {
             log.debug("Found class annotated with @LoadCommand");
             if (!ClientCommand.class.isAssignableFrom(clazz)) {
                 log.warn("{} does not extend ClientCommand but is annotated with @LoadCommand", clazz);

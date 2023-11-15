@@ -4,16 +4,15 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.morazzer.cookiesmod.CookiesMod;
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
+import dev.morazzer.cookiesmod.generated.TestEntrypointLoader;
 import dev.morazzer.cookiesmod.utils.ColorUtils;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ConfigurationBuilder;
 
 /**
  * Subcommand to add various methods to the command tree. These methods must be annotated with the
@@ -28,11 +27,7 @@ public class TestSubcommand extends ClientCommand {
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         LiteralArgumentBuilder<FabricClientCommandSource> subcommand = literal("test");
 
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-            .forPackage(CookiesMod.class.getPackageName())
-            .setScanners(Scanners.MethodsAnnotated));
-
-        reflections.getMethodsAnnotatedWith(TestEntrypoint.class).forEach(entrypoint -> {
+        Arrays.stream(TestEntrypointLoader.getMethods()).forEach(entrypoint -> {
             int modifiers = entrypoint.getModifiers();
             if (!Modifier.isStatic(modifiers)
                 || !Modifier.isPublic(modifiers)) {

@@ -6,7 +6,7 @@
 
 <suppressions>
     <suppress
-            checks="LineLength|CustomImportOrder|OverloadMethodsDeclarationOrder|Indentation|AbbreviationAsWordInName|MissingJavadocType|MissingJavadocMethod"
+            checks=".*"
             files="[/\\]generated[/\\]"/>
     <suppress checks="TypeName" files=".*Migration_[0-9]+"/>
     <suppress checks="MissingJavadocType" files=".*Mixin"/>

@@ -9,6 +9,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("cookies.generateAreas")
     id("cookies.moduleLoader")
+    id("cookies.annotationLoader")
     id("checkstyle")
 }
 
@@ -40,9 +41,6 @@ dependencies {
     include(modImplementation("com.github.0x3C50:Renderer:master-SNAPSHOT")!!)
 
     implementation("com.google.code.gson:gson:2.10.1")!!
-    shadowConfiguration(implementation("org.reflections:reflections:0.10.2") {
-        exclude(module = "slf4j-api")
-    })
     shadowConfiguration(implementation("org.kohsuke:github-api:1.317")!!)
 
     annotationProcessor("org.projectlombok:lombok:1.18.26")
