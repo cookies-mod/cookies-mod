@@ -14,6 +14,13 @@ import com.github.javaparser.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.tools.ant.util.StreamUtils;
 import org.gradle.api.Plugin;
@@ -24,13 +31,6 @@ import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.plugins.ide.idea.model.IdeaModel;
-
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class GenerateModuleLoader implements Plugin<Project> {
     @Override
@@ -45,8 +45,9 @@ public class GenerateModuleLoader implements Plugin<Project> {
                 .withPropertyName("sources").withPathSensitivity(PathSensitivity.RELATIVE);
         generateModuleLoader.doLast(task -> {
             CombinedTypeSolver typeSolver = new CombinedTypeSolver(task.getProject().getExtensions()
-                    .getByType(SourceSetContainer.class).getByName("main").getAllJava().getSrcDirs().stream()
-                    .map(JavaParserTypeSolver::new).toArray(TypeSolver[]::new));
+                .getByType(SourceSetContainer.class).getByName("main").getAllJava().getSrcDirs().stream()
+                .filter(File::exists)
+                .map(JavaParserTypeSolver::new).toArray(TypeSolver[]::new));
 
             JavaParser javaParser = new JavaParser(new ParserConfiguration().setSymbolResolver(new JavaSymbolSolver(
                     typeSolver)).setLanguageLevel(ParserConfiguration.LanguageLevel.CURRENT));

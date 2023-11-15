@@ -19,6 +19,7 @@ import com.github.javaparser.resolution.TypeSolver;
 import com.github.javaparser.symbolsolver.JavaSymbolSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.CombinedTypeSolver;
 import com.github.javaparser.symbolsolver.resolution.typesolvers.JavaParserTypeSolver;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class GenerateGenericLoader implements Plugin<Project> {
         generateAnnotationLoader.doLast(task -> {
             CombinedTypeSolver typeSolver = new CombinedTypeSolver(task.getProject().getExtensions()
                 .getByType(SourceSetContainer.class).getByName("main").getAllJava().getSrcDirs().stream()
+                .filter(File::exists)
                 .map(JavaParserTypeSolver::new).toArray(TypeSolver[]::new));
 
             JavaParser javaParser = new JavaParser(new ParserConfiguration().setSymbolResolver(new JavaSymbolSolver(
@@ -177,7 +179,7 @@ public class GenerateGenericLoader implements Plugin<Project> {
         project.getExtensions().getByType(SourceSetContainer.class).getByName("main").getAllSource().getSrcDirs()
             .addAll(generateAnnotationLoader.getOutputs().getFiles().getFiles());
         generateAnnotationLoader.dependsOn(project.getTasks().getByName("generateAreaEnum"));
-        generateAnnotationLoader.dependsOn(project.getTasks().getByName("generateModuleLoader"));
+        generateAnnotationLoader.mustRunAfter(project.getTasks().getByName("generateModuleLoader"));
         project.afterEvaluate(project1 -> {
             DefaultSourceSetContainer sourceSets = (DefaultSourceSetContainer) project.getExtensions()
                 .getByName("sourceSets");
