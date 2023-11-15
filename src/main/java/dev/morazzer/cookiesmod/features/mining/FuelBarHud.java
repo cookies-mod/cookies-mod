@@ -45,7 +45,7 @@ public class FuelBarHud extends HudElement {
         return ItemUtils.hasSkyblockItemInMainHand() && ItemUtils
             .getMainHand()
             .flatMap(ItemUtils::getSkyblockIdAsIdentifier)
-            .map(MiningData.getInstance().getDrills()::contains)
+            .map(MiningData.getInstance().drills()::contains)
             .orElse(false);
     }
 
@@ -67,7 +67,7 @@ public class FuelBarHud extends HudElement {
         NbtCompound extraAttributes = optionalAttributes.get();
 
         final int maxFuel = ItemUtils.skyblockIdToIdentifier(extraAttributes.getString("drill_part_fuel_tank"))
-            .map(MiningData.getInstance().getParts()::get)
+            .map(MiningData.getInstance().fuelTankUpgrades()::get)
             .orElse(3000);
 
         if (!extraAttributes.contains("drill_fuel")) {

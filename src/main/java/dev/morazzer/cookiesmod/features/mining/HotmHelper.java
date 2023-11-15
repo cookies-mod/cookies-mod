@@ -1,22 +1,15 @@
 package dev.morazzer.cookiesmod.features.mining;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import dev.morazzer.cookiesmod.config.ConfigManager;
 import dev.morazzer.cookiesmod.data.profile.ProfileStorage;
 import dev.morazzer.cookiesmod.events.api.InventoryContentUpdateEvent;
-import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
+import dev.morazzer.cookiesmod.features.repository.constants.Constants;
 import dev.morazzer.cookiesmod.mixin.ItemNbtAttachment;
 import dev.morazzer.cookiesmod.modules.LoadModule;
 import dev.morazzer.cookiesmod.modules.Module;
 import dev.morazzer.cookiesmod.utils.ExceptionHandler;
 import dev.morazzer.cookiesmod.utils.NumberFormat;
-import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,51 +31,13 @@ import net.minecraft.util.Formatting;
  */
 @LoadModule("mining/hotm_helper")
 public class HotmHelper implements Module {
-
-    final Map<String, List<Integer>> perks = new LinkedHashMap<>();
     final Map<ItemStack, NbtCompound> items = new ConcurrentHashMap<>() {
     };
     final List<String> gemstonePowder = new LinkedList<>();
 
-    /**
-     * Updates the constants from the repository.
-     */
-    public void update() {
-        JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/hotm_perks");
-        if (file == null || !file.isJsonObject()) {
-            return;
-        }
-        JsonObject jsonObject = JsonUtils.CLEAN_GSON.fromJson(file.getAsJsonObject(), JsonObject.class);
-        this.gemstonePowder.clear();
-        this.perks.clear();
-        for (String key : jsonObject.keySet()) {
-            if (key.equals("gemstone")) {
-                JsonArray gemstone = jsonObject.getAsJsonArray(key);
-                for (JsonElement jsonElement : gemstone) {
-                    this.gemstonePowder.add(jsonElement.getAsString());
-                }
-                continue;
-            }
-
-            JsonElement jsonElement = jsonObject.get(key);
-            if (!jsonElement.isJsonArray()) {
-                return;
-            }
-            this.perks.put(
-                key,
-                JsonUtils.CLEAN_GSON.fromJson(jsonElement, new TypeToken<List<Integer>>() {
-                }.getType())
-            );
-        }
-    }
 
     @Override
     public void load() {
-        RepositoryManager.addReloadCallback(this::update);
-        if (RepositoryManager.isFinishedLoading()) {
-            update();
-        }
-
         AtomicInteger lastSyncId = new AtomicInteger(-1);
 
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
@@ -187,7 +142,7 @@ public class HotmHelper implements Module {
         }
 
         String searchName = name.trim().replaceAll(" +", "_").toLowerCase();
-        List<Integer> integers = this.perks.getOrDefault(searchName, Collections.emptyList());
+        List<Integer> integers = Constants.getHotmPerks().getOrDefault(searchName, Collections.emptyList());
         if (integers.isEmpty()) {
             return;
         }
@@ -206,11 +161,11 @@ public class HotmHelper implements Module {
         }
         int amount = 0;
         for (int i = level - 1; i < Math.min(level + 9, integers.size()); i++) {
-            amount += integers.get(i);
+            amount += ((Number) integers.get(i)).intValue();
         }
         int total = 0;
-        for (Integer i : integers.subList(Math.min(level - 1, integers.size()), integers.size())) {
-            total += i;
+        for (Number i : integers.subList(Math.min(level - 1, integers.size()), integers.size())) {
+            total += i.intValue();
         }
         cookies.putInt("powder_for_next_10", amount);
         cookies.putInt("powder_till_max", total);

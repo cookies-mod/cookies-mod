@@ -1,10 +1,7 @@
 package dev.morazzer.cookiesmod.features.repository.constants;
 
-import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.utils.ExceptionHandler;
+import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -12,27 +9,17 @@ import lombok.Getter;
 /**
  * The plot cost data for the repository.
  */
-public class PlotCostData {
+public record PlotCostData(List<Cost> center,
+                           List<Cost> middle,
+                           List<Cost> edges,
+                           List<Cost> corners) {
 
     @Getter
     private static PlotCostData instance;
-    List<Cost> center;
-    List<Cost> middle;
-    List<Cost> edges;
-    List<Cost> corners;
 
-    /**
-     * Whether the data was loaded, if not try to load it.
-     *
-     * @return Whether the data was successfully loaded.
-     */
-    public static boolean loaded() {
-        if (instance == null && Files.exists(RepositoryManager.getRepoRoot().resolve("constants/plot_cost.json"))) {
-            instance = JsonUtils.GSON.fromJson(ExceptionHandler.removeThrows(() -> Files.readString(RepositoryManager
-                .getRepoRoot()
-                .resolve("constants/plot_cost.json"), StandardCharsets.UTF_8)), PlotCostData.class);
-        }
-        return instance != null;
+    public static void load() {
+        instance = JsonUtils.GSON
+            .fromJson(RepositoryFileAccessor.getInstance().getFile("constants/plot_cost"), PlotCostData.class);
     }
 
     /**

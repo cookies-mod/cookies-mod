@@ -1,10 +1,7 @@
 package dev.morazzer.cookiesmod.features.mining;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import dev.morazzer.cookiesmod.features.hud.HudElement;
-import dev.morazzer.cookiesmod.features.repository.RepositoryManager;
-import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
+import dev.morazzer.cookiesmod.features.repository.constants.Constants;
 import dev.morazzer.cookiesmod.features.repository.items.RepositoryItemManager;
 import dev.morazzer.cookiesmod.features.repository.items.item.SkyblockItem;
 import dev.morazzer.cookiesmod.features.repository.items.recipe.Ingredient;
@@ -13,8 +10,6 @@ import dev.morazzer.cookiesmod.utils.render.Position;
 import dev.morazzer.cookiesmod.utils.render.RenderUtils;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -29,10 +24,8 @@ import net.minecraft.util.Formatting;
  */
 public class FetchurHud extends HudElement {
 
-    final List<Ingredient> items = new LinkedList<>();
-
-    long lastUpdate = System.currentTimeMillis();
-    Ingredient currentItem = new Ingredient("skyblock:items/yellow_stained_glass:20");
+    private long lastUpdate = System.currentTimeMillis();
+    private volatile Ingredient currentItem = new Ingredient("skyblock:items/yellow_stained_glass:20");
     private PlayerEntity entity;
 
     /**
@@ -40,10 +33,6 @@ public class FetchurHud extends HudElement {
      */
     public FetchurHud() {
         super(new Position(0, 0));
-        RepositoryManager.addReloadCallback(this::updateItems);
-        if (RepositoryManager.isFinishedLoading()) {
-            this.updateItems();
-        }
     }
 
     @Override
@@ -121,36 +110,13 @@ public class FetchurHud extends HudElement {
     }
 
     /**
-     * Update the current item list/load it from the repository.
-     */
-    private void updateItems() {
-        this.items.clear();
-        JsonElement file = RepositoryFileAccessor.getInstance().getFile("constants/fetchur_items");
-        if (file == null || !file.isJsonArray()) {
-            return;
-        }
-        JsonArray jsonElements = file.getAsJsonArray();
-        for (JsonElement jsonElement : jsonElements) {
-            if (!jsonElement.isJsonPrimitive()) {
-                continue;
-            }
-            if (!jsonElement.getAsJsonPrimitive().isString()) {
-                continue;
-            }
-
-            String stringIdentifier = jsonElement.getAsString();
-            this.items.add(new Ingredient(stringIdentifier));
-        }
-    }
-
-    /**
      * Updates the current item.
      */
     private void update() {
         int dayOfMonth = ZonedDateTime.now(ZoneId.of("Canada/Eastern")).getDayOfMonth();
-        int currentItem = (dayOfMonth - 1) % this.items.size();
+        int currentItem = (dayOfMonth - 1) % Constants.getFetchurItems().size();
 
-        this.currentItem = this.items.get(currentItem);
+        this.currentItem = Constants.getFetchurItems().get(currentItem);
     }
 
 }

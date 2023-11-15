@@ -58,9 +58,6 @@ public class PlotPriceDisplay implements Module {
             if (!screen.getTitle().getString().equals("Configure Plots")) {
                 return;
             }
-            if (!PlotCostData.loaded()) {
-                return;
-            }
 
             ScreenEvents.afterRender(screen)
                 .register(ExceptionHandler.wrap(this::renderPlotCostBreakdown));

@@ -57,9 +57,6 @@ public class CompostUpgradeBreakdown implements Module {
         if (!ConfigManager.getConfig().gardenCategory.compostFoldable.showUpgradeCost.getValue()) {
             return;
         }
-        if (!CompostUpgradeCost.loaded()) {
-            return;
-        }
         if (!itemStack.hasCustomName()) {
             return;
         }
@@ -91,23 +88,23 @@ public class CompostUpgradeBreakdown implements Module {
         switch (upgradeName.trim()) {
             case "Composter Speed" -> {
                 maxAmount = "500%";
-                upgrades = CompostUpgradeCost.getInstance().getSpeed();
+                upgrades = CompostUpgradeCost.getInstance().speed();
             }
             case "Multi Drop" -> {
                 maxAmount = "75%";
-                upgrades = CompostUpgradeCost.getInstance().getMultiDrop();
+                upgrades = CompostUpgradeCost.getInstance().multiDrop();
             }
             case "Fuel Cap" -> {
                 maxAmount = "850,000";
-                upgrades = CompostUpgradeCost.getInstance().getFuelCap();
+                upgrades = CompostUpgradeCost.getInstance().fuelCap();
             }
             case "Organic Matter Cap" -> {
                 maxAmount = "540,000";
-                upgrades = CompostUpgradeCost.getInstance().getOrganicMatterCap();
+                upgrades = CompostUpgradeCost.getInstance().organicMatterCap();
             }
             case "Cost Reduction" -> {
                 maxAmount = "25%";
-                upgrades = CompostUpgradeCost.getInstance().getCostReduction();
+                upgrades = CompostUpgradeCost.getInstance().costReduction();
             }
             default -> {
                 return;
