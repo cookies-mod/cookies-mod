@@ -27,6 +27,10 @@ gradlePlugin {
             id = "cookies.moduleLoader"
             implementationClass = "dev.morazzer.cookies.plugins.modules.GenerateModuleLoader"
         }
+        create("generateAnnotationLoader") {
+            id = "cookies.annotationLoader"
+            implementationClass = "dev.morazzer.cookies.plugins.loaders.GenerateGenericLoader"
+        }
     }
 }
 

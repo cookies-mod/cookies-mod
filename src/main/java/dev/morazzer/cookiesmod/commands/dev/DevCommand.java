@@ -2,18 +2,16 @@ package dev.morazzer.cookiesmod.commands.dev;
 
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import dev.morazzer.cookiesmod.commands.dev.subcommands.DevSubcommand;
 import dev.morazzer.cookiesmod.commands.helpers.ClientCommand;
 import dev.morazzer.cookiesmod.commands.helpers.LoadCommand;
+import dev.morazzer.cookiesmod.generated.DevSubcommandLoader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ConfigurationBuilder;
 
 /**
  * The class representing the {@code /dev} command. Most (if not all) functions of the command are loaded dynamically.
@@ -27,11 +25,7 @@ public class DevCommand extends ClientCommand {
     public LiteralArgumentBuilder<FabricClientCommandSource> getCommand() {
         LiteralArgumentBuilder<FabricClientCommandSource> command = literal("dev");
 
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-            .forPackage(DevSubcommand.class.getPackageName())
-            .setScanners(Scanners.TypesAnnotated));
-
-        reflections.getTypesAnnotatedWith(DevSubcommand.class).forEach(devSubCommand -> {
+        Arrays.asList(DevSubcommandLoader.getClasses()).forEach(devSubCommand -> {
             if (!ClientCommand.class.isAssignableFrom(devSubCommand)) {
                 log.warn("{} does not extend ClientCommand but is annotated with @DevSubcommand", devSubCommand);
                 return;

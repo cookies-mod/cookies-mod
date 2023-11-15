@@ -4,7 +4,6 @@ import dev.morazzer.cookiesmod.features.repository.files.RepositoryFileAccessor;
 import dev.morazzer.cookiesmod.utils.json.JsonUtils;
 import java.util.Collections;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * The plot cost data for the repository.
@@ -14,8 +13,11 @@ public record PlotCostData(List<Cost> center,
                            List<Cost> edges,
                            List<Cost> corners) {
 
-    @Getter
     private static PlotCostData instance;
+
+    public static PlotCostData getInstance() {
+        return instance;
+    }
 
     public static void load() {
         instance = JsonUtils.GSON

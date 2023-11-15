@@ -1,9 +1,9 @@
 package dev.morazzer.cookiesmod.events.api;
 
 import java.util.UUID;
-import javax.annotation.Nullable;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Various events related to profile swaps.
